@@ -37,7 +37,7 @@ type program = (string, func) Hashtbl.t
 let sequence_content (s : stmt) : stmt list =
   match s with
   | Sequence seq -> seq
-  | _ -> failwith "InternalError: tried to retrieve the statements carried with \"Sequence\" value from non sequence constructor" 
+  | _ -> failwith "InternalError: tried to retrieve a statements carried along a \"Sequence\" value from a non sequence constructor" 
 
 let get_value (v : value option) : value =
   match v with
@@ -61,7 +61,7 @@ match v with
 | Number n  -> if n!=0 then true else false
 | Boolean b -> b
 
-(* Operations' semantics functions *)
+(* Operations semantic functions *)
 
 let neg (v : value) : value = match v with
   | (Number n) -> Number (-1*n)
