@@ -1,0 +1,11 @@
+(library
+ (name lib))
+
+(ocamllex
+  (modules Lexer)
+)
+
+(menhir
+  (modules Parser)
+  (flags --explain --dump)
+)

@@ -1,0 +1,22 @@
+function increment(x) {
+    return x+1
+};
+
+function multiply(x,y) {
+    y = y+10;
+    return x*y
+};
+
+function aenima() {
+    x = 3;
+    y = 2;
+    z = multiply(x,y);
+    z = increment(y);
+    if (y==2) {
+        print(true)
+    }
+    else {
+        print(false)
+    };
+    print(z)
+}
