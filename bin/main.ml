@@ -7,7 +7,7 @@ let create_program (funcs : Program.func list) : Program.program = (*TODO assert
 
 let parse_program (str : string) : Program.func list =
   let lexbuf = Lexing.from_string str in
-  let funcs = Parser.program_target Lexer.read lexbuf in
+  let funcs  = Parser.program_target Lexer.read lexbuf in
   funcs
 
 let read_file (fname : string) : string =

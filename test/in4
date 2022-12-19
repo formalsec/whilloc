@@ -1,0 +1,20 @@
+function multiply(x,y) {
+    return x*y
+};
+
+function increment_twice(x) {
+    x = increment(x);
+    x = increment(x);
+    return x
+};
+
+function increment(x) {
+    return x+1
+};
+
+function aenima() {
+    x = increment_twice(5);
+    print(x);
+    f2 = multiply(3,3);
+    return f2
+}

@@ -35,22 +35,21 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-let rec eval (st : Store.t) (s : stmt) (prog : program) : Store.t * State.t = 
+let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t = 
+  let eval' = eval prog in
   match s with
 
-  | Skip -> st, State.Normal
+  | Skip -> st,Normal
 
-  | Sequence [current_stmt]    -> eval st current_stmt prog
+  | Sequence [current_stmt]    -> eval' st current_stmt
 
   | Sequence (current_stmt::rest) ->
-      let st',out = eval st current_stmt prog in
-      if State.should_halt out then
-        st,out
-      else
-        if out = State.Normal then
-          eval st' (Sequence rest) prog
-        else
-          st',out (*here we should ignore "rest", since "out" will always have the form "Return x"*)
+      let st',out = eval' st current_stmt in
+      (match out with
+      | Normal    -> eval' st' (Sequence rest)
+      | Return _  -> st',out
+      | Error     -> st ,out
+      | AssumeF   -> st ,out)
 
   | Assign (x,e) ->
       Store.set st x (eval_expression st e);
@@ -63,7 +62,7 @@ let rec eval (st : Store.t) (s : stmt) (prog : program) : Store.t * State.t =
       let var_vals    = try List.combine params eval_args
                         with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
       let fresh_st    = Store.create var_vals in
-      let _, out      = eval fresh_st function'.body prog in
+      let _, out      = eval prog fresh_st function'.body  in
       (match out with
         | Normal | Error | AssumeF -> st,out
         | Return value -> Store.set st var value; st,Normal)
@@ -71,12 +70,12 @@ let rec eval (st : Store.t) (s : stmt) (prog : program) : Store.t * State.t =
   | IfElse (e, s1, s2) ->
       let guard = eval_expression st e in
       if is_true guard then
-        eval st s1 prog
+        eval' st s1
       else
-        eval st s2 prog
+        eval' st s2
 
   | While (e, body) as while_stmt ->
-      eval st (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip)) prog
+      eval' st (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip))
 
   | Print e  -> let _ = e |> eval_expression st |> print_value in st,Normal
 
@@ -97,5 +96,5 @@ let rec eval (st : Store.t) (s : stmt) (prog : program) : Store.t * State.t =
 let interpret (prog : program) (main_id : string) : State.t =
   let main = get_function main_id prog in
   let st = Store.create_store 100 in
-  let _, o = eval st main.body prog in
+  let _, o = eval prog st main.body in
   o

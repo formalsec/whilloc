@@ -21,7 +21,7 @@ let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : value =
   | Lte    -> lte    (v1, v2)
   | Equals -> equal  (v1, v2)
   | NEquals -> nequal (v1, v2)
-  
+
 let rec eval_expression (e : expr) : value = 
   match e with
   | Val v -> v
