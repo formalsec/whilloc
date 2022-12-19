@@ -1,8 +1,0 @@
-function multiply(x,y) {
-    return x*y
-};
-
-function aenima() {
-    f2 = multiply(f,f);
-    return f2
-}
