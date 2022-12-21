@@ -48,27 +48,27 @@ function_definition:
 (* v ::= int | bool *)
 value:
   | i = INT;
-    { Program.Number i }
+    { Expression.Number i }
   | b = BOOLEAN;
-    { Program.Boolean b }
+    { Expression.Boolean b }
 
 
 (* e ::= v | x | -e | e+e | f(e) | (e) *)
 expression:
   | v = value;
-    { Program.Val v }
+    { Expression.Val v }
   | v = VAR;
-    { Program.Var v }
+    { Expression.Var v }
   | MINUS; e = expression;
-    { Program.UnOp (Program.Neg, e) } %prec unopt_prec
+    { Expression.UnOp (Expression.Neg, e) } %prec unopt_prec
   | NOT; e = expression;
-    { Program.UnOp (Program.Not, e) } %prec unopt_prec
+    { Expression.UnOp (Expression.Not, e) } %prec unopt_prec
   | ABS; e = expression;
-    { Program.UnOp (Program.Abs, e) } %prec unopt_prec
+    { Expression.UnOp (Expression.Abs, e) } %prec unopt_prec
   | STOI; e = expression;
-    { Program.UnOp (Program.StringOfInt, e) } %prec unopt_prec
+    { Expression.UnOp (Expression.StringOfInt, e) } %prec unopt_prec
   | e1 = expression; bop = binop_target; e2 = expression;
-    { Program.BinOp (bop, e1, e2) }
+    { Expression.BinOp (bop, e1, e2) }
   | LPAREN; e=expression ; RPAREN
     { e }
 
@@ -102,18 +102,18 @@ statement_sequence:
 
 
 %inline binop_target:
-  | PLUS    { Program.Plus }
-  | MINUS   { Program.Minus }
-  | TIMES   { Program.Times }
-  | DIVIDE  { Program.Div }
-  | MODULO  { Program.Modulo }
-  | POW     { Program.Pow }
-  | GT      { Program.Gt }
-  | LT      { Program.Lt }
-  | GTE     { Program.Gte }
-  | LTE     { Program.Lte }
-  | EQUAL   { Program.Equals }
-  | NEQUAL  { Program.NEquals }
+  | PLUS    { Expression.Plus }
+  | MINUS   { Expression.Minus }
+  | TIMES   { Expression.Times }
+  | DIVIDE  { Expression.Div }
+  | MODULO  { Expression.Modulo }
+  | POW     { Expression.Pow }
+  | GT      { Expression.Gt }
+  | LT      { Expression.Lt }
+  | GTE     { Expression.Gte }
+  | LTE     { Expression.Lte }
+  | EQUAL   { Expression.Equals }
+  | NEQUAL  { Expression.NEquals }
   
 
 

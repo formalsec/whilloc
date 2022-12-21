@@ -1,26 +1,14 @@
-type uop = Neg | Not | Abs | StringOfInt
-
-type bop = Plus | Minus | Times | Div | Modulo | Pow | Gt | Lt | Gte | Lte | Equals | NEquals
-
-type value = Number of int
-        | Boolean   of bool
-
-type expr = Var   of string
-        | Val     of value    
-        | UnOp    of uop * expr
-        | BinOp   of bop * expr * expr
-
 type stmt = Skip
-        | Assign      of string * expr
+        | Assign      of string * Expression.expr
         | Sequence    of stmt list
-        | FunCall     of string * string * expr list
-        | IfElse      of expr * stmt * stmt
-        | While       of expr * stmt
-        | Return      of expr
-        | Assert      of expr
-        | Assume      of expr
+        | FunCall     of string * string * Expression.expr list
+        | IfElse      of Expression.expr * stmt * stmt
+        | While       of Expression.expr * stmt
+        | Return      of Expression.expr
+        | Assert      of Expression.expr
+        | Assume      of Expression.expr
         | Clear
-        | Print       of expr
+        | Print       of Expression.expr
 
 type symb = Symbol of string
 
@@ -39,88 +27,20 @@ let sequence_content (s : stmt) : stmt list =
   | Sequence seq -> seq
   | _ -> failwith "InternalError: tried to retrieve a statements carried along with a \"Sequence\" constructor from a non sequence constructor" 
 
-let get_value (v : value option) : value =
-  match v with
-  | None   -> failwith "InternalError: tried to retrieve a program value from None" 
-  | Some v -> v
-
 let get_function (id : string) (p : program) : func =
   try Hashtbl.find p id
   with _ -> failwith ("NameError: name " ^ id ^ " is not defined")
 
-let string_of_value (v : value) : string =
-  match v with
-  | Number  n -> "Number "  ^ (string_of_int n)
-  | Boolean b -> "Boolean " ^ (string_of_bool b)
-
-let print_value (v : value) : unit =
-  string_of_value v |> print_endline
-
-let is_true (v : value) : bool =
-match v with
-| Number  n -> if n!=0 then true else false
-| Boolean b -> b
-
-(* Operations semantic functions *)
-
-let neg (v : value) : value = match v with
-  | (Number n) -> Number (-1*n)
-  | _                -> invalid_arg "Exception in Oper.neg: this operation is only applicable to Number arguments"
-let not (v : value) : value = match v with
-  | (Boolean b) -> Boolean (not b)
-  | _                -> invalid_arg "Exception in Oper.neg: this operation is only applicable to Boolean arguments"
-let abs (v : value) : value = match v with
-  | (Number n)  -> Number (abs(n))
-  | _                -> invalid_arg "Exception in Oper.neg: this operation is only applicable to Number arguments"
-let stoi (v : value) : value = match v with
-  | _                -> invalid_arg "Exception in Oper.stoi: language does not support strings yet"
-
-let plus (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1 + n2)
-  | _                      -> invalid_arg "Exception in Oper.plus: this operation is only applicable to Number arguments"
-
-let minus (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1 - n2)
-  | _                      -> invalid_arg "Exception in Oper.minus: this operation is only applicable to Number arguments"
-
-let times (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1 * n2)
-  | _                      -> invalid_arg "Exception in Oper.times: this operation is only applicable to Number arguments"
-
-let div (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1 / n2)
-  | _                      -> invalid_arg "Exception in Oper.div: this operation is only applicable to Number arguments"
-
-let modulo (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1 mod n2)
-  | _                      -> invalid_arg "Exception in Oper.modulo: this operation is only applicable to Number arguments"
-
-let pow (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number n1, Number n2) -> Number (n1*n2) (*TODO*)
-  | _                      -> invalid_arg "Exception in Oper.modulo: this operation is only applicable to Number arguments"
-
-let equal (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number  n1, Number n2)  -> Boolean (n1=n2)
-  | (Boolean b1, Boolean b2) -> Boolean (b1=b2)
-  | _                        -> invalid_arg "Exception in Oper.equal: this operation is only applicable to Number or Boolean arguments"
-
-let nequal (v1, v2 : value * value) : value = match v1, v2 with
-  | (Number  n1, Number n2)  -> Boolean (n1!=n2)
-  | (Boolean b1, Boolean b2) -> Boolean (b1!=b2)
-  | _                        -> invalid_arg "Exception in Oper.equal: this operation is only applicable to Number or Boolean arguments"
-
-let gt (v1, v2 : value * value) : value = match v1, v2 with
-| (Number n1, Number n2) -> Boolean (n1>n2)
-| _                      -> invalid_arg "Exception in Oper.gt: this operation is only applicable to Number arguments"
-
-let lt (v1, v2 : value * value) : value = match v1, v2 with
-| (Number n1, Number n2) -> Boolean (n1<n2)
-| _                      -> invalid_arg "Exception in Oper.lt: this operation is only applicable to Number arguments"
-
-let gte (v1, v2 : value * value) : value = match v1, v2 with
-| (Number n1, Number n2)   -> Boolean (n1>=n2)
-| _                        -> invalid_arg "Exception in Oper.gte: this operation is only applicable to Number arguments"
-
-let lte (v1, v2 : value * value) : value = match v1, v2 with
-| (Number  n1, Number  n2) -> Boolean (n1<=n2)
-| _                        -> invalid_arg "Exception in Oper.lte: this operation is only applicable to Number arguments"
+let rec string_of_stmt (s : stmt) : string =
+  match s with
+  | Skip -> "skip"
+  | Assign (x,e) -> x ^ "=" ^ (Expression.string_of_expression e)
+  | Sequence s -> String.concat ";\n" (List.map string_of_stmt s)
+  | FunCall (x,f,args) -> x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")"
+  | IfElse (expr, s1, s2) -> "if (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nelse\n  " ^ string_of_stmt s2
+  | While (expr, s) -> "while (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s 
+  | Return e -> "return " ^ Expression.string_of_expression e
+  | Assert e -> "assert(" ^ Expression.string_of_expression e ^ ")"
+  | Assume e -> "assume(" ^ Expression.string_of_expression e ^ ")"
+  | Clear    -> "clear"
+  | Print  e -> "print(" ^ Expression.string_of_expression e ^ ")"
