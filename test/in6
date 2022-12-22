@@ -1,0 +1,9 @@
+function tst(x) {
+    y = 1;
+    assert(5==3)
+};
+
+function aenima() {
+    a = tst(4);
+    return 0
+}
