@@ -1,0 +1,20 @@
+function max(x,y) {
+    if (x>y) {
+        return x
+    }
+    else {
+        return y
+    }
+};
+
+function aenima() {
+    a = false;
+    print(a);
+    if (!a) {
+        return -1
+    }
+    else {
+        print(0)
+    };
+    return 0
+}
