@@ -37,90 +37,78 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
 
-let rec small_step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) : State.t * Store.t * Callstack.t = 
-  let eval = small_step prog st cs in
+let step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : Program.stmt * State.t * Store.t * Callstack.t = 
+
+  let k = State.get_continuation out in
+
   match s with
-
-  | Skip | Clear -> Cont None, st, cs
   
-  | Sequence [current_stmt] ->
-    let out,st',cs' = eval current_stmt in
-    (match out with
-      | Cont None       -> Cont None,st',cs'
-      | Cont (Some s')  -> Cont (Some (Sequence [s'])),st',cs'
-      | Return v        -> Return v ,st',cs'
-      | Error           -> Error    ,st',cs'
-      | AssumeF         -> AssumeF  ,st',cs')
+  | Skip ->
+      (match k with
+      | []     -> Skip, Cont [], st, cs
+      | h :: t -> h   , Cont t , st, cs)
+  
+  | Sequence (s1::s2) -> s1, Cont (s2@k), st, cs
 
-    (*If we have at hand a function call without anything following it, then there is nothing to evaluate after its return, thus,
-    the return value associated with the variable is inconsequential. Therefore, we simply set the state to Cont None. *)
-  | FunCall (_,_,_) -> Cont None, st, cs
-
-  | Sequence ( (FunCall (var,id,args)) :: rest) ->
+  | Assign (x,e) ->
+    Store.set st x (eval_expression st e);
+    Skip,out,st,cs
+  
+  | FunCall (var,id,args) ->
     let eval_args   = List.map (fun e -> eval_expression st e) args in
     let function'   = Program.get_function id prog in
     let params      = function'.args in
     let var_vals    = try List.combine params eval_args
                       with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
     let func_frame  = Store.create_store var_vals in
-    let cs'         = (Callstack.Intermediate (st, Sequence rest, var) ) :: cs in
-    Cont (Some function'.body),func_frame,cs'
-
-  | Sequence (current_stmt :: rest) ->
-      let out,st',cs' = eval current_stmt in
-      (match out with
-      | Cont None       -> Cont (Some (Sequence rest) ),st',cs'
-      | Cont (Some s')  -> Cont (Some (Sequence (s'::rest))),st',cs'
-      | Return v        -> Return v ,st',cs'
-      | Error           -> Error    ,st',cs'
-      | AssumeF         -> AssumeF  ,st',cs')
-
-  | Assign (x,e) ->
-    Store.set st x (eval_expression st e);
-    Cont None, st, cs
+    let cs'         = (Callstack.Intermediate (st, k, var) ) :: cs in
+    function'.body, Cont [], func_frame, cs'
 
   | IfElse (e, s1, s2) ->
-      let guard = eval_expression st e in
-      if is_true guard then
-        Cont (Some s1),st,cs
-      else
-        Cont (Some s2),st,cs
+    let guard = eval_expression st e in
+    if is_true guard then
+      s1,out,st,cs
+    else
+      s2,out,st,cs
 
   | While (e, body) as while_stmt ->
-      Cont (Some ( IfElse(e, Sequence ( (sequence_content body) @ [while_stmt] ), Skip ) ) ),st,cs
+      (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip)),out,st,cs
 
-  | Print e  -> let _ = e |> eval_expression st |> print_value in Cont None,st,cs
+  | Print e  -> let _ = e |> eval_expression st |> print_value in Skip,out,st,cs
 
   | Return e ->
       let v     = eval_expression st e in
       let frame = Callstack.top cs in
       let cs'   = Callstack.pop cs in
         (match frame with
-        | Callstack.Intermediate (st',s',x) -> (Store.set st' x v;
-                                                Cont (Some s'),st',cs')
-        | Callstack.Toplevel -> Return v,st,cs)
-        
+        | Callstack.Intermediate (st',rest,x) -> (Store.set st' x v;
+                                                  Skip, Cont rest, st', cs')
+        | Callstack.Toplevel -> Skip, Return v, st, cs)
+
   | Assert e -> 
       let v = eval_expression st e in
-      if is_true v then Cont None,st,cs
-      else              Error,st,cs
+      if is_true v then Skip,out,st,cs
+      else              Skip,Error,st,cs
 
   | Assume e -> 
       let v = eval_expression st e in
-      if is_true v then Cont None,st,cs
-      else              AssumeF,st,cs
+      if is_true v then Skip,out,st,cs
+      else              Skip,AssumeF,st,cs
 
-  | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
+  | _    -> failwith "TODO command"
 
-let rec eval (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) : State.t * Store.t * Callstack.t = 
-  let o,st',cs' = small_step prog st cs s in
-  match o with
-  | Cont (Some s') -> eval prog st' cs' s'
-  | _              -> o,st',cs'
+let rec eval (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : State.t * Store.t * Callstack.t = 
+  let stmt',out',st',cs' = step prog st cs s out in
+  match stmt',out' with
+  | Skip, Cont []  -> Cont [] ,st',cs'
+  | _,    Error    -> Error   ,st',cs'
+  | _,    AssumeF  -> AssumeF ,st',cs'
+  | _,    Return v -> Return v,st',cs'
+  | _              -> eval prog st' cs' stmt' out'
 
 let interpret (prog : program) (main_id : string) : State.t =
   let main = get_function main_id prog in
   let st   = Store.create_empty_store 100 in
   let cs   = [Callstack.Toplevel] in
-  let o, _, _ = eval prog st cs main.body in
+  let o, _, _ = eval prog st cs Skip (Cont (sequence_content main.body)) in
   o
