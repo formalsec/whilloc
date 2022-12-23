@@ -40,7 +40,7 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
   let eval' = eval prog in
   match s with
 
-  | Skip | Clear -> st,Cont None
+  | Skip | Clear -> st,Cont []
 
   | Sequence [current_stmt]    -> eval' st current_stmt
 
@@ -52,7 +52,7 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
 
   | Assign (x,e) ->
       Store.set st x (eval_expression st e);
-      st,Cont None
+      st,Cont []
 
   | FunCall (var,id,args) ->
       let eval_args   = List.map (fun e -> eval_expression st e) args in
@@ -64,7 +64,7 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
       let _, out      = eval prog fresh_st function'.body  in
       (match out with
         | Cont _ | Error | AssumeF -> st,out
-        | Return value -> Store.set st var value; st,Cont None)
+        | Return value -> Store.set st var value; st,Cont [])
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression st e in
@@ -73,21 +73,21 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
       else
         eval' st s2
 
-  | While (e, body) as while_stmt -> (*unfold the while loop by testing, iteration for iteration, if the guard evaluates to true*)
+  | While (e, body) as while_stmt ->
       eval' st (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip))
 
-  | Print e  -> let _ = e |> eval_expression st |> print_value in st,Cont None
+  | Print e  -> let _ = e |> eval_expression st |> print_value in st,Cont []
 
   | Return e -> st,Return (eval_expression st e)
 
   | Assert e -> 
       let v = eval_expression st e in
-      if is_true v then st,Cont None
+      if is_true v then st,Cont []
       else              st,Error
 
   | Assume e -> 
       let v = eval_expression st e in
-      if is_true v then st,Cont None
+      if is_true v then st,Cont []
       else              st,AssumeF
   
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"

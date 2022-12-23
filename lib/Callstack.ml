@@ -1,4 +1,4 @@
-type frame = Intermediate of (Store.t * Program.stmt * string) | Toplevel
+type frame = Intermediate of (Store.t * Program.stmt list * string) | Toplevel
 
 type t = frame list
 
