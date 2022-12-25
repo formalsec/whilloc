@@ -25,7 +25,7 @@ type program = (string, func) Hashtbl.t
 let sequence_content (s : stmt) : stmt list =
   match s with
   | Sequence seq -> seq
-  | _ -> failwith "InternalError: tried to retrieve a statements carried along with a \"Sequence\" constructor from a non sequence constructor" 
+  | _            -> failwith "InternalError: tried to retrieve a statements carried along with a \"Sequence\" constructor from a non sequence constructor" 
 
 let get_function (id : string) (p : program) : func =
   try Hashtbl.find p id

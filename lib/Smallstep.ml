@@ -39,16 +39,16 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
 
 let step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : Program.stmt * State.t * Store.t * Callstack.t = 
 
-  let k = State.get_continuation out in
+  let continuation = State.get_continuation out in
 
   match s with
   
   | Skip ->
-      (match k with
+      (match continuation with
       | []     -> Skip, Cont [], st, cs
       | h :: t -> h   , Cont t , st, cs)
   
-  | Sequence (s1::s2) -> s1, Cont (s2@k), st, cs
+  | Sequence (s1::s2) -> s1, Cont (s2@continuation), st, cs
 
   | Assign (x,e) ->
     Store.set st x (eval_expression st e);
@@ -61,7 +61,7 @@ let step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : St
     let var_vals    = try List.combine params eval_args
                       with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
     let func_frame  = Store.create_store var_vals in
-    let cs'         = (Callstack.Intermediate (st, k, var) ) :: cs in
+    let cs'         = (Callstack.Intermediate (st, continuation, var) ) :: cs in
     function'.body, Cont [], func_frame, cs'
 
   | IfElse (e, s1, s2) ->
@@ -95,7 +95,7 @@ let step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : St
       if is_true v then Skip,out,st,cs
       else              Skip,AssumeF,st,cs
 
-  | _    -> failwith "TODO command"
+  | _    -> failwith ("InternalError: missing implementation of command " ^ (string_of_stmt s) )
 
 let rec eval (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : State.t * Store.t * Callstack.t = 
   let stmt',out',st',cs' = step prog st cs s out in
