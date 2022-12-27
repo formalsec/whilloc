@@ -1,9 +1,10 @@
-function tst(x) {
+function is_one(x) {
     y = 1;
-    assert(5==3)
+    assert(x==1);
+    return 73
 };
 
 function aenima() {
-    a = tst(4);
-    return 0
+    a = is_one(1);
+    return a
 }

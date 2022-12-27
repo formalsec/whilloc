@@ -50,6 +50,7 @@ function aenima() {
     print(d+e);
     f = 3;
     f2 = multiply(f,f);
+    print(f2);
 
     if ( (f*f) == f2) {
         g = true

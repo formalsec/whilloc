@@ -34,13 +34,16 @@ let get_function (id : string) (p : program) : func =
 let rec string_of_stmt (s : stmt) : string =
   match s with
   | Skip -> "skip"
-  | Assign (x,e) -> x ^ "=" ^ (Expression.string_of_expression e)
-  | Sequence s -> String.concat ";\n" (List.map string_of_stmt s)
-  | FunCall (x,f,args) -> x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")"
-  | IfElse (expr, s1, s2) -> "if (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nelse\n  " ^ string_of_stmt s2
-  | While (expr, s) -> "while (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s 
-  | Return e -> "return " ^ Expression.string_of_expression e
-  | Assert e -> "assert(" ^ Expression.string_of_expression e ^ ")"
-  | Assume e -> "assume(" ^ Expression.string_of_expression e ^ ")"
-  | Clear    -> "clear"
-  | Print  e -> "print(" ^ Expression.string_of_expression e ^ ")"
+  | Assign (x,e) -> "Assignment:\n" ^ x ^ "=" ^ (Expression.string_of_expression e)
+  | Sequence s -> "Sequence:\n" ^ String.concat ";\n" (List.map string_of_stmt s)
+  | FunCall (x,f,args) -> "FunCall:\n" ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")"
+  | IfElse (expr, s1, s2) -> "IfElse:\n" ^ "if (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nelse\n  " ^ string_of_stmt s2
+  | While (expr, s) -> "While:\n" ^ "while (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s 
+  | Return e -> "Return:\n" ^ "return " ^ Expression.string_of_expression e
+  | Assert e -> "Assert:\n" ^ "assert(" ^ Expression.string_of_expression e ^ ")"
+  | Assume e -> "Assume:\n" ^ "assume(" ^ Expression.string_of_expression e ^ ")"
+  | Clear    -> "Clear:\n"  ^ "clear"
+  | Print  e -> "Print:\n"  ^ "print(" ^ Expression.string_of_expression e ^ ")"
+
+let print_statement (s : stmt) : unit =
+  s |> string_of_stmt |> print_endline

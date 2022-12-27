@@ -5,10 +5,20 @@ function factorial(x) {
         res = res*y;
         y = y+1
     };
-    return res
+    if (false) {
+        print(false)
+    }
+    else {
+        return res
+    };
+    return -1;
+    print(true)
 };
 
 function aenima() {
-    a = factorial(6);
+    a = factorial(4);
+    print(a);
+    return 12;
+    print(a);
     print(a)
 }

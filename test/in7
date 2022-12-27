@@ -1,15 +1,12 @@
-function max(x,y) {
-    if (x>y) {
-        return x
-    }
-    else {
-        return y
-    }
+function f(x,y) {
+    print(true);
+    return 1
 };
 
 function aenima() {
-    a = false;
-    print(a);
+    x = f(5,6);
+    print(x);
+    a=true;
     if (!a) {
         return -1
     }

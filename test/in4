@@ -4,6 +4,8 @@ function multiply(x,y) {
 
 function increment_twice(x) {
     x = increment(x);
+    y = x;
+    print(y);
     x = increment(x);
     return x
 };

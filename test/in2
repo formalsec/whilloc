@@ -3,7 +3,6 @@ function increment(x) {
 };
 
 function multiply(x,y) {
-    y = y+10;
     return x*y
 };
 
@@ -13,11 +12,13 @@ function aenima() {
     z = multiply(x,y);
     print(z);
     z = increment(y);
-    if (y==2) {
+    if (z==2) {
         print(true)
     }
     else {
         print(false)
     };
-    print(z)
+    print(z);
+    print(y);
+    return -1
 }
