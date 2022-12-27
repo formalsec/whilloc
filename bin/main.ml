@@ -21,6 +21,6 @@ let main =
   let entry_point = "aenima" in
   let program     = filename |> read_file |> parse_program |> create_program in
   let prog_state  = Smallstep.interpret program entry_point in
-  print_endline (State.string_of_state prog_state)
+  print_endline (Outcome.string_of_outcome prog_state)
 
 let _ = main
