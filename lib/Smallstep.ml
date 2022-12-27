@@ -1,5 +1,6 @@
 open Program
 open Expression
+open Outcome
 
 let eval_unop_expr (op : uop) (v : value) : value =
   match op with
@@ -37,78 +38,80 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
 
-let step (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : Program.stmt * State.t * Store.t * Callstack.t = 
+let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Program.stmt * State.t * Outcome.t = 
 
-  let continuation = State.get_continuation out in
+  let store,cont,cs = state in
 
   match s with
   
   | Skip ->
-      (match continuation with
-      | []     -> Skip, Cont [], st, cs
-      | h :: t -> h   , Cont t , st, cs)
+      (match cont with
+      | []     -> Skip,  state        , Cont
+      | h :: t -> h   , (store, t, cs), Cont)
   
-  | Sequence (s1::s2) -> s1, Cont (s2@continuation), st, cs
+  | Sequence (s1::s2) -> s1, (store, s2@cont, cs), Cont
 
   | Assign (x,e) ->
-    Store.set st x (eval_expression st e);
-    Skip,out,st,cs
+      Store.set store x (eval_expression store e);
+      Skip,(store,cont,cs),Cont
   
   | FunCall (var,id,args) ->
-    let eval_args   = List.map (fun e -> eval_expression st e) args in
-    let function'   = Program.get_function id prog in
-    let params      = function'.args in
-    let var_vals    = try List.combine params eval_args
-                      with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
-    let func_frame  = Store.create_store var_vals in
-    let cs'         = (Callstack.Intermediate (st, continuation, var) ) :: cs in
-    function'.body, Cont [], func_frame, cs'
-
-  | IfElse (e, s1, s2) ->
-    let guard = eval_expression st e in
-    if is_true guard then
-      s1,out,st,cs
-    else
-      s2,out,st,cs
-
-  | While (e, body) as while_stmt ->
-      (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip)),out,st,cs
-
-  | Print e  -> let _ = e |> eval_expression st |> print_value in Skip,out,st,cs
+      let eval_args   = List.map (fun e -> eval_expression store e) args in
+      let function'   = Program.get_function id prog in
+      let params      = function'.args in
+      let var_vals    = try List.combine params eval_args
+                        with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
+      let func_frame  = Store.create_store var_vals in
+      let cs'         = (Callstack.Intermediate (store, cont, var) ) :: cs in
+      function'.body, (func_frame, [], cs'), Cont
 
   | Return e ->
-      let v     = eval_expression st e in
-      let frame = Callstack.top cs in
-      let cs'   = Callstack.pop cs in
-        (match frame with
-        | Callstack.Intermediate (st',rest,x) -> (Store.set st' x v;
-                                                  Skip, Cont rest, st', cs')
-        | Callstack.Toplevel -> Skip, Return v, st, cs)
+    let v     = eval_expression store e in
+    let frame = Callstack.top cs in
+    let cs'   = Callstack.pop cs in
+      (match frame with
+      | Callstack.Intermediate (store',rest,var) -> (Store.set store' var v;
+                                                     Skip, (store',rest,cs'), Cont)
+      | Callstack.Toplevel -> Skip, (store,cont,cs'), Return v)
+
+  | IfElse (e, s1, s2) ->
+      let guard = eval_expression store e in
+      if is_true guard then
+        s1,state,out
+      else
+        s2,state,out
+
+  | While (e, body) as while_stmt ->
+      (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip)),state,out
 
   | Assert e -> 
-      let v = eval_expression st e in
-      if is_true v then Skip,out,st,cs
-      else              Skip,Error,st,cs
+      let v = eval_expression store e in
+      if is_true v then Skip,state,Cont
+      else              Skip,state,Error
 
   | Assume e -> 
-      let v = eval_expression st e in
-      if is_true v then Skip,out,st,cs
-      else              Skip,AssumeF,st,cs
+      let v = eval_expression store e in
+      if is_true v then Skip,state,Cont
+      else              Skip,state,AssumeF
+
+  | Print e  -> let _ = e |> eval_expression store |> print_value in Skip,state,out
 
   | _    -> failwith ("InternalError: missing implementation of command " ^ (string_of_stmt s) )
 
-let rec eval (prog : program) (st : Store.t) (cs : Callstack.t) (s : stmt) (out : State.t) : State.t * Store.t * Callstack.t = 
-  let stmt',out',st',cs' = step prog st cs s out in
-  match stmt',out' with
-  | Skip, Cont []  -> Cont [] ,st',cs'
-  | _,    Error    -> Error   ,st',cs'
-  | _,    AssumeF  -> AssumeF ,st',cs'
-  | _,    Return v -> Return v,st',cs'
-  | _              -> eval prog st' cs' stmt' out'
+let rec eval (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Outcome.t * State.t  = 
 
-let interpret (prog : program) (main_id : string) : State.t =
-  let main = get_function main_id prog in
-  let st   = Store.create_empty_store 100 in
-  let cs   = [Callstack.Toplevel] in
-  let o, _, _ = eval prog st cs Skip (Cont (sequence_content main.body)) in
+  let stmt',state',out'  = step prog state s out in
+  let (_,cont',_) = state' in
+
+  match stmt',out',cont' with
+  | Skip, Cont    , [] -> failwith "BadProgram: functions should always return a value"
+  | _,    Error   , _  -> out',state'
+  | _,    AssumeF , _  -> out',state'
+  | _,    Return _, _  -> out',state'
+  | _                  -> eval prog state' stmt' out'
+
+let interpret (prog : program) (main_id : string) : Outcome.t =
+  let main  = get_function main_id prog in
+  let state = ( Store.create_empty_store 100, [main.body], [Callstack.Toplevel] ) in
+  let o, _  = eval prog state Skip Cont in
   o

@@ -36,23 +36,24 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t = 
+let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
   let eval' = eval prog in
   match s with
 
-  | Skip | Clear -> st,Cont []
+  | Skip | Clear -> st,Cont
 
   | Sequence [current_stmt]    -> eval' st current_stmt
 
   | Sequence (current_stmt::rest) ->
       let st',out = eval' st current_stmt in
       (match out with
-      | Cont _    -> eval' st' (Sequence rest)
-      | Return _ | Error | AssumeF -> st ,out)
+      | Cont    -> eval' st' (Sequence rest)
+      | Error | AssumeF -> st,out
+      | Return _ -> st,out)
 
   | Assign (x,e) ->
       Store.set st x (eval_expression st e);
-      st,Cont []
+      st,Cont
 
   | FunCall (var,id,args) ->
       let eval_args   = List.map (fun e -> eval_expression st e) args in
@@ -63,8 +64,9 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
       let fresh_st    = Store.create_store var_vals in
       let _, out      = eval prog fresh_st function'.body  in
       (match out with
-        | Cont _ | Error | AssumeF -> st,out
-        | Return value -> Store.set st var value; st,Cont [])
+        | Cont            -> failwith ("BadProgram: function \"" ^ id ^ "\" did not return a value")
+        | Error | AssumeF -> st,out
+        | Return value    -> Store.set st var value; st,Cont)
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression st e in
@@ -76,25 +78,27 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * State.t =
   | While (e, body) as while_stmt ->
       eval' st (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip))
 
-  | Print e  -> let _ = e |> eval_expression st |> print_value in st,Cont []
+  | Print e  -> let _ = e |> eval_expression st |> print_value in st,Cont
 
   | Return e -> st,Return (eval_expression st e)
 
   | Assert e -> 
       let v = eval_expression st e in
-      if is_true v then st,Cont []
+      if is_true v then st,Cont
       else              st,Error
 
   | Assume e -> 
       let v = eval_expression st e in
-      if is_true v then st,Cont []
+      if is_true v then st,Cont
       else              st,AssumeF
   
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
   
 
-let interpret (prog : program) (main_id : string) : State.t =
+let interpret (prog : program) (main_id : string) : Outcome.t =
   let main = get_function main_id prog in
   let st   = Store.create_empty_store 100 in
   let _, o = eval prog st main.body in
-  o
+  match o with
+  | Cont -> failwith "BadProgram: main function did not return a value"
+  | _    -> o
