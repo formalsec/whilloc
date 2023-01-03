@@ -4,7 +4,7 @@ open Expression
 let eval_unop_expr (op : uop) (v : value) : value =
   match op with
   | Neg -> neg v
-  | Not -> not v
+  | Not -> not_ v
   | Abs -> abs v
   | StringOfInt -> stoi v
 
@@ -22,19 +22,27 @@ let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : value =
   | Lte     -> lte    (v1, v2)
   | Equals  -> equal  (v1, v2)
   | NEquals -> nequal (v1, v2)
+  | Or      -> or_ (v1, v2)
+  | And     -> and_ (v1, v2)
+  | Xor     -> xor (v1, v2)
+  | ShiftL  -> shl (v1, v2)
+  | ShiftR  -> shr (v1, v2)
 
 let rec eval_expression (st : Store.t) (e : expr) : value = 
   match e with
   
   | Var x ->
       let value = Store.get st x in
-      if  value = None then failwith ("NameError: name " ^ x ^ " is not defined")
-      else Expression.get_value value
+      (match value with
+      | None    -> failwith ("NameError: name " ^ x ^ " is not defined")
+      | Some v  -> v)
   
   | Val v -> v
 
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
+
+  | SymbVal s -> failwith ("ApplicationError: tried to use a symbolic value " ^ s ^ " in a concrete execution context")
 
 let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
   let eval' = eval prog in
@@ -92,8 +100,10 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
       if is_true v then st,Cont
       else              st,AssumeF
   
+  | Symbol s -> failwith ("ApplicationError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
-  
+
 
 let interpret (prog : program) (main_id : string) : Outcome.t =
   let main = get_function main_id prog in

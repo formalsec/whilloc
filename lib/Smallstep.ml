@@ -5,7 +5,7 @@ open Outcome
 let eval_unop_expr (op : uop) (v : value) : value =
   match op with
   | Neg -> neg v
-  | Not -> not v
+  | Not -> not_ v
   | Abs -> abs v
   | StringOfInt -> stoi v
 
@@ -23,20 +23,28 @@ let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : value =
   | Lte     -> lte    (v1, v2)
   | Equals  -> equal  (v1, v2)
   | NEquals -> nequal (v1, v2)
+  | Or      -> or_    (v1, v2)
+  | And     -> and_   (v1, v2)
+  | Xor     -> xor    (v1, v2)
+  | ShiftL  -> shl    (v1, v2)
+  | ShiftR  -> shr    (v1, v2)
 
 let rec eval_expression (st : Store.t) (e : expr) : value = 
   match e with
   
   | Var x ->
       let value = Store.get st x in
-      if  value = None then failwith ("NameError: name " ^ x ^ " is not defined")
-      else Expression.get_value value
+      (match value with
+      | None    -> failwith ("NameError: name " ^ x ^ " is not defined")
+      | Some v  -> v)
   
   | Val v -> v
 
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
+  | SymbVal x -> failwith ("InternalError: tried to evaluate a symbolic value " ^ x ^ " in a concrete execution context")
+  
 
 let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Program.stmt * State.t * Outcome.t = 
 
@@ -44,9 +52,9 @@ let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Progr
 
   match s with
   
-  | Skip ->
+  | Skip | Clear ->
       (match cont with
-      | []     -> Skip,  state        , Cont
+      | []     -> Skip,     state     , Cont
       | h :: t -> h   , (store, t, cs), Cont)
   
   | Sequence (s1::s2) -> s1, (store, s2@cont, cs), Cont
@@ -72,7 +80,7 @@ let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Progr
       (match frame with
       | Callstack.Intermediate (store',rest,var) -> (Store.set store' var v;
                                                      Skip, (store',rest,cs'), Cont)
-      | Callstack.Toplevel -> Skip, (store,cont,cs'), Return v)
+      | Callstack.Toplevel -> let _ = assert(List.length cs'=0) in Skip, (store,cont,cs'), Return v)
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression store e in
@@ -96,7 +104,9 @@ let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Progr
 
   | Print e  -> let _ = e |> eval_expression store |> print_value in Skip,state,out
 
-  | _    -> failwith ("InternalError: missing implementation of command " ^ (string_of_stmt s) )
+  | Symbol s -> failwith ("InternalError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+
+  | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 
 let rec eval (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Outcome.t * State.t  = 
 
