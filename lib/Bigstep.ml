@@ -34,7 +34,7 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | Var x ->
       let value = Store.get st x in
       (match value with
-      | None    -> failwith ("NameError: name " ^ x ^ " is not defined")
+      | None    -> failwith ("NameError: name \'" ^ x ^ "\' is not defined")
       | Some v  -> v)
   
   | Val v -> v
@@ -42,72 +42,76 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal s -> failwith ("ApplicationError: tried to use a symbolic value " ^ s ^ " in a concrete execution context")
+  | SymbVal s -> failwith ("ApplicationError: tried to use a symbolic value \'" ^ s ^ "\' in a concrete execution context")
 
-let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
+let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t =
   let eval' = eval prog in
   match s with
 
-  | Skip | Clear -> st,Cont
+  | Skip | Clear -> store,Cont
 
-  | Sequence [current_stmt]    -> eval' st current_stmt
+  | Sequence [current_stmt] -> eval' store current_stmt
 
   | Sequence (current_stmt::rest) ->
-      let st',out = eval' st current_stmt in
+      let store',out = eval' store current_stmt in
       (match out with
-      | Cont    -> eval' st' (Sequence rest)
-      | Error | AssumeF | Return _ -> st,out)
+      | Cont    -> eval' store' (Sequence rest)
+      | Error | AssumeF | Return _ -> store,out)
 
   | Assign (x,e) ->
-      Store.set st x (eval_expression st e);
-      st,Cont
+      Store.set store x (eval_expression store e);
+      store,Cont
 
   | FunCall (var,id,args) ->
-      let eval_args   = List.map (fun e -> eval_expression st e) args in
+      let eval_args   = List.map (fun e -> eval_expression store e) args in
       let function'   = Program.get_function id prog in
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
-                        with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
+                        with _ -> failwith ("TypeError: argument arity mismatch when calling \'" ^ id ^ "\'") in
       let fresh_st    = Store.create_store var_vals in
       let _, out      = eval prog fresh_st function'.body  in
       (match out with
         | Cont            -> failwith ("BadProgram: function \"" ^ id ^ "\" did not return a value")
-        | Error | AssumeF -> st,out
-        | Return value    -> Store.set st var value; st,Cont)
+        | Error | AssumeF -> store,out
+        | Return e        -> Store.set store var (eval_expression fresh_st e); store,Cont)
 
   | IfElse (e, s1, s2) ->
-      let guard = eval_expression st e in
+      let guard = eval_expression store e in
       if is_true guard then
-        eval' st s1
+        eval' store s1
       else
-        eval' st s2
+        eval' store s2
 
   | While (e, body) as while_stmt ->
-      eval' st (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip))
+      eval' store (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip))
 
-  | Print e  -> let _ = e |> eval_expression st |> print_value in st,Cont
+  | Print exprs ->
+      let eval_exprs = List.map (eval_expression store) exprs in
+      let ()         = List.iter print_value eval_exprs in
+      let ()         = print_endline "" in
+      store,Cont
 
-  | Return e -> st,Return (eval_expression st e)
+  | Return e -> store,Return e
 
   | Assert e -> 
-      let v = eval_expression st e in
-      if is_true v then st,Cont
-      else              st,Error
+      let v = eval_expression store e in
+      if is_true v then store,Cont
+      else              store,Error
 
   | Assume e -> 
-      let v = eval_expression st e in
-      if is_true v then st,Cont
-      else              st,AssumeF
+      let v = eval_expression store e in
+      if is_true v then store,Cont
+      else              store,AssumeF
   
-  | Symbol s    -> failwith ("ApplicationError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+  | Symbol s    -> failwith ("ApplicationError: tried to declarate a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 
 
 let interpret (prog : program) (main_id : string) : Outcome.t =
-  let main = get_function main_id prog in
-  let st   = Store.create_empty_store 100 in
-  let _, o = eval prog st main.body in
+  let main  = get_function main_id prog in
+  let store = Store.create_empty_store 100 in
+  let _, o  = eval prog store main.body in
   match o with
   | Cont -> failwith "BadProgram: main function did not return a value"
   | _    -> o

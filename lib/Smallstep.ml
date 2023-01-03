@@ -43,25 +43,27 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal x -> failwith ("InternalError: tried to evaluate a symbolic value " ^ x ^ " in a concrete execution context")
+  | SymbVal x -> failwith ("InternalError: tried to evaluate a symbolic value \'" ^ x ^ "\' in a concrete execution context")
   
 
-let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Program.stmt * State.t * Outcome.t = 
+let step (prog : program) (state : State.t) : State.t * Outcome.t = 
 
-  let store,cont,cs = state in
+  let s,cont,store,cs = state in
+  (*let after_state = cont, store, cs in*)
+  let atomic_step = Skip, cont, store, cs in (*maybe 'trivial_step' or 'trivial_state' or 'trivial_step' are more suitable names*)
 
   match s with
   
   | Skip | Clear ->
       (match cont with
-      | []     -> Skip,     state     , Cont
-      | h :: t -> h   , (store, t, cs), Cont)
+      | []     ->        state     , Cont
+      | h :: t -> (h, t, store, cs), Cont)
   
-  | Sequence (s1::s2) -> s1, (store, s2@cont, cs), Cont
+  | Sequence (s1::s2) -> (s1, s2@cont, store, cs), Cont
 
   | Assign (x,e) ->
       Store.set store x (eval_expression store e);
-      Skip,(store,cont,cs),Cont
+      atomic_step, Cont
   
   | FunCall (var,id,args) ->
       let eval_args   = List.map (fun e -> eval_expression store e) args in
@@ -71,57 +73,65 @@ let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Progr
                         with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
       let func_frame  = Store.create_store var_vals in
       let cs'         = (Callstack.Intermediate (store, cont, var) ) :: cs in
-      function'.body, (func_frame, [], cs'), Cont
+      (function'.body, [], func_frame, cs'), Cont
 
   | Return e ->
     let v     = eval_expression store e in
     let frame = Callstack.top cs in
     let cs'   = Callstack.pop cs in
       (match frame with
-      | Callstack.Intermediate (store',rest,var) -> (Store.set store' var v;
-                                                     Skip, (store',rest,cs'), Cont)
-      | Callstack.Toplevel -> let _ = assert(List.length cs'=0) in Skip, (store,cont,cs'), Return v)
+      | Callstack.Intermediate (store',rest,var)  -> (Store.set store' var v;
+                                                     (Skip, rest, store', cs'), Cont)
+      | Callstack.Toplevel  -> (Skip, cont, store, cs'), Return e)
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression store e in
       if is_true guard then
-        s1,state,out
+        (s1, cont, store, cs), Cont
       else
-        s2,state,out
+        (s2, cont, store, cs), Cont
 
   | While (e, body) as while_stmt ->
-      (IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip)),state,out
+      let guard = eval_expression store e in
+      if is_true guard then
+        (body, while_stmt::cont, store, cs), Cont
+      else
+        (Skip, cont, store, cs), Cont
 
   | Assert e -> 
       let v = eval_expression store e in
-      if is_true v then Skip,state,Cont
-      else              Skip,state,Error
+      if is_true v then atomic_step, Cont
+      else              atomic_step, Error
 
   | Assume e -> 
       let v = eval_expression store e in
-      if is_true v then Skip,state,Cont
-      else              Skip,state,AssumeF
+      if is_true v then atomic_step, Cont
+      else              atomic_step, AssumeF
 
-  | Print e  -> let _ = e |> eval_expression store |> print_value in Skip,state,out
+  | Print exprs  -> 
+      let eval_exprs = List.map (eval_expression store) exprs in
+      let ()         = List.iter print_value eval_exprs in
+      let ()         = print_endline "" in
+      atomic_step, Cont
 
-  | Symbol s    -> failwith ("InternalError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+  | Symbol s    -> failwith ("InternalError: tried to declarate a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 
-let rec eval (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Outcome.t * State.t  = 
+let rec eval (prog : program) (state : State.t) : State.t * Outcome.t = 
 
-  let stmt',state',out'  = step prog state s out in
-  let (_,cont',_) = state' in
+  let state',out' = step prog state in
+  let (stmt',cont',_,_) = state' in
 
-  match stmt',out',cont' with
-  | Skip, Cont    , [] -> failwith "BadProgram: functions should always return a value"
-  | _,    Error   , _  -> out',state'
-  | _,    AssumeF , _  -> out',state'
-  | _,    Return _, _  -> out',state'
-  | _                  -> eval prog state' stmt' out'
+  match stmt',cont',out' with
+  | Skip, [], Cont     -> failwith "BadProgram: functions should always return a value"
+  | _,    _ , Error    -> state',out'
+  | _,    _ , AssumeF  -> state',out'
+  | _,    _ , Return _ -> state',out'
+  | _                  -> eval prog state'
 
 let interpret (prog : program) (main_id : string) : Outcome.t =
   let main  = get_function main_id prog in
-  let state = (Store.create_empty_store 100, [main.body], [Callstack.Toplevel]) in
-  let o, _  = eval prog state Skip Cont in
+  let state = (Skip, [main.body], Store.create_empty_store 100, [Callstack.Toplevel]) in
+  let _, o  = eval prog state in
   o
