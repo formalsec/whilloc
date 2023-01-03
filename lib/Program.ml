@@ -9,8 +9,7 @@ type stmt = Skip
         | Assume      of Expression.expr
         | Clear
         | Print       of Expression.expr
-
-type symb = Symbol of string
+        | Symbol      of string
 
 type func = {
   id   : string;
@@ -21,6 +20,11 @@ type func = {
 type program = (string, func) Hashtbl.t
 
 (* Helper functions *)
+
+let get_symb_id (s : stmt) : string = 
+  match s with
+  | Symbol x -> x
+  | _        -> failwith "InternalError: tried to get the id from a supposedely symbolic variable" 
 
 let sequence_content (s : stmt) : stmt list =
   match s with
@@ -44,6 +48,7 @@ let rec string_of_stmt (s : stmt) : string =
   | Assume e -> "Assume:\n" ^ "assume(" ^ Expression.string_of_expression e ^ ")"
   | Clear    -> "Clear:\n"  ^ "clear"
   | Print  e -> "Print:\n"  ^ "print(" ^ Expression.string_of_expression e ^ ")"
+  | Symbol s -> "Symbol declaration: " ^ s ^ "\n"
 
 let print_statement (s : stmt) : unit =
   s |> string_of_stmt |> print_endline
