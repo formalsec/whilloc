@@ -56,8 +56,7 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
       let st',out = eval' st current_stmt in
       (match out with
       | Cont    -> eval' st' (Sequence rest)
-      | Error | AssumeF -> st,out
-      | Return _ -> st,out)
+      | Error | AssumeF | Return _ -> st,out)
 
   | Assign (x,e) ->
       Store.set st x (eval_expression st e);
@@ -100,7 +99,7 @@ let rec eval (prog : program) (st : Store.t) (s : stmt) : Store.t * Outcome.t =
       if is_true v then st,Cont
       else              st,AssumeF
   
-  | Symbol s -> failwith ("ApplicationError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+  | Symbol s    -> failwith ("ApplicationError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 

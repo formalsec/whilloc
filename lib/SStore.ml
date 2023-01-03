@@ -1,4 +1,4 @@
-type t = (string, Expression.expr) Hashtbl.t (*function from Var to Expressions*)
+type t = (string, Expression.expr) Hashtbl.t (*partial function from Var to Expressions*)
 
 let create_empty_store (size : int) : t =
   Hashtbl.create size

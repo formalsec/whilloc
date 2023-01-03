@@ -104,7 +104,7 @@ let step (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : Progr
 
   | Print e  -> let _ = e |> eval_expression store |> print_value in Skip,state,out
 
-  | Symbol s -> failwith ("InternalError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
+  | Symbol s    -> failwith ("InternalError: tried to declarate a symbolic variable " ^ s ^ " in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 
@@ -122,6 +122,6 @@ let rec eval (prog : program) (state : State.t) (s : stmt) (out : Outcome.t) : O
 
 let interpret (prog : program) (main_id : string) : Outcome.t =
   let main  = get_function main_id prog in
-  let state = ( Store.create_empty_store 100, [main.body], [Callstack.Toplevel] ) in
+  let state = (Store.create_empty_store 100, [main.body], [Callstack.Toplevel]) in
   let o, _  = eval prog state Skip Cont in
   o
