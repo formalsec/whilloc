@@ -11,8 +11,8 @@ type expr = Var     of string
           | BinOp   of bop * expr * expr
           | SymbVal of string
 
-let make_symb_value (name : string) : string = (*X̂x̂*)
-  "X̂__"  ^ name
+let make_symb_value (name : string) : expr = (*X̂x̂*)
+  SymbVal ("X̂__"  ^ name)
 
 let rec is_symbolic_expression (e : expr) : bool =
   match e with
@@ -132,14 +132,14 @@ let string_of_value (v : value) : string =
 
 let rec string_of_expression (e : expr) : string =
   match e with
-  | Var x -> "variable " ^ x
-  | Val v -> "value " ^ string_of_value v
+  | Var x -> "Variable " ^ x (*^ " = " ^ string_of_value( Expression.eval_expression store e ) if I move the 'expressions' logic to the Expression module... *)
+  | Val v -> "Value (" ^ string_of_value v ^ ")"
   | UnOp  (op, v)      -> (string_of_uop op) ^ (string_of_expression v)
   | BinOp (op, v1, v2) -> (string_of_expression v1) ^ (string_of_bop op) ^ (string_of_expression v2)
-  | SymbVal x -> "symbol value " ^ x
+  | SymbVal x -> "Symbol value (" ^ x ^ ")"
   
 let print_value (v : value) : unit =
-  string_of_value v |> print_endline
+  string_of_value v |> print_string
 
 let print_expression (e : expr) : unit =
-  string_of_expression e |> print_endline
+  string_of_expression e |> print_string

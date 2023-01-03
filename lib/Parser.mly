@@ -95,8 +95,8 @@ statement:
     { Program.While (e, s) }
   | RETURN; e = expression;
     { Program.Return e }
-  | PRINT; e = expression;
-    { Program.Print e }
+  | PRINT; LPAREN; exprs = separated_nonempty_list(COMMA, expression); RPAREN;
+    { Program.Print exprs }
   | v = VAR; DEFEQ; SYMBOL;
     { Program.Symbol v }
 
