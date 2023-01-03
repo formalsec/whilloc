@@ -1,7 +1,7 @@
 function aenima() {
     x = 5;
+    print(x+1);
     y = symbol;
-    print(x);
-    print(y);
+    print(y+3+x*2);
     return x
 }

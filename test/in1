@@ -38,19 +38,35 @@ function C(n,k) {
 };
 
 function aenima() {
+
     a = 3;
     b = factorial(3);
     print(b);
+
     c = C(b+2,a*2);
     print(c);
+
     d = min(c,5);
     e = max(4,d);
     print(d);
     print(e);
     print(d+e);
+
     f = 3;
     f2 = multiply(f,f);
     print(f2);
+
+    n=4;
+    x=1;
+    y=1;
+    while (x<=n) {
+        while (y<=n) {
+            print(x,y);
+            y=y+1
+        };
+        x=x+1;
+        y=1
+    };
 
     if ( (f*f) == f2) {
         g = true

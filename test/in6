@@ -1,6 +1,7 @@
 function is_one(x) {
     y = 1;
     assert(x==1);
+    assume(x==2);
     return 73
 };
 

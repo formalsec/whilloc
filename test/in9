@@ -5,5 +5,6 @@ function f(x,y) {
 
 function aenima() {
     x = f(5,6);
+    print(x);
     return x
 }

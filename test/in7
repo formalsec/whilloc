@@ -13,5 +13,6 @@ function aenima() {
     else {
         print(0)
     };
-    return 0
+    print(x);
+    return x
 }
