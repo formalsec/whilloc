@@ -1,0 +1,7 @@
+function aenima() {
+    x = 5;
+    y = symbol;
+    print(x);
+    print(y);
+    return x
+}
