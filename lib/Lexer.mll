@@ -42,6 +42,7 @@ rule read =
   | '*'               { TIMES }
   | '/'               { DIVIDE }
   | '%'               { MODULO }
+  | "**"              { POW }
   | "=="              { EQUAL }
   | "!="              { NEQUAL }
   | '>'               { GT }
@@ -49,7 +50,11 @@ rule read =
   | ">="              { GTE }
   | "<="              { LTE }
   | '!'               { NOT }
-  | "**"              { POW }
+  | '|'               { OR }
+  | '&'               { AND }
+  | '^'               { XOR }
+  | "<<"              { SHL }
+  | ">>"              { SHR }
   | '('               { LPAREN }
   | ')'               { RPAREN }
   | '{'               { LBRACE }
@@ -68,6 +73,7 @@ rule read =
   | "assert"          { ASSERT }
   | "clear"           { CLEAR }
   | "print"           { PRINT }
+  | "symbol"          { SYMBOL }
   | '"'               { read_string (Buffer.create 16) lexbuf }
   (*| letter(letter|digit|'_')* as id { try
                                         Hashtbl.find keyword_table id

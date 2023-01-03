@@ -8,6 +8,7 @@
 %token ASSUME
 %token ASSERT
 %token CLEAR
+%token SYMBOL
 
 %token LPAREN RPAREN 
 %token LBRACE RBRACE
@@ -19,12 +20,14 @@
 
 %token NOT ABS STOI
 %token PLUS MINUS TIMES DIVIDE MODULO POW EQUAL NEQUAL GT LT GTE LTE
+%token OR AND XOR SHL SHR
 %token EOF
 
 %left EQUAL NEQUAL
 %left GT LT GTE LTE
 %left PLUS MINUS
 %left TIMES DIVIDE MODULO
+%left OR XOR AND SHL SHR
 %right POW
 
 %nonassoc unopt_prec
@@ -38,7 +41,6 @@
 program_target:
   | funcs = separated_nonempty_list (SEMICOLON, function_definition); EOF;
    { funcs }
-
 
 function_definition:
   | FUNCTION; id = VAR; LPAREN; args = separated_list (COMMA, VAR); RPAREN; LBRACE; body = statement_sequence; RBRACE
@@ -95,6 +97,8 @@ statement:
     { Program.Return e }
   | PRINT; e = expression;
     { Program.Print e }
+  | v = VAR; DEFEQ; SYMBOL;
+    { Program.Symbol v }
 
 statement_sequence:
   | s = separated_nonempty_list (SEMICOLON, statement);
@@ -114,7 +118,11 @@ statement_sequence:
   | LTE     { Expression.Lte }
   | EQUAL   { Expression.Equals }
   | NEQUAL  { Expression.NEquals }
-  
+  | OR      { Expression.Or }
+  | AND     { Expression.And }
+  | XOR     { Expression.Xor }
+  | SHL     { Expression.ShiftL }
+  | SHR     { Expression.ShiftR }
 
 
 
