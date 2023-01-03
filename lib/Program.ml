@@ -8,7 +8,7 @@ type stmt = Skip
         | Assert      of Expression.expr
         | Assume      of Expression.expr
         | Clear
-        | Print       of Expression.expr
+        | Print       of Expression.expr list
         | Symbol      of string
 
 type func = {
@@ -43,12 +43,12 @@ let rec string_of_stmt (s : stmt) : string =
   | FunCall (x,f,args) -> "FunCall:\n" ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")"
   | IfElse (expr, s1, s2) -> "IfElse:\n" ^ "if (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nelse\n  " ^ string_of_stmt s2
   | While (expr, s) -> "While:\n" ^ "while (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s 
-  | Return e -> "Return:\n" ^ "return " ^ Expression.string_of_expression e
-  | Assert e -> "Assert:\n" ^ "assert(" ^ Expression.string_of_expression e ^ ")"
-  | Assume e -> "Assume:\n" ^ "assume(" ^ Expression.string_of_expression e ^ ")"
-  | Clear    -> "Clear:\n"  ^ "clear"
-  | Print  e -> "Print:\n"  ^ "print(" ^ Expression.string_of_expression e ^ ")"
-  | Symbol s -> "Symbol declaration: " ^ s ^ "\n"
+  | Return e  -> "Return:\n" ^ "return " ^ Expression.string_of_expression e
+  | Assert e  -> "Assert:\n" ^ "assert(" ^ Expression.string_of_expression e ^ ")"
+  | Assume e  -> "Assume:\n" ^ "assume(" ^ Expression.string_of_expression e ^ ")"
+  | Clear     -> "Clear:\n"  ^ "clear"
+  | Print  es -> "Print:\n"  ^ "print(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) es) ^ ")"
+  | Symbol s  -> "Symbol declaration: " ^ s ^ "\n"
 
 let print_statement (s : stmt) : unit =
   s |> string_of_stmt |> print_endline
