@@ -1,12 +1,12 @@
 type t = Cont | Return of Expression.expr | AssumeF | Error
 
 let string_of_outcome (o : t) : string =
-  let prefix = "OUTCOME: " in
+  "OUTCOME: " ^ 
   match o with
-  | Cont     -> prefix ^ "Continue"
-  | Error    -> prefix ^ "Assertion evaluated to false"
-  | AssumeF  -> prefix ^ "Assumption evaluated to false"
-  | Return e -> prefix ^ "Returned " ^ (Expression.string_of_expression e)
+  | Cont     -> "Continue"
+  | Error    -> "Assertion evaluated to false"
+  | AssumeF  -> "Assumption evaluated to false"
+  | Return e -> "Returned " ^ (Expression.string_of_expression e)
 
 let should_halt (o: t) : bool =
   match o with
