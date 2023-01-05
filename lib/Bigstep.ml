@@ -103,7 +103,7 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
       if is_true v then store,Cont
       else              store,AssumeF
   
-  | Symbol s    -> failwith ("ApplicationError: tried to declarate a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol s    -> failwith ("ApplicationError: tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 

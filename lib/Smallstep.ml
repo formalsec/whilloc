@@ -76,13 +76,13 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
       (function'.body, [], func_frame, cs'), Cont
 
   | Return e ->
-    let v     = eval_expression store e in
-    let frame = Callstack.top cs in
-    let cs'   = Callstack.pop cs in
-      (match frame with
-      | Callstack.Intermediate (store',rest,var)  -> (Store.set store' var v;
-                                                     (Skip, rest, store', cs'), Cont)
-      | Callstack.Toplevel  -> (Skip, cont, store, cs'), Return e)
+      let v     = eval_expression store e in
+      let frame = Callstack.top cs in
+      let cs'   = Callstack.pop cs in
+        (match frame with
+        | Callstack.Intermediate (store',rest,var) -> (Store.set store' var v;
+                                                      (Skip, rest, store', cs'), Cont)
+        | Callstack.Toplevel  -> (Skip, cont, store, cs'), Return e)
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression store e in
@@ -114,7 +114,7 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
       let ()         = print_endline "" in
       atomic_step, Cont
 
-  | Symbol s    -> failwith ("InternalError: tried to declarate a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol s    -> failwith ("InternalError: tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
   | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
 

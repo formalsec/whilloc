@@ -37,7 +37,7 @@ let rec eval_expression (st : SStore.t) (e : expr) : expr =
      In the future, I will write a 'simplify' function that takes advantage of the properties of the operators of our language (commutativity, etc) *)
   if is_symbolic_expression e then e (*if is_symbolic_expression e then simplify_symb_expr e  (#e.g. 2x̂+2-x̂+1 --> 3x̂+3) *)
   
-  (* Else, we can reduce the expression until it becomes a value *)
+  (* If the expression does not contains symbolic values, we can reduce it until it becomes a value *)
   else
 
   match e with
@@ -137,12 +137,11 @@ let step (prog : program) (state : SState.t) : SState.t * Outcome.t (*list? why?
       let unfold_loop = IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip) in
       (unfold_loop, cont, store, cs, pc), Cont
 
-  (* TODO Assume and Assert with oracle call *)
   (* (pc ∧ e) SAT   means that there exists a concretization of symbolic values that makes the expression evaluate to true  *)
   (* (pc ∧ ê) SAT   means that there exists a concretization of symbolic values that makes the expression evaluate to false *)
-  (* (pc ∧ e) UNSAT means that for any possible concretization of symbolic values the expression evaluates to false *)
-  (* (pc ∧ ê) UNSAT means that for any possible concretization of symbolic values the expression evaluates to true  *)
-    
+  (* (pc ∧ e) UNSAT means that for any possible concretization of symbolic values the expression always evaluates to false *)
+  (* (pc ∧ ê) UNSAT means that for any possible concretization of symbolic values the expression always evaluates to true  *)
+
   (*
     Semantic of assert(e) is as follows: assert(e) means that we are asserting something that is true for all possible concretizations of symbolic values, thus, if the
     formula (pc ∧ ê) is satisfiable (i.e., there is at least one assignment that evaluates ê to false), assert(e) evaluates to 'Error', otherwise it evaluates to 'Continue'
