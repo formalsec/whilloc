@@ -35,7 +35,7 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | Var x ->
       let value = Store.get st x in
       (match value with
-      | None    -> failwith ("NameError: name " ^ x ^ " is not defined")
+      | None    -> failwith ("NameError: Smallstep, name " ^ x ^ " is not defined")
       | Some v  -> v)
   
   | Val v -> v
@@ -43,7 +43,7 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal x -> failwith ("InternalError: tried to evaluate a symbolic value \'" ^ x ^ "\' in a concrete execution context")
+  | SymbVal x -> failwith ("InternalError: Smallstep, tried to evaluate a symbolic value \'" ^ x ^ "\' in a concrete execution context")
   
 
 let step (prog : program) (state : State.t) : State.t * Outcome.t = 
@@ -70,7 +70,7 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
       let function'   = Program.get_function id prog in
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
-                        with _ -> failwith ("TypeError: argument arity mismatch when calling " ^ id) in
+                        with _ -> failwith ("TypeError: Smallstep, argument arity mismatch when calling " ^ id) in
       let func_frame  = Store.create_store var_vals in
       let cs'         = (Callstack.Intermediate (store, cont, var) ) :: cs in
       (function'.body, [], func_frame, cs'), Cont
@@ -82,7 +82,7 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
         (match frame with
         | Callstack.Intermediate (store',rest,var) -> (Store.set store' var v;
                                                       (Skip, rest, store', cs'), Cont)
-        | Callstack.Toplevel  -> (Skip, cont, store, cs'), Return e)
+        | Callstack.Toplevel  -> (Skip, cont, store, cs'), Return (Val v) )
 
   | IfElse (e, s1, s2) ->
       let guard = eval_expression store e in
@@ -110,13 +110,14 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
 
   | Print exprs  -> 
       let eval_exprs = List.map (eval_expression store) exprs in
+      let ()         = print_endline ">Program Print" in
       let ()         = List.iter print_value eval_exprs in
       let ()         = print_endline "" in
       atomic_step, Cont
 
-  | Symbol s    -> failwith ("InternalError: tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol s    -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
-  | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
+  | Sequence [] -> failwith "InternalError: Smallstep, tried to evaluate an empty Sequence"
 
 let rec eval (prog : program) (state : State.t) : State.t * Outcome.t = 
 
@@ -124,7 +125,7 @@ let rec eval (prog : program) (state : State.t) : State.t * Outcome.t =
   let (stmt',cont',_,_) = state' in
 
   match stmt',cont',out' with
-  | Skip, [], Cont     -> failwith "BadProgram: functions should always return a value"
+  | Skip, [], Cont     -> failwith "BadProgram: Smallstep, functions should always return a value"
   | _,    _ , Error    -> state',out'
   | _,    _ , AssumeF  -> state',out'
   | _,    _ , Return _ -> state',out'

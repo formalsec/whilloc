@@ -34,7 +34,7 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | Var x ->
       let value = Store.get st x in
       (match value with
-      | None    -> failwith ("NameError: name \'" ^ x ^ "\' is not defined")
+      | None    -> failwith ("NameError: Bigstep, name \'" ^ x ^ "\' is not defined")
       | Some v  -> v)
   
   | Val v -> v
@@ -42,7 +42,7 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal s -> failwith ("ApplicationError: tried to use a symbolic value \'" ^ s ^ "\' in a concrete execution context")
+  | SymbVal s -> failwith ("ApplicationError: Bigstep, tried to use a symbolic value \'" ^ s ^ "\' in a concrete execution context")
 
 let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t =
   let eval' = eval prog in
@@ -67,11 +67,11 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
       let function'   = Program.get_function id prog in
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
-                        with _ -> failwith ("TypeError: argument arity mismatch when calling \'" ^ id ^ "\'") in
+                        with _ -> failwith ("TypeError: Bigstep, argument arity mismatch when calling \'" ^ id ^ "\'") in
       let fresh_st    = Store.create_store var_vals in
       let _, out      = eval prog fresh_st function'.body  in
       (match out with
-        | Cont            -> failwith ("BadProgram: function \"" ^ id ^ "\" did not return a value")
+        | Cont            -> failwith ("BadProgram: Bigstep, function \"" ^ id ^ "\" did not return a value")
         | Error | AssumeF -> store,out
         | Return e        -> Store.set store var (eval_expression fresh_st e); store,Cont)
 
@@ -87,11 +87,12 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
 
   | Print exprs ->
       let eval_exprs = List.map (eval_expression store) exprs in
+      let ()         = print_endline ">Program Print" in
       let ()         = List.iter print_value eval_exprs in
       let ()         = print_endline "" in
       store,Cont
 
-  | Return e -> store,Return e
+  | Return e -> store,Return (Val (eval_expression store e))
 
   | Assert e -> 
       let v = eval_expression store e in
@@ -103,9 +104,9 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
       if is_true v then store,Cont
       else              store,AssumeF
   
-  | Symbol s    -> failwith ("ApplicationError: tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol s    -> failwith ("ApplicationError: Bigstep, tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
-  | Sequence [] -> failwith "InternalError: tried to evaluate an empty Sequence"
+  | Sequence [] -> failwith "InternalError: Bigstep, tried to evaluate an empty Sequence"
 
 
 let interpret (prog : program) (main_id : string) : Outcome.t =
@@ -113,5 +114,5 @@ let interpret (prog : program) (main_id : string) : Outcome.t =
   let store = Store.create_empty_store 100 in
   let _, o  = eval prog store main.body in
   match o with
-  | Cont -> failwith "BadProgram: main function did not return a value"
+  | Cont -> failwith "BadProgram: Bigstep, main function did not return a value"
   | _    -> o
