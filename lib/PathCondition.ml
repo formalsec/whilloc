@@ -1,6 +1,11 @@
-type t = Expression.expr list
+type t = Expression.expr list (* a conjunction of expressions *)
 
-let rec print_pc (pc : t) : unit =
-  match pc with
-  | []      -> print_endline ""
-  | h :: t  -> Expression.print_expression h; print_pc t
+let string_of_pathcondition (pc : t) : string = 
+  let rec aux (pc : t) : string list =
+    match pc with
+    | []      -> []
+    | h :: t  -> Expression.string_of_expression h :: (aux t)
+  in String.concat " ∧ " (aux pc)
+
+let print_pc (pc : t) : unit =
+  string_of_pathcondition pc |> print_endline
