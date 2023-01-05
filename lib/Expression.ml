@@ -14,18 +14,15 @@ type expr = Var     of string
 let make_symb_value (name : string) : expr = (*X̂x̂*)
   SymbVal ("X̂__"  ^ name)
 
-let rec is_symbolic_expression (e : expr) : bool =
-  match e with
-  | Var _     -> false
-  | Val _     -> false
-  | SymbVal _ -> true
-  | UnOp  (_, e)    -> is_symbolic_expression e
-  | BinOp (_,e1,e2) -> is_symbolic_expression e1 || is_symbolic_expression e2
-
 let get_value_from_expr (e : expr) : value =
   match e with
   | Val v -> v
-  | _     -> failwith "InternalError: tried to retrieve a value from a non value constructor" 
+  | _     -> failwith "InternalError: Expression.get_value_from_expr, tried to retrieve a value from a non value constructor" 
+
+let get_expr_from_opt (e : expr option) : expr =
+  match e with
+  | Some s -> s
+  | None   ->  failwith "InternalError: Expression.get_expr_from_opt, tried to retrieve an expression from None"
 
 let is_true (v : value) : bool =
   match v with
@@ -135,11 +132,11 @@ let rec string_of_expression (e : expr) : string =
   | Var x -> "Variable " ^ x (*^ " = " ^ string_of_value( Expression.eval_expression store e ) if I move the 'expressions' logic to the Expression module... *)
   | Val v -> "Value (" ^ string_of_value v ^ ")"
   | UnOp  (op, v)      -> (string_of_uop op) ^ (string_of_expression v)
-  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ (string_of_bop op) ^ (string_of_expression v2)
+  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ " " ^ (string_of_bop op) ^ " " ^ (string_of_expression v2)
   | SymbVal x -> "Symbol value (" ^ x ^ ")"
   
 let print_value (v : value) : unit =
-  string_of_value v |> print_string
+  (string_of_value v ^ " ") |> print_string
 
 let print_expression (e : expr) : unit =
-  string_of_expression e |> print_string
+  (string_of_expression e ^ " ") |> print_string
