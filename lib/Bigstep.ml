@@ -9,24 +9,26 @@ let eval_unop_expr (op : uop) (v : value) : value =
   | StringOfInt -> stoi v
 
 let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : value =
+  let f =
   match op with
-  | Plus    -> plus   (v1, v2)
-  | Minus   -> minus  (v1, v2)
-  | Times   -> times  (v1, v2)
-  | Div     -> div    (v1, v2)
-  | Modulo  -> modulo (v1, v2)
-  | Pow     -> pow    (v1, v2)
-  | Gt      -> gt     (v1, v2)
-  | Lt      -> lt     (v1, v2)
-  | Gte     -> gte    (v1, v2)
-  | Lte     -> lte    (v1, v2)
-  | Equals  -> equal  (v1, v2)
-  | NEquals -> nequal (v1, v2)
-  | Or      -> or_ (v1, v2)
-  | And     -> and_ (v1, v2)
-  | Xor     -> xor (v1, v2)
-  | ShiftL  -> shl (v1, v2)
-  | ShiftR  -> shr (v1, v2)
+  | Plus    -> plus  
+  | Minus   -> minus 
+  | Times   -> times 
+  | Div     -> div   
+  | Modulo  -> modulo
+  | Pow     -> pow   
+  | Gt      -> gt    
+  | Lt      -> lt    
+  | Gte     -> gte   
+  | Lte     -> lte   
+  | Equals  -> equal 
+  | NEquals -> nequal
+  | Or      -> or_   
+  | And     -> and_  
+  | Xor     -> xor   
+  | ShiftL  -> shl   
+  | ShiftR  -> shr
+  in f (v1, v2)
 
 let rec eval_expression (st : Store.t) (e : expr) : value = 
   match e with
@@ -42,10 +44,10 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal s -> failwith ("ApplicationError: Bigstep, tried to use a symbolic value \'" ^ s ^ "\' in a concrete execution context")
-
 let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t =
+
   let eval' = eval prog in
+  
   match s with
 
   | Skip | Clear -> store,Cont

@@ -10,24 +10,26 @@ let eval_unop_expr (op : uop) (v : value) : value =
   | StringOfInt -> stoi v
 
 let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : value =
+  let f =
   match op with
-  | Plus    -> plus   (v1, v2)
-  | Minus   -> minus  (v1, v2)
-  | Times   -> times  (v1, v2)
-  | Div     -> div    (v1, v2)
-  | Modulo  -> modulo (v1, v2)
-  | Pow     -> pow    (v1, v2)
-  | Gt      -> gt     (v1, v2)
-  | Lt      -> lt     (v1, v2)
-  | Gte     -> gte    (v1, v2)
-  | Lte     -> lte    (v1, v2)
-  | Equals  -> equal  (v1, v2)
-  | NEquals -> nequal (v1, v2)
-  | Or      -> or_    (v1, v2)
-  | And     -> and_   (v1, v2)
-  | Xor     -> xor    (v1, v2)
-  | ShiftL  -> shl    (v1, v2)
-  | ShiftR  -> shr    (v1, v2)
+  | Plus    -> plus  
+  | Minus   -> minus 
+  | Times   -> times
+  | Div     -> div   
+  | Modulo  -> modulo
+  | Pow     -> pow   
+  | Gt      -> gt    
+  | Lt      -> lt    
+  | Gte     -> gte   
+  | Lte     -> lte   
+  | Equals  -> equal 
+  | NEquals -> nequal
+  | Or      -> or_   
+  | And     -> and_  
+  | Xor     -> xor   
+  | ShiftL  -> shl   
+  | ShiftR  -> shr
+  in f (v1, v2)
 
 let rec eval_expression (st : Store.t) (e : expr) : value = 
   match e with
@@ -43,14 +45,11 @@ let rec eval_expression (st : Store.t) (e : expr) : value =
   | UnOp (op, e)       -> eval_unop_expr  op (eval_expression st e)
   | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1) (eval_expression st e2)
 
-  | SymbVal x -> failwith ("InternalError: Smallstep, tried to evaluate a symbolic value \'" ^ x ^ "\' in a concrete execution context")
-  
-
 let step (prog : program) (state : State.t) : State.t * Outcome.t = 
 
   let s,cont,store,cs = state in
-  (*let after_state = cont, store, cs in*)
-  let atomic_step = Skip, cont, store, cs in (*maybe 'trivial_step' or 'trivial_state' or 'trivial_step' are more suitable names*)
+  
+  let neutral_step = Skip, cont, store, cs in (*maybe 'trivial_step' or 'trivial_state' or 'trivial_step' are more suitable names*)
 
   match s with
   
@@ -63,7 +62,7 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
 
   | Assign (x,e) ->
       Store.set store x (eval_expression store e);
-      atomic_step, Cont
+      neutral_step, Cont
   
   | FunCall (var,id,args) ->
       let eval_args   = List.map (fun e -> eval_expression store e) args in
@@ -100,20 +99,20 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
 
   | Assert e -> 
       let v = eval_expression store e in
-      if is_true v then atomic_step, Cont
-      else              atomic_step, Error
+      if is_true v then neutral_step, Cont
+      else              neutral_step, Error
 
   | Assume e -> 
       let v = eval_expression store e in
-      if is_true v then atomic_step, Cont
-      else              atomic_step, AssumeF
+      if is_true v then neutral_step, Cont
+      else              neutral_step, AssumeF
 
   | Print exprs  -> 
       let eval_exprs = List.map (eval_expression store) exprs in
       let ()         = print_endline ">Program Print" in
       let ()         = List.iter print_value eval_exprs in
       let ()         = print_endline "" in
-      atomic_step, Cont
+      neutral_step, Cont
 
   | Symbol s    -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
 
