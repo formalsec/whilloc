@@ -2,20 +2,25 @@ open Program
 open Expression
 open Outcome
 open Search
+open Encoding
+
+let is_symbolic_value (v : value) : bool =
+  match v with
+  | Integer _ -> false
+  | Boolean _ -> false
+  | SymbVal _ -> true
 
 let rec is_symbolic_expression (st : SStore.t) (e : expr) : bool =
   match e with
-  | Val _     -> false
-  | SymbVal _ -> true
-  | Var x     -> SStore.get st x |> get_expr_from_opt |> is_symbolic_expression st 
+  | Val v     -> is_symbolic_value v
+  | Var x     -> SStore.get st x |> is_symbolic_expression st 
   | UnOp  (_, e)    -> is_symbolic_expression st e
   | BinOp (_,e1,e2) -> is_symbolic_expression st e1 || is_symbolic_expression st e2
 
 let rec simplify_symb_expr (st : SStore.t) (e : expr) : expr =
   match e with
   | Val _     -> e
-  | SymbVal _ -> e
-  | Var x     -> get_expr_from_opt ( SStore.get st x ) 
+  | Var x     -> SStore.get st x
   | UnOp  (op, e)    -> UnOp (op, simplify_symb_expr st e)
   | BinOp (op,e1,e2) -> BinOp(op, simplify_symb_expr st e1, simplify_symb_expr st e2)
 
@@ -27,26 +32,27 @@ let eval_unop_expr (op : uop) (v : value) : Expression.expr =
   | Abs -> abs v
   | StringOfInt -> stoi v)
 
-let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : Expression.expr =
-  Val (
+let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : expr =
+  let f =
   match op with
-  | Plus    -> plus   (v1, v2)
-  | Minus   -> minus  (v1, v2)
-  | Times   -> times  (v1, v2)
-  | Div     -> div    (v1, v2)
-  | Modulo  -> modulo (v1, v2)
-  | Pow     -> pow    (v1, v2)
-  | Gt      -> gt     (v1, v2)
-  | Lt      -> lt     (v1, v2)
-  | Gte     -> gte    (v1, v2)
-  | Lte     -> lte    (v1, v2)
-  | Equals  -> equal  (v1, v2)
-  | NEquals -> nequal (v1, v2)
-  | Or      -> or_    (v1, v2)
-  | And     -> and_   (v1, v2)
-  | Xor     -> xor    (v1, v2)
-  | ShiftL  -> shl    (v1, v2)
-  | ShiftR  -> shr    (v1, v2))
+  | Plus    -> plus  
+  | Minus   -> minus 
+  | Times   -> times 
+  | Div     -> div   
+  | Modulo  -> modulo
+  | Pow     -> pow   
+  | Gt      -> gt    
+  | Lt      -> lt    
+  | Gte     -> gte   
+  | Lte     -> lte   
+  | Equals  -> equal 
+  | NEquals -> nequal
+  | Or      -> or_   
+  | And     -> and_  
+  | Xor     -> xor   
+  | ShiftL  -> shl   
+  | ShiftR  -> shr
+  in Val ( f (v1, v2) )
 
 let rec eval_expression (st : SStore.t) (e : Expression.expr) : Expression.expr = 
 
@@ -57,20 +63,10 @@ let rec eval_expression (st : SStore.t) (e : Expression.expr) : Expression.expr 
   else
 
   match e with
-  
-    | Var x ->
-        let value = SStore.get st x in
-        (match value with
-        | None    -> failwith ("NameError: Symbolic, name " ^ x ^ " is not defined")
-        | Some v  -> v) (*here, 'v' will always be an expr.Val *)
-
-    | Val v -> Val v
-
+    | Val v -> Val v  
+    | Var x -> SStore.get st x
     | UnOp  (op, e)      -> eval_expression st e |> get_value_from_expr |> eval_unop_expr op
     | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1 |> get_value_from_expr) (eval_expression st e2 |> get_value_from_expr)
-
-    | SymbVal x -> failwith ("InternalError: Symbolic, tried to reduce an expression consisting of a symbolic value \'" ^ x ^ "\'")
-
 
 let step (prog : program) (state : SState.t) : Return.t list = 
 
@@ -80,8 +76,8 @@ let step (prog : program) (state : SState.t) : Return.t list =
 
   | Skip | Clear ->
     (match cont with
-    | []     -> [        state         , Cont  ]
-    | h :: t -> [ (h, t, store, cs, pc), Cont  ])
+    | []                      -> [ state, Cont  ]
+    | next_statement :: cont' -> [ (next_statement, cont', store, cs, pc), Cont  ])
   
   | Sequence (s1::s2) -> [ (s1, s2@cont, store, cs, pc), Cont ]
 
@@ -91,7 +87,7 @@ let step (prog : program) (state : SState.t) : Return.t list =
   
   | Symbol s ->
       let symb_val = make_symb_value s in
-      SStore.set store s symb_val;
+      SStore.set store s (Val symb_val);
       [ (Skip, cont, store, cs, pc), Cont ]
 
   | Print exprs ->
@@ -119,70 +115,82 @@ let step (prog : program) (state : SState.t) : Return.t list =
                                                         [ (Skip, rest, store', cs', pc), Cont ]
         | SCallstack.Toplevel  -> [ (Skip, cont, store, cs', pc), Return v ])
 
+  | IfElse (e, s1, s2) when is_symbolic_expression store e->
+      let e'  = simplify_symb_expr store e in
+      let e'' = negate_expression e'       in
+
+      let then_guard = is_sat (e' ::pc) in
+      let else_guard = is_sat (e''::pc) in
+      
+      let store' = if then_guard && else_guard then Hashtbl.copy store else store in
+
+      let then_branch = if then_guard then [ (s1, cont, store , cs, e' ::pc ), Cont ] else [] in
+      let else_branch = if else_guard then [ (s2, cont, store', cs, e''::pc ), Cont ] else [] in
+
+      then_branch @ else_branch
+
   | IfElse (e, s1, s2) ->
-      let e = eval_expression store e in
-      (*
-      let b1 = isSat ( Z3.query(pc ∧ e) ) in
-      let b2 = isSat ( Z3.query(pc ∧ ê) ) in
-      let store' = SStore.copy store      in
-      let t1 = ( s1,cont,store',cs',(pc ∧ e) ), Cont in
-      let t2 = ( s2,cont,store',cs',(pc ∧ ê) ), Cont in
-      if b1 && b2 then
-        [ t1; t2 ] 
-      else
-        if b1 then
-          [ t1 ] 
-        else
-          if b2 then
-            [ t2 ] 
-          else
-            ( Skip,cont,store,cs,pc ), Cont
-      *)
-      if is_true (get_value_from_expr e) then
+      if ( eval_expression store e |> get_value_from_expr |> is_true ) then
         [ (s1, cont, store, cs, pc), Cont ]
       else
         [ (s2, cont, store, cs, pc), Cont ]
 
-  | While (e,body) as while_stmt ->
-      (*
-      let b = isSat ( Z3.query(pc ∧ e) ) in
-      if b then
-        [ ( body,while_stmt@cont,store,cs,(pc ∧ e) ), Cont ]
-      else
-        [ ( Skip,cont,store,cs,pc ), Cont ]
-      *)
-      let unfold_loop = IfElse (e, Sequence ( (sequence_content body)@[while_stmt] ), Skip) in
-      [ (unfold_loop, cont, store, cs, pc), Cont ]
+  | While (e,body) as while_stmt when is_symbolic_expression store e ->
+      let e'  = simplify_symb_expr store e in
+      let e'' = negate_expression e'       in
 
-  (* (pc ∧ e) SAT   means that there exists a concretization of symbolic values that makes the expression evaluate to true  *)
-  (* (pc ∧ ê) SAT   means that there exists a concretization of symbolic values that makes the expression evaluate to false *)
-  (* (pc ∧ e) UNSAT means that for any possible concretization of symbolic values the expression always evaluates to false *)
-  (* (pc ∧ ê) UNSAT means that for any possible concretization of symbolic values the expression always evaluates to true  *)
+      let guard_t = is_sat (e' ::pc ) in
+      let guard_f = is_sat (e''::pc ) in
+
+      let store' = if guard_t && guard_f then Hashtbl.copy store else store in
+
+      let body_branch = if guard_t then [ ( body, while_stmt::cont, store , cs, e' ::pc ), Cont ] else [] in
+      let skip_branch = if guard_f then [ ( Skip, cont            , store', cs, e''::pc ), Cont ] else [] in
+
+      body_branch @ skip_branch
+
+  | While (e,body) as while_stmt ->
+      let guard = eval_expression store e |> get_value_from_expr |> is_true in
+      if guard then
+        [ (body, while_stmt::cont, store, cs, pc), Cont ]
+      else
+        [ (Skip, cont, store, cs, pc), Cont ]
 
   (*
-    Semantic of assert(e) is as follows: assert(e) means that we are asserting something that is true for all possible concretizations of symbolic values, thus, if the
+    Semantics of assert(e) is as follows: assert(e) means that we are asserting something that is true for all possible concretizations of symbolic values, thus, if the
     formula (pc ∧ ê) is satisfiable (i.e., there is at least one assignment that evaluates ê to false), assert(e) evaluates to 'Error', otherwise it evaluates to 'Continue'
     #(pc ∧ ê) SAT?
     Yes: Error
     No : Continue
-    IDK: ?
   *)
+  | Assert e when is_symbolic_expression store e ->
+      let e'     = negate_expression ( simplify_symb_expr store e ) in
+      let is_sat = is_sat (e'::pc) in
+      if is_sat then [ (Skip, cont, store, cs,     pc), Error ]
+      else           [ (Skip, cont, store, cs, e'::pc), Cont  ]
+
   | Assert e -> 
-      let v = get_value_from_expr (eval_expression store e) in (*FIXME temporary line of code*)
+      let v = get_value_from_expr (eval_expression store e) in
       if is_true v then [ (Skip, cont, store, cs, pc), Cont  ]
       else              [ (Skip, cont, store, cs, pc), Error ]
 
   (*
-    Semantic of assume(e): assume(e) means that we are assuming that at least one concretization of symbolic values makes the expression 'e' evaluate to true, thus,
+    Semantics of assume(e): assume(e) means that we are assuming that at least one concretization of symbolic values makes the expression 'e' evaluate to true, thus,
     if the formula (pc ∧ e) is unsatisfiable (i.e., there is no model for the expression 'e'), assume(e) evaluates to 'AssumeF', otherwise it evaluates to 'Continue'
-    #(pc ∧ e) UNSAT?
-    Yes: AssumeF
-    No : Continue
-    IDK: ?
+    #(pc ∧ e) SAT?
+    Yes: Continue
+    No : AssumeF
   *)
+  | Assume e when is_symbolic_expression store e ->
+    let e'     = simplify_symb_expr store e in
+    print_endline (string_of_expression e');
+    let is_sat = is_sat (e'::pc) in
+    if is_sat then [ (Skip, cont, store, cs, e'::pc), Cont    ]
+    else           [ (Skip, cont, store, cs,     pc), AssumeF ]
+
   | Assume e ->
-      let v = get_value_from_expr (eval_expression store e) in (*FIXME temporary line of code*)
-      if is_true v then [ (Skip, cont, store, cs, pc), Cont  ]
+      let v = get_value_from_expr (eval_expression store e) in
+      if is_true v then [ (Skip, cont, store, cs, pc), Cont    ]
       else              [ (Skip, cont, store, cs, pc), AssumeF ]
 
   | Sequence [] -> failwith "InternalError: Symbolic, tried to evaluate an empty Sequence"
@@ -194,6 +202,8 @@ let rec search (gas : int) (prog : program) (states : SState.t list) (rets : Ret
   let state, states' = pick states in
   let branches       = step prog state in
 
+  (*print_endline (SState.string_of_sstate state);*)
+
   let branches_final, branches_cont = List.partition is_final branches in
 
   let next_states_cont,_  = List.split branches_cont in
@@ -203,7 +213,7 @@ let rec search (gas : int) (prog : program) (states : SState.t list) (rets : Ret
 
 let interpret (prog : program) (main_id : string) : Return.t list = 
   let main  = get_function main_id prog in
-  let tank  = Configs.tank in 
+  let tank  = Parameters.tank in 
   let pathc = [Val (Boolean true)] in
   let state = (Skip, [main.body], SStore.create_empty_store 100, [SCallstack.Toplevel], pathc) in
   let r  = search tank prog [state] [] in
