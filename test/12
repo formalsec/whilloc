@@ -1,0 +1,11 @@
+function create_return_symbol () {
+    x = symbol;
+    x = x + 1;
+    return x
+};
+
+function aenima() {
+    y = create_return_symbol();
+    print(y*2);
+    return y
+}

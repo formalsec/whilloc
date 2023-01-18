@@ -1,0 +1,10 @@
+function aenima() {
+    x = symbol;
+    assume(x>=1);
+    assume(x<=3);
+    y=1;
+    while (x<=4) {
+        y=y+1
+    };
+    return y
+}

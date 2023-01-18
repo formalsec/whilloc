@@ -1,0 +1,10 @@
+function aenima() {
+    x = symbol;
+    if (x>10) {
+        y=true
+    }
+    else {
+        y = false
+    };
+    return y
+}

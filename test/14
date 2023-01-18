@@ -1,0 +1,10 @@
+function aenima() {
+    x = symbol;
+    if (x>10) {
+        x = 9
+    }
+    else {
+        x = 11
+    };
+    return (x+1)
+}
