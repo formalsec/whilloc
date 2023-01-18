@@ -12,6 +12,7 @@ bug-reports: "https://github.com/username/reponame/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.5"}
+  "z3"
   "odoc" {with-doc}
 ]
 build: [
