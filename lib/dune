@@ -1,5 +1,6 @@
 (library
- (name lib))
+ (name lib)
+ (libraries z3))
 
 (ocamllex
   (modules Lexer)
