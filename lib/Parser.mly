@@ -50,7 +50,7 @@ function_definition:
 (* v ::= int | bool *)
 value:
   | i = INT;
-    { Expression.Number i }
+    { Expression.Integer i }
   | b = BOOLEAN;
     { Expression.Boolean b }
 
