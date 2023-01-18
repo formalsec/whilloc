@@ -37,17 +37,17 @@ let get_function (id : string) (p : program) : func =
 
 let rec string_of_stmt (s : stmt) : string =
   match s with
-  | Skip -> "skip"
-  | Assign (x,e) -> "Assignment:\n" ^ x ^ "=" ^ (Expression.string_of_expression e)
-  | Sequence s -> "Sequence:\n" ^ String.concat ";\n" (List.map string_of_stmt s)
-  | FunCall (x,f,args) -> "FunCall:\n" ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")"
-  | IfElse (expr, s1, s2) -> "IfElse:\n" ^ "if (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nelse\n  " ^ string_of_stmt s2
-  | While (expr, s) -> "While:\n" ^ "while (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s 
-  | Return e  -> "Return:\n" ^ "return " ^ Expression.string_of_expression e
-  | Assert e  -> "Assert:\n" ^ "assert(" ^ Expression.string_of_expression e ^ ")"
-  | Assume e  -> "Assume:\n" ^ "assume(" ^ Expression.string_of_expression e ^ ")"
-  | Clear     -> "Clear:\n"  ^ "clear"
-  | Print  es -> "Print:\n"  ^ "print(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) es) ^ ")"
+  | Skip -> "Skip\n"
+  | Assign (x,e) -> "Assignment: " ^ x ^ "=" ^ (Expression.string_of_expression e) ^ "\n"
+  | Sequence s -> "Sequence:\n" ^ String.concat "" (List.map string_of_stmt s)
+  | FunCall (x,f,args) -> "FunCall: " ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args) ^ ")\n"
+  | IfElse (expr, s1, s2) -> "If (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nElse\n  " ^ string_of_stmt s2 ^ "\n"
+  | While (expr, s) -> "While (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s ^ "\n"
+  | Return e  -> "Return: " ^ "return " ^ Expression.string_of_expression e ^ "\n"
+  | Assert e  -> "Assert: " ^ Expression.string_of_expression e ^ ")\n"
+  | Assume e  -> "Assume: " ^ Expression.string_of_expression e ^ ")\n"
+  | Clear     -> "Clear\n"
+  | Print  es -> "Print: "  ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) es) ^ ")\n"
   | Symbol s  -> "Symbol declaration: " ^ s ^ "\n"
 
 let print_statement (s : stmt) : unit =

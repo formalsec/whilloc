@@ -1,4 +1,4 @@
-type t = (SState.t * Outcome.t)
+type t = SState.t * Outcome.t
 
 let string_of_return (ret : t) : string =
   let (_,_,st,_,pc), out = ret in
