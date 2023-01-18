@@ -1,4 +1,11 @@
 (executable
  (public_name Interpreters)
  (name main)
+ (modules main)
+ (libraries lib))
+
+(executable
+ (public_name Play)
+ (name play)
+ (modules play)
  (libraries lib))

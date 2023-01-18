@@ -20,7 +20,14 @@ let main =
   let filename    = Sys.argv.(1) in
   let entry_point = "aenima" in
   let program     = filename |> read_file |> parse_program |> create_program in
+
+  let prog_return = Symbolic.interpret program entry_point in
+  let ()          = List.iter Return.print_return prog_return in
+
   let prog_state  = Smallstep.interpret program entry_point in
-  print_endline (Outcome.string_of_outcome prog_state)
+  let ()          = print_endline (Outcome.string_of_outcome prog_state ^ "\n") in
+
+  let prog_state  = Bigstep.interpret program entry_point in
+                    print_endline (Outcome.string_of_outcome prog_state ^ "\n")
 
 let _ = main
