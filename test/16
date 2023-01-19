@@ -1,0 +1,12 @@
+function aenima() {
+    x = symbol("miguel");
+    y = symbol("rita");
+    z = symbol("XXXXXXXXXXXXXXXXXX");
+    print(x,y,z);
+    x = x+1;
+    x = x+y;
+    print(x,y,z);
+    x = symbol("nvidia");
+    print(x,y,z);
+    return x*z
+}

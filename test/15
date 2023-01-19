@@ -4,7 +4,8 @@ function aenima() {
     assume(x<=3);
     y=1;
     while (x<=4) {
-        y=y+1
+        x=x+1;
+        y=y*2
     };
     return y
 }
