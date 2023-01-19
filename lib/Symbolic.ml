@@ -6,9 +6,8 @@ open Encoding
 
 let is_symbolic_value (v : value) : bool =
   match v with
-  | Integer _ -> false
-  | Boolean _ -> false
   | SymbVal _ -> true
+  | _         -> false
 
 let rec is_symbolic_expression (st : SStore.t) (e : expr) : bool =
   match e with
@@ -85,9 +84,9 @@ let step (prog : program) (state : SState.t) : Return.t list =
       SStore.set store x (eval_expression store e);
       [ (Skip, cont, store, cs, pc), Cont ]
   
-  | Symbol s ->
+  | Symbol (x,s) ->
       let symb_val = make_symb_value s in
-      SStore.set store s (Val symb_val);
+      SStore.set store x (Val symb_val);
       [ (Skip, cont, store, cs, pc), Cont ]
 
   | Print exprs ->
@@ -102,9 +101,10 @@ let step (prog : program) (state : SState.t) : Return.t list =
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
                         with _ -> failwith ("TypeError: Symbolic, argument arity mismatch when calling " ^ id) in
-      let func_frame  = SStore.create_store var_vals in
-      let cs'         = (SCallstack.Intermediate (store, cont, var) ) :: cs in
-      [ (function'.body, [], func_frame, cs', pc), Cont ]
+      let func_init   = SStore.create_store var_vals in
+      let frame       = SCallstack.Intermediate (store, cont, var) in
+      let cs'         = SCallstack.push frame cs in
+      [ (function'.body, [], func_init, cs', pc), Cont ]
 
   | Return e ->
       let v     = eval_expression store e in
@@ -199,8 +199,8 @@ let rec search (gas : int) (prog : program) (states : SState.t list) (rets : Ret
 
   if gas=0 || states=[] then rets else
 
-  let state, states' = pick states in
-  let branches       = step prog state in
+  let state, states' = pick_head states in
+  let branches       = step prog  state in
 
   (*print_endline (SState.string_of_sstate state);*)
 
@@ -208,7 +208,7 @@ let rec search (gas : int) (prog : program) (states : SState.t list) (rets : Ret
 
   let next_states_cont,_  = List.split branches_cont in
 
-  search (gas-1) prog (join next_states_cont states') ( branches_final @ rets )
+  search (gas-1) prog (join_push next_states_cont states') ( branches_final @ rets )
 
 
 let interpret (prog : program) (main_id : string) : Return.t list = 

@@ -14,8 +14,9 @@
 %token LBRACE RBRACE
 %token COMMA SEMICOLON
 
-%token <int> INT
-%token <bool> BOOLEAN
+%token <int>    INT
+%token <bool>   BOOLEAN
+%token <string> STRING
 %token <string> VAR
 
 %token NOT ABS STOI
@@ -97,8 +98,8 @@ statement:
     { Program.Return e }
   | PRINT; LPAREN; exprs = separated_nonempty_list(COMMA, expression); RPAREN;
     { Program.Print exprs }
-  | v = VAR; DEFEQ; SYMBOL;
-    { Program.Symbol v }
+  | v = VAR; DEFEQ; SYMBOL; LPAREN; s = STRING; RPAREN;
+    { Program.Symbol (v, s)}
 
 statement_sequence:
   | s = separated_nonempty_list (SEMICOLON, statement);

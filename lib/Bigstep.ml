@@ -106,9 +106,9 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
       if is_true v then store,Cont
       else              store,AssumeF
   
-  | Symbol s    -> failwith ("ApplicationError: Bigstep, tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol (x,s) -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable '" ^ x ^ "' with value '" ^ s ^ "' in a concrete execution context")
 
-  | Sequence [] -> failwith "InternalError: Bigstep, tried to evaluate an empty Sequence"
+  | Sequence []  -> failwith "InternalError: Bigstep, tried to evaluate an empty Sequence"
 
 
 let interpret (prog : program) (main_id : string) : Outcome.t =

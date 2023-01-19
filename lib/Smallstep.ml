@@ -70,9 +70,10 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
                         with _ -> failwith ("TypeError: Smallstep, argument arity mismatch when calling " ^ id) in
-      let func_frame  = Store.create_store var_vals in
-      let cs'         = (Callstack.Intermediate (store, cont, var) ) :: cs in
-      (function'.body, [], func_frame, cs'), Cont
+      let func_init   = Store.create_store var_vals in
+      let frame       = Callstack.Intermediate (store, cont, var) in
+      let cs'         = Callstack.push frame cs in
+      (function'.body, [], func_init, cs'), Cont
 
   | Return e ->
       let v     = eval_expression store e in
@@ -114,9 +115,9 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
       let ()         = print_endline "" in
       neutral_step, Cont
 
-  | Symbol s    -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable \'" ^ s ^ "\' in a concrete execution context")
+  | Symbol (x,s) -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable '" ^ x ^ "' with value '" ^ s ^ "' in a concrete execution context")
 
-  | Sequence [] -> failwith "InternalError: Smallstep, tried to evaluate an empty Sequence"
+  | Sequence []  -> failwith "InternalError: Smallstep, tried to evaluate an empty Sequence"
 
 let rec eval (prog : program) (state : State.t) : State.t * Outcome.t = 
 

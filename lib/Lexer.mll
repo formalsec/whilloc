@@ -50,8 +50,8 @@ rule read =
   | ">="              { GTE }
   | "<="              { LTE }
   | '!'               { NOT }
-  | '|'               { OR }
-  | '&'               { AND }
+  | "||"              { OR }
+  | "&&"              { AND }
   | '^'               { XOR }
   | "<<"              { SHL }
   | ">>"              { SHR }
@@ -61,6 +61,7 @@ rule read =
   | '}'               { RBRACE }
   | int               { INT (int_of_string (Lexing.lexeme lexbuf)) }
   | bool              { BOOLEAN (bool_of_string (Lexing.lexeme lexbuf)) }
+  | '"'               { read_string (Buffer.create 16) lexbuf }
   | "abs"             { ABS }
   (*| "max"             { MAX }
   | "min"             { MIN }*)
@@ -84,35 +85,26 @@ rule read =
   | eof               { EOF }
 
 
-
-(* Read strings *)
 and read_string buf =
   parse
-  (*| '"'                  { STRING (Buffer.contents buf) } language does not support string literals for now *)
+  | '"'                  { STRING (Buffer.contents buf) }
   | '\\' '/'             { Buffer.add_char buf '/'; read_string buf lexbuf }
   | '\\' '\\'            { Buffer.add_char buf '\\'; read_string buf lexbuf }
   | '\\' 'b'             { Buffer.add_char buf '\b'; read_string buf lexbuf }
+  | '\\' 'v'             { Buffer.add_char buf '\011'; read_string buf lexbuf }
+  | '\\' 'f'             { Buffer.add_char buf '\012'; read_string buf lexbuf }
   | '\\' 'n'             { Buffer.add_char buf '\n'; read_string buf lexbuf }
   | '\\' 'r'             { Buffer.add_char buf '\r'; read_string buf lexbuf }
   | '\\' 't'             { Buffer.add_char buf '\t'; read_string buf lexbuf }
   | '\\' '\"'            { Buffer.add_char buf '\"'; read_string buf lexbuf }
   | '\\' '\''            { Buffer.add_char buf '\''; read_string buf lexbuf }
   | '\\' '0'             { Buffer.add_char buf '\000'; read_string buf lexbuf }
-  | '\\' (three_d as c)  { Buffer.add_char buf (Char.chr (int_of_string c)); read_string buf lexbuf }
-  | c_code c_code        {
-                           let s = Lexing.lexeme lexbuf in
-                           let s' = "\"" ^ s ^ "\"" in
-                           let s'' = Scanf.sscanf s' "%S" (fun s -> s) in
-                           Buffer.add_string buf s'';
-                           read_string buf lexbuf
-                         }
   | [^ '"' '\\']+        {
                            Buffer.add_string buf (Lexing.lexeme lexbuf);
                            read_string buf lexbuf
                          }
   | _                    { raise (create_syntax_error "Illegal string character" lexbuf) }
   | eof                  { raise (create_syntax_error ~eof:true "String is not terminated" lexbuf) }
-
 
 
 and read_comment =

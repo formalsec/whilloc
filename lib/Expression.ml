@@ -11,9 +11,6 @@ type expr = Val     of value
           | UnOp    of uop * expr
           | BinOp   of bop * expr * expr
 
-let make_symb_value (name : string) : value = (*X̂x̂*)
-  SymbVal ("X̂__"  ^ name)
-
 let negate_expression (e : expr) : expr = 
   UnOp (Not, e)
 
@@ -125,7 +122,7 @@ let string_of_value (v : value) : string =
   match v with
   | Integer n -> "Int "  ^ (string_of_int n)
   | Boolean b -> "Bool " ^ (string_of_bool b)
-  | SymbVal x -> "¥ " ^ x
+  | SymbVal x -> x
 
 let rec string_of_expression (e : expr) : string =
   match e with
