@@ -14,7 +14,7 @@ let set (st : t) (var : string) (e : Expression.expr) =
 let get (st : t) (var : string) =
   let value = Hashtbl.find_opt st var in
   (match value with
-  | None    -> failwith ("NameError: SStore.get, name " ^ var ^ " is not defined")
+  | None    -> failwith ("NameError: SStore.get, name '" ^ var ^ "' is not defined")
   | Some v  -> v) (* here, 'v' will always be an expr.Val *)
 
 let find_all (st : t) (var : string) =
