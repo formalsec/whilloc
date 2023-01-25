@@ -8,6 +8,5 @@ function f(x,y) {
 function aenima() {
     print(true);
     print(true);
-    x = f(5,6);
-    return x
+    x = f(5,6)
 }

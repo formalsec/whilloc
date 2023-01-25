@@ -1,4 +1,4 @@
-function fibonacii (n) {
+function fibonacci (n) {
     if (n<1) {
         return 0
     }
@@ -7,19 +7,23 @@ function fibonacii (n) {
             return 1
         }
         else {
-            x = fibonacii(n-2);
-            y = fibonacii(n-1);
+            two = 2;
+            one = 1;
+            x = fibonacci(n-two);
+            y = fibonacci(n-one);
             return x+y
         }
     }
 };
-
+/* 0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144. */
 function aenima() {
-    x = symbol;
-    if (x<8 || result>=34) {
+    n = symbol("x");
+    result = fibonacci(n);
+    print(true,result);
+    if (n<8 || result>=34) {
         return 0
     }
-    else {
+    else { /* n>=8 && result<34. there exists n>8 such that F_n<34 */
         assert(false)
     };
     return true

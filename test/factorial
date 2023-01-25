@@ -9,10 +9,10 @@ function factorial(n) {
 };
 
 function aenima() {
-    x = symbol;
+    x = symbol("x");
     assume(x>=1);
     assume(x<=5);
     f = factorial(x);
-    assert(x<121);
+    assert(f<121);
     return f
 }

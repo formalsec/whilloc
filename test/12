@@ -1,6 +1,7 @@
 function create_return_symbol () {
-    x = symbol;
-    x = x + 1;
+    x = symbol("ok_computer");
+    aux = 1;
+    x = x + aux;
     return x
 };
 
