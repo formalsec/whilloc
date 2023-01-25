@@ -24,9 +24,13 @@ let join_push (new_states : SState.t list) (old_states : SState.t list) : SState
 let join_enqueue (new_states : SState.t list) (old_states : SState.t list) : SState.t list =
   old_states @ new_states
 
-let is_final (result : Return.t) : bool =
-  let _,out = result in
+let is_final (result : Return.t) : bool = (*TODO learn how to code pls*)
+  let st,out = result in
+  let (stmt',cont',_,_,_) = st in
+  if stmt'=Program.Skip && cont'=[] && out=Cont then failwith "BadProgram: Symbolic, functions should always return a value"
+  else
   match out with
   | Cont -> false
-  | AssumeF -> print_endline "HA!"; true
-  | _    -> true
+  | AssumeF  -> true
+  | Error    -> true
+  | Return _ -> true

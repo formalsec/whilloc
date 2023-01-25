@@ -214,9 +214,9 @@ let prt (s:string) : unit=
 print_endline s; print_endline ""
 
 let is_sat (exprs : expr list) : bool =
-  (*print_endline ">Encoding.ml: Checking the satisfiability of:";
+  print_endline "\n\n>Encoding.ml: Checking the satisfiability of:";
   let aux = List.map string_of_expression exprs in
-  List.iter print_endline aux;*)
+  List.iter print_endline aux;
 
   try 
     let exprs'  = List.map encode_expr exprs in
