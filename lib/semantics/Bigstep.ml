@@ -90,8 +90,7 @@ let rec eval (prog : program) (store : Store.t) (s : stmt) : Store.t * Outcome.t
   | Print exprs ->
       let eval_exprs = List.map (eval_expression store) exprs in
       let ()         = print_endline ">Program Print" in
-      let ()         = List.iter print_value eval_exprs in
-      let ()         = print_endline "" in
+      let ()         = List.iter print_value eval_exprs; print_endline "" in
       store,Cont
 
   | Return e -> store,Return (Val (eval_expression store e))

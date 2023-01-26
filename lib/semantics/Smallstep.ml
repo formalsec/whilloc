@@ -111,8 +111,7 @@ let step (prog : program) (state : State.t) : State.t * Outcome.t =
   | Print exprs  -> 
       let eval_exprs = List.map (eval_expression store) exprs in
       let ()         = print_endline ">Program Print" in
-      let ()         = List.iter print_value eval_exprs in
-      let ()         = print_endline "" in
+      let ()         = List.iter print_value eval_exprs; print_endline "" in
       neutral_step, Cont
 
   | Symbol (x,s) -> failwith ("InternalError: Smallstep, tried to declare a symbolic variable '" ^ x ^ "' with value '" ^ s ^ "' in a concrete execution context")
