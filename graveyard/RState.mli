@@ -1,4 +1,4 @@
-module type M = sig 
+module type M = sig
   
   (* state type *)
   type t 
