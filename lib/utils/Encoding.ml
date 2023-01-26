@@ -121,14 +121,6 @@ let solve (solver : Z3.Solver.solver) : unit =
   print_endline (Z3.Model.to_string (get_model_from_opt model));
   print_endline ""
 
-let model (solver : Z3.Solver.solver) : unit =
-  print_endline "Printing model:";
-  let m =
-  match Z3.Solver.get_model solver with
-  | None -> ""
-  | Some model -> Z3.Model.to_string model;
-  in print_endline (m^"\n")
-
 (* Encoding of expressions *)
 
 let encode_unop (op : uop) (e : Z3.Expr.expr) : Z3.Expr.expr = 
@@ -191,7 +183,6 @@ let encode_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) : Z3.Expr.ex
   | Lt			-> binop_numbers_to_booleans  mk_lt  v1 v2
   | Gte			-> binop_numbers_to_booleans  mk_gte v1 v2
   | Lte 		-> binop_numbers_to_booleans  mk_lte v1 v2
-  (*| Equals 	-> Z3.Expr.mk_app ctx lit_operations.bool_constructor [ (Z3.Boolean.mk_eq ctx v1 v2) ]*)
   | Equals 	-> binop_numbers_to_booleans  mk_eq  v1 v2
   | NEquals -> binop_numbers_to_booleans  mk_eq  v1 v2 (*TODO*)
   | Or 			-> binop_booleans_to_booleans mk_or  v1 v2
@@ -200,7 +191,6 @@ let encode_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) : Z3.Expr.ex
   | _ 			-> failwith ("TODO: Encoding.encode_binop, missing implementation of " ^ string_of_bop op)
 
 let rec encode_expr (e : expr) : Z3.Expr.expr =
-  (*print_endline ("Encoding " ^ string_of_expression e);*)
   match e with
   | Val v -> encode_value v
   | Var v -> failwith ("InternalError: Encoding.encode_expr, tried to encode variable " ^ v)
@@ -211,33 +201,21 @@ let rec encode_expr (e : expr) : Z3.Expr.expr =
       let e1' = encode_expr e1 and e2' = encode_expr e2 in
       encode_binop op e1' e2'
 
-let prt (s:string) : unit=
-print_endline s; print_endline ""
-
 let is_sat (exprs : expr list) : bool =
-  print_endline "\n\n>Encoding.ml: Checking the satisfiability of:";
-  let aux = List.map string_of_expression exprs in
-  List.iter print_endline aux;
 
   try 
     let exprs'  = List.map encode_expr exprs in
     let exprs'' = List.map (fun x -> Z3.Expr.mk_app ctx lit_operations.bool_accessor [ x ]) exprs' in
 
-    (*let aux = List.map Z3.Expr.to_string exprs'' in
-    List.iter prt aux;*)
-
     let solver = Z3.Solver.mk_solver ctx None in
     Z3.Solver.add solver exprs'';
 
     let eval  = Z3.Solver.check solver [] in
-    let ()    = model solver in
-    let z3_result,b = match eval with
-    | Z3.Solver.SATISFIABLE 	-> "SAT"   ,true
-    | Z3.Solver.UNSATISFIABLE -> "UNSAT" ,false
-    | Z3.Solver.UNKNOWN 			-> "Unkown",false
+    let b = match eval with
+    | Z3.Solver.SATISFIABLE 	-> true
+    | Z3.Solver.UNSATISFIABLE -> false
+    | Z3.Solver.UNKNOWN 			-> false
     in
-
-    print_endline ("Z3 Output: " ^ z3_result ^ "\n");
 
     b
    

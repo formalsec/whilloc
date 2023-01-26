@@ -198,17 +198,9 @@ let step (prog : program) (state : SState.t) : Return.t list =
 
 let rec search (gas : int) (prog : program) (states : SState.t list) (returns : Return.t list) (tree : Program.stmt BinaryTree.t) : Return.t list * Program.stmt BinaryTree.t = 
 
-  if gas<10 then print_endline (">Gas: " ^ (string_of_int gas)) else ();
-
   if gas=0 || states=[] then returns,tree else
 
   let state, states' = pick_head states in
-
-  print_endline ">Cur Stmt:";
-  let a = SState.get_current_stmt state in
-  Program.print_statement a;
-  print_endline "";
-
   let branches       = step prog  state in
 
   let tree' = add_left tree (SState.get_current_stmt state) in
@@ -226,7 +218,5 @@ let interpret (prog : program) (main_id : string) : Return.t list =
   let cs    = [SCallstack.Toplevel] in
   let pathc = [Val (Boolean true)] in
   let state = (Skip, [main.body], store, cs, pathc) in
-  let r,t = search tank prog [state] [] Nil in
-  print_tree Program.string_of_stmt t;
-  print_endline (to_graphviz Program.string_of_stmt t);
+  let r,_ = search tank prog [state] [] Nil in
   r
