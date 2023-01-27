@@ -1,19 +1,50 @@
-module type M = sig
-  
+module type State = sig
+
   (* state type *)
   type t 
 
   (* value type *)
-  type vt 
+  type value
 
-  val get_conf : t -> Program.stmt list
-
-  val set : t -> string -> vt -> unit 
+  (* store type *)
+  type store
   
-  val eval_expression : t -> Expression.t -> vt 
+  (*
+  callstack ???
+  type cs
+  path cond ??? 
+  type pc
+  *)
 
-  val make_symbol : t -> string -> vt 
+  val get_stmt : t -> Program.stmt list
 
-  val val_to_string : t -> vt -> string 
+  val get_continuation : t -> Program.stmt list
 
-end 
+  val get_store : store -> .stmt list
+
+  val create_store : (string * Expression.value) list -> store
+
+  val set : store -> string -> value -> unit
+
+  val get : store -> string -> value 
+
+  val is_symbolic_expression : store -> Expression.expr -> bool
+  
+  val eval_expression : store -> Expression.t -> value 
+
+  (* val make_symbol : t -> string -> value *) (* do I really need this in the signature? *)
+
+  val string_of_t : t -> string
+
+  val string_of_value : t -> value -> string
+  
+  val top : t -> t (* FIXME idk the type of this thing*)
+
+  val pop : t -> t
+
+  val push : t -> t
+
+  exception EmptyStack
+  exception NameError
+
+end

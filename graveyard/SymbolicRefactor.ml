@@ -1,77 +1,17 @@
-open Program
-open Expression
-open Outcome
-open Search
-open Encoding
-
-let is_symbolic_value (v : value) : bool =
-  match v with
-  | SymbVal _ -> true
-  | _         -> false
-
-let rec is_symbolic_expression (st : SStore.t) (e : expr) : bool =
-  match e with
-  | Val v     -> is_symbolic_value v
-  | Var x     -> SStore.get st x |> is_symbolic_expression st 
-  | UnOp  (_, e)    -> is_symbolic_expression st e
-  | BinOp (_,e1,e2) -> is_symbolic_expression st e1 || is_symbolic_expression st e2
-
-let rec simplify_symb_expr (st : SStore.t) (e : expr) : expr =
-  match e with
-  | Val _     -> e
-  | Var x     -> SStore.get st x
-  | UnOp  (op, e)    -> UnOp (op, simplify_symb_expr st e)
-  | BinOp (op,e1,e2) -> BinOp(op, simplify_symb_expr st e1, simplify_symb_expr st e2)
-
-let eval_unop_expr (op : uop) (v : value) : Expression.expr =
-  Val (
-  match op with
-  | Neg -> neg v
-  | Not -> not_ v
-  | Abs -> abs v
-  | StringOfInt -> stoi v)
-
-let eval_binop_expr (op : bop) (v1 : value) (v2 : value) : expr =
-  let f =
-  match op with
-  | Plus    -> plus  
-  | Minus   -> minus 
-  | Times   -> times 
-  | Div     -> div   
-  | Modulo  -> modulo
-  | Pow     -> pow   
-  | Gt      -> gt    
-  | Lt      -> lt    
-  | Gte     -> gte   
-  | Lte     -> lte   
-  | Equals  -> equal 
-  | NEquals -> nequal
-  | Or      -> or_   
-  | And     -> and_  
-  | Xor     -> xor   
-  | ShiftL  -> shl   
-  | ShiftR  -> shr
-  in Val ( f (v1, v2) )
-
-let rec eval_expression (st : SStore.t) (e : Expression.expr) : Expression.expr = 
-
-  (* We can't reduce the expression 'e' to a value if it contains symbolic variables, so we just replace each symbolic variable with its symbolic value *)
-  if is_symbolic_expression st e then simplify_symb_expr st e
-  
-  (* If the expression does not contains symbolic variables, we can reduce it until it becomes a value *)
-  else
-
-  match e with
-    | Val v -> Val v  
-    | Var x -> SStore.get st x
-    | UnOp  (op, e)      -> eval_expression st e |> get_value_from_expr |> eval_unop_expr op
-    | BinOp (op, e1, e2) -> eval_binop_expr op (eval_expression st e1 |> get_value_from_expr) (eval_expression st e2 |> get_value_from_expr)
+open SymbolicState
 
 let step (prog : program) (state : SState.t) : Return.t list = 
 
   (* let s,cont,store,cs,pc = state in *)
+  let stmt  = get_stmt state in
+  let cont  = get_continuation state in 
+  let store = get_store state in
+  let cs    = get_cs state in
+  let pc    = get_pc state in
 
-  let cont = State.get_cont state in 
+  let eval_expr    = eval_expression state in
+  let is_symb_expr = is_symbolic_expression store in
+  let update_store = set store in
 
   match s with
 
@@ -83,43 +23,44 @@ let step (prog : program) (state : SState.t) : Return.t list =
   | Sequence (s1::s2) -> [ (s1, s2@cont, store, cs, pc), Cont ]
 
   | Assign (x,e) ->
-      State.set state x (State.eval_expression state e);
+      State.set state x (eval_expr e);
       [ (Skip, cont, store, cs, pc), Cont ]
   
   | Symbol (x,s) ->
       let symb_val = make_symb_value s in
-      State.set store x symb_val;
+      update_store x symb_val;
       [ (Skip, cont, store, cs, pc), Cont ]
 
   | Print exprs ->
-      let eval_exprs = List.map (State.eval_expression store) exprs in
+      let eval_exprs = List.map eval_expr exprs in
       let ()         = print_endline ">Program Print" in
       let ()         = List.iter print_expression eval_exprs; print_endline "" in
       [ (Skip, cont, store, cs, pc), Cont ]
   
   | FunCall (var,id,args) ->
-      let eval_args   = List.map (fun e -> eval_expression store e) args in
+      let eval_args   = List.map (fun e -> eval_expr e) args in
       let function'   = Program.get_function id prog in
       let params      = function'.args in
       let var_vals    = try List.combine params eval_args
                         with _ -> failwith ("TypeError: Symbolic, argument arity mismatch when calling " ^ id) in
-      let func_init   = SStore.create_store var_vals in
-      let frame       = SCallstack.Intermediate (store, cont, var) in
-      let cs'         = SCallstack.push frame cs in
+      let func_init   = create_store var_vals in
+      let frame       = SCallstack.Intermediate (store, cont, var) in (* HELP callstack type declaration *)
+      let cs'         = push frame cs in (* HELP frame *)
       [ (function'.body, [], func_init, cs', pc), Cont ]
 
   | Return e ->
-      let v     = eval_expression store e in
-      let frame = SCallstack.top cs in
-      let cs'   = SCallstack.pop cs in
+      let v     = eval_expr e in
+      let frame = top cs in 
+      let cs'   = pop cs in
         (match frame with
-        | SCallstack.Intermediate (store',rest,var) ->  SStore.set store' var v;
-                                                        [ (Skip, rest, store', cs', pc), Cont ]
+        | SCallstack.Intermediate (store',rest,var) ->  let store'' = Hashtbl.copy store' in
+                                                        set store'' var v;
+                                                        [ (Skip, rest, store'', cs', pc), Cont ]
         | SCallstack.Toplevel  -> [ (Skip, cont, store, cs', pc), Return v ])
 
-  | IfElse (e, s1, s2) when is_symbolic_expression store e->
-      let e'  = simplify_symb_expr store e in
-      let e'' = negate_expression e'       in
+  | IfElse (e, s1, s2) when is_symb_expr e ->
+      let e'  = simplify_symb_expr store e in (* HELP *)
+      let e'' = negate_expression e'       in (* HELP *)
 
       let then_guard = is_sat (e' ::pc) in
       let else_guard = is_sat (e''::pc) in
@@ -132,12 +73,12 @@ let step (prog : program) (state : SState.t) : Return.t list =
       then_branch @ else_branch
 
   | IfElse (e, s1, s2) ->
-      if ( eval_expression store e |> get_value_from_expr |> is_true ) then
+      if ( eval_expr e |> get_value_from_expr |> is_true ) then (* 'is_true' depends on the language, not on the State or wtv *)
         [ (s1, cont, store, cs, pc), Cont ]
       else
         [ (s2, cont, store, cs, pc), Cont ]
 
-  | While (e,body) as while_stmt when is_symbolic_expression store e ->
+  | While (e,body) as while_stmt when is_symb_expr e ->
       let e'  = simplify_symb_expr store e in
       let e'' = negate_expression e'       in
 
@@ -152,7 +93,7 @@ let step (prog : program) (state : SState.t) : Return.t list =
       body_branch @ skip_branch
 
   | While (e,body) as while_stmt ->
-      let guard = eval_expression store e |> get_value_from_expr |> is_true in
+      let guard = eval_expr e |> get_value_from_expr |> is_true in (* 'is_true' depends on the language, not on the State or wtv *)
       if guard then
         [ (body, while_stmt::cont, store, cs, pc), Cont ]
       else
@@ -165,7 +106,7 @@ let step (prog : program) (state : SState.t) : Return.t list =
     Yes: Error
     No : Continue
   *)
-  | Assert e when is_symbolic_expression store e ->
+  | Assert e when is_symb_expr e ->
       let e'     = negate_expression ( simplify_symb_expr store e ) in
       let is_sat = is_sat (e'::pc) in
       if is_sat then [ (Skip, cont, store, cs,     pc), Error ]
@@ -183,9 +124,8 @@ let step (prog : program) (state : SState.t) : Return.t list =
     Yes: Continue
     No : AssumeF
   *)
-  | Assume e when is_symbolic_expression store e ->
+  | Assume e when is_symb_expr e ->
     let e'     = simplify_symb_expr store e in
-    print_endline (string_of_expression e');
     let is_sat = is_sat (e'::pc) in
     if is_sat then [ (Skip, cont, store, cs, e'::pc), Cont    ]
     else           [ (Skip, cont, store, cs,     pc), AssumeF ]
