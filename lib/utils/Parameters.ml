@@ -1,3 +1,3 @@
 let entry_point = "aenima"
 
-let tank = 100
+let tank = 100000

@@ -13,7 +13,7 @@ let preorder (tree : 'a t) = fold_tree (fun x l r -> [x] @ l @ r) [] tree
 let string_of_tree_preorder (f : 'a -> string) (tree : 'a t) = List.map f (preorder tree)
 
 let rec add_left (tree : 'a t) (x : 'a) : 'a t =
-  let subtree = Node (x,Nil,Nil) in
+  let subtree = Node (x, Nil, Nil) in
   match tree with
   | Nil -> subtree
   | Node (v, left, right) when left ==Nil -> Node (v, subtree, right)
@@ -21,7 +21,7 @@ let rec add_left (tree : 'a t) (x : 'a) : 'a t =
   | Node (v, left, right) -> Node (v, add_left left x, right)
 
 let rec add_right (tree : 'a t) (x : 'a) : 'a t =
-  let subtree = Node (x,Nil,Nil) in
+  let subtree = Node (x, Nil, Nil) in
   match tree with
   | Nil -> subtree
   | Node (v, left, right) when right==Nil -> Node (v, left, subtree)
@@ -38,7 +38,10 @@ let rec string_of_tree (prefix : string) (is_left : bool) (f : 'a -> string) (tr
 let print_tree (f : 'a -> string) (tree : 'a t) : unit = 
   print_endline (string_of_tree "" false f tree)
 
-  (*use program lines to simultaneously identify each node of the graph and its statement *)
+(* use program lines to simultaneously identify each node of the graph and its statement *)
+(* https://stackoverflow.com/questions/3455389/graphviz-tree-layout *)
+(* https://graphviz.org/docs/attrs/fontsize/ *)
+(* https://dreampuf.github.io/GraphvizOnline *)
 let to_graphviz (f : 'a -> string) (tree : 'a t) : string =
   let header = "strict graph {\n  size=\"6,6\";\n  node [color=lightblue2, style=filled];\n\n  " in
   let rec aux = function

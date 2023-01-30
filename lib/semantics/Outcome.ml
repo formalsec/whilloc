@@ -1,4 +1,4 @@
-type t = Cont | Return of Expression.expr | AssumeF | Error
+type t = Cont | Return of Expression.expr | AssumeF | Error (* of (string, Expression.value) Hashtbl *)
 
 let string_of_outcome (o : t) : string =
   "OUTCOME: " ^ 

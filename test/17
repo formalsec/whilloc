@@ -1,0 +1,10 @@
+function aenima() {
+    x = symbol("x");
+    if (x) {
+        res = true
+    }
+    else {
+        res = false
+    };
+    return res
+}
