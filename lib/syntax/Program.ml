@@ -40,5 +40,13 @@ let rec string_of_stmt (s : stmt) : string =
   | FunCall (x,f,args)     -> "Function Call: " ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args)
   | While   (expr, s)      -> "While (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s
 
+let string_of_function (f : func) : string =
+  "Function id: "  ^ f.id                      ^ "\n" ^
+  "Argumetns  : (" ^ String.concat ", " f.args ^ ")\n" ^
+  "Body       : "  ^ string_of_stmt f.body     ^ "\n"
+
 let print_statement (s : stmt) : unit =
   s |> string_of_stmt |> print_endline
+
+let print_function (f : func) : unit =
+  f |> string_of_function |> print_endline
