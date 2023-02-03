@@ -1,16 +1,20 @@
-type frame = Intermediate of (Store.t * Program.stmt list * string) | Toplevel
+type 'v frame = Intermediate of ( ('v Store.t) * Program.stmt list * string) | Toplevel
+type 'v t     = ('v frame) list
 
-type t = frame list
+exception EmptyStack of string
 
-let top (cs : t): frame =
+let create_callstack : 'v t =
+  [Toplevel]
+
+let top (cs : 'v t): 'v frame =
   match cs with
-  | [] -> failwith "InternalError: Tried to peek from an empty stack"
+  | [] -> raise (EmptyStack "Callstack.ml: tried to peek from an empty stack")
   | top :: _ -> top
 
-let pop (cs : t) : t =
+let pop (cs : 'v t) : 'v t =
   match cs with
-  | [] -> failwith "InternalError: Tried to pop from an empty stack"
+  | [] -> raise (EmptyStack "Callstack.ml: tried to pop from an empty stack")
   | _ :: t -> t
 
-let push (f : frame) (cs : t) : t =
+let push (cs : 'v t) (f : 'v frame) : 'v t =
   f::cs

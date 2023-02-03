@@ -1,21 +1,30 @@
-type t = (string, Expression.value) Hashtbl.t (*partial function from Var to Values*)
+type 'v t = (string, 'v) Hashtbl.t
 
-let create_empty_store (size : int) : t =
+let create_empty_store (size : int) : 'v t =
   Hashtbl.create size
 
-let create_store (varvals : (string * Expression.value) list) : t =
+let create_store (varvals : (string * 'v) list) : 'v t =
   let st = Hashtbl.create (List.length varvals) in
   List.iter (fun (x, v) -> Hashtbl.replace st x v) varvals;
   st
 
-let set (st : t) (var : string) (v : Expression.value) =
-  Hashtbl.replace st var v
+let set (store : 'v t) (var : string) (v : 'v) : unit =
+  Hashtbl.replace store var v
 
-let get (st : t) (var : string) =
-  Hashtbl.find_opt st var
+let get (store : 'v t) (var : string) : 'v =
+  let value = Hashtbl.find_opt store var in
+  (match value with
+  | None    -> failwith ("NameError: Store.get, name '" ^ var ^ "' is not defined") 
+  | Some v  -> v) (* exception NameError of string * string (id, message to be shown). this is also used in Program.ml *)
 
-let find_all (st : t) (var : string) =
-  Hashtbl.find_all st var
+let dup (store : 'v t) : 'v t =
+  Hashtbl.copy store
 
-let exists (st : t) (var : string) =
-  Hashtbl.mem st var;;
+let find_all (store : 'v t) (var : string) : 'v list =
+  Hashtbl.find_all store var
+
+let exists (store : 'v t) (var : string) : bool =
+  Hashtbl.mem store var;;
+
+let string_of_store (to_string : 'v -> string ) (store : 'v t) : string =
+  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("      " ^ x ^ "  ->  " ^ (to_string y)) :: z ) store [])
