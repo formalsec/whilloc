@@ -36,6 +36,7 @@
 %type <Program.func list> program_target
 
 %start program_target
+
 %%
 
 
@@ -51,9 +52,9 @@ function_definition:
 (* v ::= int | bool *)
 value:
   | i = INT;
-    { Expression.Integer i }
+    { Value.Integer i }
   | b = BOOLEAN;
-    { Expression.Boolean b }
+    { Value.Boolean b }
 
 
 (* e ::= v | x | -e | e+e | f(e) | (e) *)
