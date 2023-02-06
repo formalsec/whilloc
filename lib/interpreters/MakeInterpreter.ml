@@ -2,22 +2,51 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
   
   open Program
   open Outcome
-  open Common
-  
+
   type t = Eval.t
 
-  (* Evaluation *)
+  (* Evaluation of expressions *)
   let eval    = Eval.eval
+  (* Asserting wheter a given expression is true or not *)
   let is_true = Eval.is_true
+  (* Negates an expression *)
   let negate  = Eval.negate
-  let add_condition = Eval.add_condition (* let add_cond = PathCondition.add_cond *)
+  (* Creates a fresh symbol *)
   let make_symbol = Eval.make_symbol
+  (* Adds an expression to a path condition *)
+  let add_condition = PathCondition.add_condition
 
-  (* Search criteria *)
+  (* Selects which state to expand given a set of candidate states *)
   let pick = Search.pick
+  (* Merges the set of candidate states with the new set of states returned by 'step' *)
   let join = Search.join
+  (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
 
+  (* Helper functions, common to both concrete and symbolic contexts *)
+  let create_initial_state program =
+    let main  = Program.get_function Parameters.main_id program in
+    let store = Store.create_empty_store Parameters.size in
+    let cs    = Callstack.create_callstack in
+    let pathc = PathCondition.create_pathcondition in
+    (Skip, [main.body], store, cs, pathc)
+  
+  let is_final result =
+    let state,out = result in
+    let (stmt',cont',_,_,_) = state in
+    if stmt'=Skip && cont'=[] && out=Cont then failwith "BadProgram: functions should always return a value"
+    else
+    match out with
+    | Cont     -> false
+    | AssumeF  -> true
+    | Error    -> true
+    | Return _ -> true
+  
+  (* -------------------------------------------------------------------------------- *)
+  (* The interpreter itself. It consists of a 'step' function and a 'search' function *)
+  (* -------------------------------------------------------------------------------- *)
+
+  (* The 'step' function is a small-step semantics evaluator and uses the "continuations" trick, and thus it is tail recursive. Note: the evaluation of expressions is big-step *)
   let step (prog : program) (state : t State.t) : t Return.t list = 
   
     let s,cont,store,cs,pc = state in
@@ -26,7 +55,7 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
   
     | Skip | Clear ->
       (match cont with
-      | []                      -> [ state, Cont  ]
+      | [ ]                     -> [ state, Cont  ]
       | next_statement :: cont' -> [ (next_statement, cont', store, cs, pc), Cont  ])
     
     | Sequence (s1::s2) -> [ (s1, s2@cont, store, cs, pc), Cont ]
@@ -36,9 +65,11 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
         [ (Skip, cont, store, cs, pc), Cont ]
     
     | Symbol (x,s) ->
-        let symb_val = make_symbol s in
-        Store.set store x symb_val;
-        [ (Skip, cont, store, cs, pc), Cont ]
+        let symb_opt = make_symbol s in
+        (match symb_opt with
+        | None          -> failwith "ApplicationError: tried to create a symbolic value in a concrete execution context"
+        | Some symb_val -> Store.set store x symb_val;
+                           [ (Skip, cont, store, cs, pc), Cont ])
   
     | Print exprs ->
         let exprs = List.map (eval store) exprs in
@@ -81,47 +112,45 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
   
         let then_branch = if then_guard then [ (s1, cont, store , cs, then_pc), Cont ] else [ ] in
         let else_branch = if else_guard then [ (s2, cont, store', cs, else_pc), Cont ] else [ ] in
-  
-        (* if concrete_context then assert (then_guard XOR else_guard) *)
-  
+
         then_branch @ else_branch
   
     | While (e,body) as while_stmt ->
         let e'  = eval store e  in
         let e'' = negate e' in
 
-        let t_pc = add_condition pc e'  in
-        let f_pc = add_condition pc e'' in
+        let true_pc  = add_condition pc e'  in
+        let false_pc = add_condition pc e'' in
 
-        let guard_t = is_true t_pc in
-        let guard_f = is_true f_pc in
+        let guard_true  = is_true true_pc in
+        let guard_false = is_true false_pc in
   
-        let store' = if guard_t && guard_f then (Store.dup store) else store in
+        let store' = if guard_true && guard_false then (Store.dup store) else store in
   
-        let body_branch = if guard_t then [ ( body, while_stmt::cont, store , cs, t_pc ), Cont ] else [ ] in
-        let skip_branch = if guard_f then [ ( Skip, cont            , store', cs, f_pc ), Cont ] else [ ] in
-  
-        (* if in_concrete_context then assert (guard_t XOR guard_f) *)
+        let body_branch = if guard_true  then [ ( body, while_stmt::cont, store , cs, true_pc  ), Cont ] else [ ] in
+        let skip_branch = if guard_false then [ ( Skip,             cont, store', cs, false_pc ), Cont ] else [ ] in
   
         body_branch @ skip_branch
   
     | Assert e ->
-        let e'      = e |> eval store |> negate in
-        let pc'     = add_condition pc e' in
-        let is_true = is_true pc' in
+        let e       = eval store e in
+        let pc'     = add_condition pc e in
+        let test_pc = add_condition pc (negate e) in
+        let is_true = is_true test_pc in
         if is_true then [ (Skip, cont, store, cs, pc ), Error ]
         else            [ (Skip, cont, store, cs, pc'), Cont  ]
   
     | Assume e ->
-        let e'      = eval store e in
-        let pc'     = add_condition pc e' in
+        let e       = eval store e in
+        let pc'     = add_condition pc e in
         let is_true = is_true pc' in
         if is_true then [ (Skip, cont, store, cs, pc'), Cont    ] 
         else            [ (Skip, cont, store, cs, pc ), AssumeF ]
   
-    | Sequence [] -> failwith "InternalError: Interpreter, reached the empty program"
+    | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
   
 
+  (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler *)
   let rec search (gas : int) (prog : program) (states : t State.t list) (returns : t Return.t list) : t Return.t list = 
   
     if gas=0 || states=[] then returns else
@@ -135,6 +164,6 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
     search (gas-1) prog (join states_cont states') (returns @ branches_final)
   
   let interpret (prog : program) : t Return.t list = 
-    search tank prog [create_initial_state prog] []
+    search tank prog [create_initial_state prog] [ ]
 
 end
