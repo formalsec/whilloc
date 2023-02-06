@@ -15,7 +15,7 @@ let get (store : 'v t) (var : string) : 'v =
   let value = Hashtbl.find_opt store var in
   (match value with
   | None    -> failwith ("NameError: Store.get, name '" ^ var ^ "' is not defined") 
-  | Some v  -> v) (* exception NameError of string * string (id, message to be shown). this is also used in Program.ml *)
+  | Some v  -> v)
 
 let dup (store : 'v t) : 'v t =
   Hashtbl.copy store
@@ -27,4 +27,4 @@ let exists (store : 'v t) (var : string) : bool =
   Hashtbl.mem store var;;
 
 let string_of_store (to_string : 'v -> string ) (store : 'v t) : string =
-  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("      " ^ x ^ "  ->  " ^ (to_string y)) :: z ) store [])
+  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (to_string y)) :: z ) store [])
