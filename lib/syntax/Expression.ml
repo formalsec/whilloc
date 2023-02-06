@@ -44,11 +44,11 @@ let string_of_bop (op : bop) : string =
 
 let rec string_of_expression (e : t) : string =
   "(" ^
-  match e with
-  | Var x -> "Var " ^ x  (*^ " = " ^ string_of_value( Expression.eval_expression store e ) if I move the 'expressions' logic to the Expression module... *)
+  (match e with
+  | Var x -> "Var " ^ x
   | Val v -> "Val " ^ Value.string_of_value v
   | UnOp  (op, v)      -> (string_of_uop op) ^ (string_of_expression v)
-  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ " " ^ (string_of_bop op) ^ " " ^ (string_of_expression v2)
+  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ " " ^ (string_of_bop op) ^ " " ^ (string_of_expression v2) )
   ^ ")"
 
 let print_expression (e : t) : unit =
