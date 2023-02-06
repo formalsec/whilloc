@@ -8,7 +8,6 @@ module type M = sig
     val print     : t -> unit
     val to_string : t -> string
 
-    val add_condition  : t PathCondition.t -> t -> t PathCondition.t
-    val make_symbol    : string -> t (*TODO fazer t option e tratar o caso None*)
+    val make_symbol    : string -> t option
 
 end
