@@ -29,13 +29,8 @@ module M : Eval.M with type t = Value.t = struct
   let to_string t = Value.string_of_value t
   let print t = to_string t |> print_endline
 
-  let add_condition pc t = t::pc
-    (*match pc with
-    | h :: t -> t
-    *)
-  (* Symbols X̂x̂ *)
   let make_symbol (name : string) =
     let _ = name in
-    failwith "ApplicationError: StateConcrete.make_symb_value, tried to create a symbolic value in a concrete execution context"
+    None
 
 end

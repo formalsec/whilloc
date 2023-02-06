@@ -48,8 +48,6 @@ module M : Eval.M  with type t = Expression.t = struct
   let to_string t = Expression.string_of_expression t
   let print t = to_string t |> print_endline
 
-  let add_condition pc t = t::pc
-
   let make_fresh_symb_generator (pref : string) : (unit -> string) =
     let count = ref 1 in
     fun () -> let x = !count in
@@ -57,7 +55,9 @@ module M : Eval.M  with type t = Expression.t = struct
 
   let generate_fresh_var = make_fresh_symb_generator Parameters.symbol
 
-  let make_symbol (name : string) = 
-    Val (Value.SymbVal ( generate_fresh_var() ^ "__" ^ name) )
+  let make_symbol (name : string) = (* Symbols X̂x̂ *)
+    let symb_name   = generate_fresh_var() ^ "__" ^ name in
+    let symb_value  = Value.SymbVal symb_name in 
+    Some (Val symb_value)
 
 end
