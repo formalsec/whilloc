@@ -24,7 +24,7 @@ type program = (string, func) Hashtbl.t
 let get_function (id : string) (prog : program) : func =
   try Hashtbl.find prog id
   with _ -> failwith ("NameError: Program.get_function, name " ^ id ^ " is not defined")
-            (* exception NameError of string * string (id, message to be shown). this is also used in Store.ml *)
+  
 let rec string_of_stmt (s : stmt) : string =
   match s with
   | Skip         -> "Skip"
