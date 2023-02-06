@@ -1,4 +1,4 @@
-function create_return_symbol () {
+function create_symbol () {
     x = symbol("ok_computer");
     aux = 1;
     x = x + aux;
@@ -6,7 +6,7 @@ function create_return_symbol () {
 };
 
 function aenima() {
-    y = create_return_symbol();
+    y = create_symbol();
     print(y*2);
     return y
 }

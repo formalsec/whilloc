@@ -1,12 +1,20 @@
 function f(x,y) {
-    print(false);
-    print(false);
-    print(false);
     return 73
 };
 
 function aenima() {
-    print(true);
-    print(true);
-    x = f(5,6)
+    skip;
+    x = false;
+    if (x) {
+        print(true)
+    }
+    else {
+        print(false)
+    };
+    y = 10;
+    while (y<12) {
+        y=y+1;
+        print(y)
+    };
+    return 1
 }
