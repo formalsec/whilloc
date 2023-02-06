@@ -111,17 +111,6 @@ let pop (solver : Z3.Solver.solver) (lvl : int) : unit =
 
 let push (solver : Z3.Solver.solver) : unit = Z3.Solver.push solver
 
-let solve (solver : Z3.Solver.solver) : unit =
-  let eval  = Z3.Solver.check solver [] in
-  let model = Z3.Solver.get_model solver in
-  let () = print_endline(
-	match eval with
-	| Z3.Solver.UNKNOWN 			-> "false"
-	| Z3.Solver.UNSATISFIABLE -> "false"
-	| Z3.Solver.SATISFIABLE 	-> "true") in
-  print_endline (Z3.Model.to_string (get_model_from_opt model));
-  print_endline ""
-
 let model (solver : Z3.Solver.solver) : unit =
   print_endline "Printing model:";
   let m =
@@ -180,28 +169,23 @@ let encode_value (v : Value.t) : Z3.Expr.expr =
   | SymbVal s -> Z3.Expr.mk_const ctx (mk_string_symb s) z3_sort
 
 let encode_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) : Z3.Expr.expr =
-  (*print_endline ( (Z3.Expr.to_string v1) ^ (string_of_bop op) ^ (Z3.Expr.to_string v2) );*)
   match op with
   | Plus 		-> binop_numbers_to_numbers   mk_add v1 v2 
   | Minus		-> binop_numbers_to_numbers   mk_sub v1 v2 
   | Times 	-> binop_numbers_to_numbers   mk_mul v1 v2
   | Div    	-> binop_numbers_to_numbers   mk_div v1 v2
-  | Modulo 	-> binop_numbers_to_numbers   mk_pow v1 v2 (*TODO*)
   | Pow    	-> binop_numbers_to_numbers   mk_pow v1 v2
   | Gt 			-> binop_numbers_to_booleans  mk_gt  v1 v2
   | Lt			-> binop_numbers_to_booleans  mk_lt  v1 v2
   | Gte			-> binop_numbers_to_booleans  mk_gte v1 v2
   | Lte 		-> binop_numbers_to_booleans  mk_lte v1 v2
-  (*| Equals 	-> Z3.Expr.mk_app ctx lit_operations.bool_constructor [ (Z3.Boolean.mk_eq ctx v1 v2) ]*)
   | Equals 	-> binop_numbers_to_booleans  mk_eq  v1 v2
-  | NEquals -> binop_numbers_to_booleans  mk_eq  v1 v2 (*TODO*)
   | Or 			-> binop_booleans_to_booleans mk_or  v1 v2
   | And 		-> binop_booleans_to_booleans mk_and v1 v2
   | Xor 		-> binop_booleans_to_booleans mk_xor v1 v2
   | _ 			-> failwith ("TODO: Encoding.encode_binop, missing implementation of " ^ string_of_bop op)
 
 let rec encode_expr (e : Expression.t) : Z3.Expr.expr =
-  (*print_endline ("Encoding " ^ string_of_expression e);*)
   match e with
   | Val v -> encode_value v
   | Var v -> failwith ("InternalError: Encoding.encode_expr, tried to encode variable " ^ v)
@@ -212,36 +196,23 @@ let rec encode_expr (e : Expression.t) : Z3.Expr.expr =
       let e1' = encode_expr e1 and e2' = encode_expr e2 in
       encode_binop op e1' e2'
 
-let prt (s:string) : unit=
-print_endline s; print_endline ""
+let is_sat (exprs : Expression.t list) : bool =
 
-let is_sat (exprs : Expression.t list) : bool = (* (string, Expression.value) Hashtbl option, None quando UNSAT e RES (from Some RES) quando é sat, a hashtable mapeia vars em values do modelo *)
-  print_endline "\n\n>Encoding.ml: Checking the satisfiability of:";
-  let aux = List.map string_of_expression exprs in
-  List.iter print_endline aux;
-
-  try 
+  try
     let exprs'  = List.map encode_expr exprs in
     let exprs'' = List.map (fun x -> Z3.Expr.mk_app ctx lit_operations.bool_accessor [ x ]) exprs' in
-
-    (*let aux = List.map Z3.Expr.to_string exprs'' in
-    List.iter prt aux;*)
 
     let solver = Z3.Solver.mk_solver ctx None in
     Z3.Solver.add solver exprs'';
 
     let eval  = Z3.Solver.check solver [] in
-    let ()    = model solver in
-    let z3_result,b = match eval with
+    (*let ()    = model solver in*)
+    let _,b = match eval with
     | Z3.Solver.SATISFIABLE 	-> "SAT"   ,true
     | Z3.Solver.UNSATISFIABLE -> "UNSAT" ,false
     | Z3.Solver.UNKNOWN 			-> "Unkown",false
-    in
-
-    print_endline ("Z3 Output: " ^ z3_result ^ "\n");
-
-    b
+    in b
    
   with (Failure msg) ->
-    Printf.printf "Z3_Error: Call to solver failed with exception %s\n" msg; 
+    Printf.printf "InternalError: Z3: call to solver failed with exception %s\n" msg; 
     false 
