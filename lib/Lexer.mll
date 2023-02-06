@@ -72,6 +72,7 @@ rule read =
   | "function"        { FUNCTION }
   | "assume"          { ASSUME }
   | "assert"          { ASSERT }
+  | "skip"            { SKIP }
   | "clear"           { CLEAR }
   | "print"           { PRINT }
   | "symbol"          { SYMBOL }
