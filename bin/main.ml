@@ -28,6 +28,11 @@ let read_file (fname : string) : string =
   close_in ch;
   str_file
 
+let write_file (fname : string) (text : string) : unit =
+  let oc = open_out fname in
+  Printf.fprintf oc "%s\n" text;
+  close_out oc
+
 let arguments () =
 
   let usage_msg = "Usage: -i <path> -mode <c/p> -o <path> [-v|-s] -h <path> [--parse]" in
@@ -57,8 +62,12 @@ let main =
   let module C = MakeInterpreter.M (EvalConcrete.M) (DFS.M) in
 
   match !mode with
-    | "c" -> List.iter (Return.print Value.string_of_value)           (C.interpret program)
-    | "s" -> List.iter (Return.print Expression.string_of_expression) (S.interpret program)
+    | "c" -> let returns        = C.interpret program in
+             let str_of_returns = String.concat "\n" (List.map (Return.string_of_return Value.string_of_value) returns) in
+             write_file !out str_of_returns
+    | "s" -> let returns        = S.interpret program in
+             let str_of_returns = String.concat "\n" (List.map (Return.string_of_return Expression.string_of_expression) returns) in
+             write_file !out str_of_returns
     | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  s : for symbolic interpretation\n  c : for concrete interpretation\n"
 
 let _ = main
