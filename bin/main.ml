@@ -61,13 +61,17 @@ let main =
   let module S = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) in
   let module C = MakeInterpreter.M (EvalConcrete.M) (DFS.M) in
 
+  let str_of_returns =
+
   match !mode with
     | "c" -> let returns        = C.interpret program in
-             let str_of_returns = String.concat "\n" (List.map (Return.string_of_return Value.string_of_value) returns) in
-             write_file !out str_of_returns
+             String.concat "\n" (List.map (Return.string_of_return Value.string_of_value) returns)
+             
     | "s" -> let returns        = S.interpret program in
-             let str_of_returns = String.concat "\n" (List.map (Return.string_of_return Expression.string_of_expression) returns) in
-             write_file !out str_of_returns
+             String.concat "\n" (List.map (Return.string_of_return Expression.string_of_expression) returns)
+             
     | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  s : for symbolic interpretation\n  c : for concrete interpretation\n"
+
+  in write_file !out str_of_returns
 
 let _ = main
