@@ -1,25 +1,31 @@
-module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval.t) = struct
-  
+module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.t = struct
+
   open Program
   open Outcome
 
   type t = Eval.t
 
-  (* Evaluation of expressions *)
+  (* Evaluates an expressions *)
   let eval    = Eval.eval
-  (* Asserting wheter a given expression is true or not *)
+
+  (* Asserts wheter a given expression is true or not *)
   let is_true = Eval.is_true
+
   (* Negates an expression *)
   let negate  = Eval.negate
+
   (* Creates a fresh symbol *)
   let make_symbol = Eval.make_symbol
+
   (* Adds an expression to a path condition *)
   let add_condition = PathCondition.add_condition
 
   (* Selects which state to expand given a set of candidate states *)
   let pick = Search.pick
-  (* Merges the set of candidate states with the new set of states returned by 'step' *)
+
+  (* Merges the set of candidate states with the new set of states returned by the 'step' function *)
   let join = Search.join
+
   (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
 
@@ -61,7 +67,8 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
     | Sequence (s1::s2) -> [ (s1, s2@cont, store, cs, pc), Cont ]
   
     | Assign (x,e) ->
-        Store.set store x (eval store e);
+        let e' = eval store e in
+        Store.set store x e';
         [ (Skip, cont, store, cs, pc), Cont ]
     
     | Symbol (x,s) ->
@@ -150,7 +157,7 @@ module M (Eval : Eval.M) (Search : Search.M) : (Interpreter.M with type t = Eval
     | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
   
 
-  (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler *)
+  (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler of states *)
   let rec search (gas : int) (prog : program) (states : t State.t list) (returns : t Return.t list) : t Return.t list = 
   
     if gas=0 || states=[] then returns else

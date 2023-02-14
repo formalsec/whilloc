@@ -95,15 +95,15 @@ let z3_sort, lit_operations =
       (*  Recognizers  *)
       bool_recognizer    = bool_recognizer;
       int_recognizer     = int_recognizer
-    }  in 
+    } in 
     aux_sort, esl_literal_operations
   with _ -> raise (Failure ("InternalError: construction of z3_sort"))
 
 (* Solver helper functions *)
 
 let get_model_from_opt (mdl : Z3.Model.model option) : Z3.Model.model =
-  match mdl with
-  | None   -> failwith "zz"
+  match mdl with  (* None case -> either last Check was UNSAT, the model production was not enabled, or Check wasn't invoked before *)
+  | None   -> failwith "InternalError: Encoding.get_model_from_opt, tried to retrieve a Z3 model from None"
   | Some s -> s
 
 let pop (solver : Z3.Solver.solver) (lvl : int) : unit =

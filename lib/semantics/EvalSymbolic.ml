@@ -1,4 +1,4 @@
-module M : Eval.M  with type t = Expression.t = struct
+module M : Eval.M with type t = Expression.t = struct
 
   open EvalExpression
   open Expression
@@ -45,17 +45,18 @@ module M : Eval.M  with type t = Expression.t = struct
   let negate (e : t) : t = 
     Expression.UnOp (Not, e) 
 
-  let to_string t = Expression.string_of_expression t
-  let print t = to_string t |> print_endline
+  let to_string t : string = Expression.string_of_expression t
+
+  let print t : unit = to_string t |> print_endline
 
   let make_fresh_symb_generator (pref : string) : (unit -> string) =
     let count = ref 1 in
     fun () -> let x = !count in
       count := x+1; pref ^ (string_of_int x)
 
-  let generate_fresh_var = make_fresh_symb_generator Parameters.symbol
+  let generate_fresh_var = make_fresh_symb_generator Parameters.symbol_prefix
 
-  let make_symbol (name : string) = (* Symbols X̂x̂ *)
+  let make_symbol (name : string) =
     let symb_name   = generate_fresh_var() ^ "__" ^ name in
     let symb_value  = Value.SymbVal symb_name in 
     Some (Val symb_value)
