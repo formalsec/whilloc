@@ -7,7 +7,7 @@ type t = Val     of Value.t
        | UnOp    of uop * t
        | BinOp   of bop * t * t
 
-let negate_expression (e : t) : t = 
+let negate (e : t) : t = 
   UnOp (Not, e)
 
 let get_value_from_expr (e : t) : Value.t =
