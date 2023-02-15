@@ -43,11 +43,13 @@ module M : Eval.M with type t = Expression.t = struct
     Encoding.is_sat exprs
 
   let negate (e : t) : t = 
-    Expression.UnOp (Not, e) 
+    Expression.negate e
+    
+  let to_string (e : t) : string =
+    Expression.string_of_expression e
 
-  let to_string t : string = Expression.string_of_expression t
-
-  let print t : unit = to_string t |> print_endline
+  let print (e : t) : unit =
+    to_string e |> print_endline
 
   let make_fresh_symb_generator (pref : string) : (unit -> string) =
     let count = ref 1 in

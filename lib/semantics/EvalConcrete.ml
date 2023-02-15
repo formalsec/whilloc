@@ -26,9 +26,11 @@ module M : Eval.M with type t = Value.t = struct
     | Boolean false -> Boolean true
     | _             -> failwith "InternalError: EvalConcrete.negate, tried to negate a non boolean value"
 
-  let to_string t : string = Value.string_of_value t
+  let to_string (e : t) : string =
+    Value.string_of_value e
   
-  let print t : unit = to_string t |> print_endline
+  let print (e : t) : unit =
+    to_string e |> print_endline
 
   let make_symbol (name : string) =
     let _ = name in
