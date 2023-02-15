@@ -9,3 +9,9 @@
  (name play)
  (modules play)
  (libraries lib))
+
+(executable
+ (public_name Concolic)
+ (name concolic)
+ (modules concolic)
+ (libraries lib))
