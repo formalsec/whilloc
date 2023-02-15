@@ -24,7 +24,13 @@ let find_all (store : 'v t) (var : string) : 'v list =
   Hashtbl.find_all store var
 
 let exists (store : 'v t) (var : string) : bool =
-  Hashtbl.mem store var;;
+  Hashtbl.mem store var
+
+let iterate (f : string -> 'v -> unit) (store : 'v t) : unit =
+  Hashtbl.iter f store
+
+let fold (f : 'a -> 'b -> 'c -> 'c) ( htbl : ('a, 'b) Hashtbl.t) (init : 'c) : 'c =
+  Hashtbl.fold f htbl init
 
 let string_of_store (to_string : 'v -> string ) (store : 'v t) : string =
   "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (to_string y)) :: z ) store [])
