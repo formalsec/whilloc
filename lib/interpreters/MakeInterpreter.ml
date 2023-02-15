@@ -129,8 +129,8 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
         let true_pc  = add_condition pc e'  in
         let false_pc = add_condition pc e'' in
 
-        let guard_true  = is_true true_pc in
-        let guard_false = is_true false_pc in
+        let guard_true  = is_true true_pc   in
+        let guard_false = is_true false_pc  in
   
         let store' = if guard_true && guard_false then (Store.dup store) else store in
   
@@ -143,16 +143,16 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
         let e       = eval store e in
         let pc'     = add_condition pc e in
         let test_pc = add_condition pc (negate e) in
-        let is_true = is_true test_pc in
-        if is_true then [ (Skip, cont, store, cs, pc ), Error ]
-        else            [ (Skip, cont, store, cs, pc'), Cont  ]
+        let passed  = is_true test_pc in
+        if passed then [ (Skip, cont, store, cs, pc ), Error ]
+        else           [ (Skip, cont, store, cs, pc'), Cont  ]
   
     | Assume e ->
         let e       = eval store e in
         let pc'     = add_condition pc e in
-        let is_true = is_true pc' in
-        if is_true then [ (Skip, cont, store, cs, pc'), Cont    ] 
-        else            [ (Skip, cont, store, cs, pc ), AssumeF ]
+        let passed  = is_true pc' in
+        if passed then [ (Skip, cont, store, cs, pc'), Cont    ] 
+        else           [ (Skip, cont, store, cs, pc ), AssumeF ]
   
     | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
   
