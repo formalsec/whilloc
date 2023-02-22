@@ -32,5 +32,5 @@ let iterate (f : string -> 'v -> unit) (store : 'v t) : unit =
 let fold (f : 'a -> 'b -> 'c -> 'c) ( htbl : ('a, 'b) Hashtbl.t) (init : 'c) : 'c =
   Hashtbl.fold f htbl init
 
-let string_of_store (to_string : 'v -> string ) (store : 'v t) : string =
-  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (to_string y)) :: z ) store [])
+let to_string (str : 'v -> string ) (store : 'v t) : string =
+  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (str y)) :: z ) store [])

@@ -19,10 +19,10 @@ type 'v t = Program.stmt * (Program.stmt list) * 'v Store.t * 'v Callstack.t * '
     let stmt,stmts,st,cs,pc = state in
     (stmt,to_add@stmts,st,cs,pc)
 
-  let to_string (f : 'v -> string) (state : 'v t) : string =
-    let _ = f in
+  let to_string (str : 'v -> string) (state : 'v t) : string =
+    let _ = str   in
     let _ = state in
     "State.ml TODO to_string"
 
-  let print (f : 'v -> string) (state : 'v t) : unit = 
-    print_endline (to_string f state)
+  let print (str : 'v -> string) (state : 'v t) : unit = 
+    print_endline (to_string str state)
