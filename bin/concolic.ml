@@ -1,13 +1,16 @@
 open Lib
 
-open Expression
-open Value
-
 module C = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
 
-let create_program (funcs : Program.func list) : Program.program = (*TODO assert pairwise distinct function ids*)
-  let prog = Hashtbl.create 100 in
-  List.iter (fun (f : Program.func) -> Hashtbl.replace prog f.id f) funcs;
+let create_program (funcs : Program.func list) : Program.program =
+  let prog    = Hashtbl.create Parameters.size in
+  let replace =
+    fun (prog : Program.program) (func : Program.func) ->
+      let f = (Hashtbl.find_opt prog func.id) in
+      match f with
+        | None   -> Hashtbl.replace prog func.id func
+        | Some _ -> failwith "BadProgram: function names must pairwise distinct" in
+  List.iter (fun func -> replace prog func) funcs;
   prog
 
 let parse_program (str : string) : Program.func list =
@@ -21,17 +24,25 @@ let read_file (fname : string) : string =
   close_in ch;
   str_file
 
-let rec concolic_loop program (global_pc : Expression.t PathCondition.t) : bool = 
+let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) : bool = 
+  
   if Encoding.is_sat global_pc then
-    (*model = Encoding.get_model global_pc in TODO get_model*)
-    let returns = C.interpret program in (* model needs to enter here somehow *)
-    let return  = List.hd returns in
-    if Return.outcome return = Outcome.Error then
-      false
-    else
-      let _,npc = List.split (Return.pc return) in
-      let npc   = List.map Expression.negate npc  in (* BUG! the negation of this pc, which is a conjunction of expressions, is not the conjunction of each clause negated *)  
-      concolic_loop program (npc @ global_pc) 
+  
+    let model  = Encoding.get_model() in
+    let ()     = SymbMap.update model in
+
+    let returns = C.interpret program in
+    let return  = List.hd returns     in
+    
+    let state,outcome = return in
+
+    match outcome with
+    | Error _  -> Outcome.print outcome; false
+    | _        ->
+    let _,pc   = List.split (State.get_pathcondition state) in
+    let neg_pc = PathCondition.negate pc in
+    concolic_loop program (neg_pc :: global_pc)
+  
   else
     true
 
@@ -39,7 +50,8 @@ let main =
   
   let filename = Sys.argv.(1) in
   let program  = filename |> read_file |> parse_program |> create_program in
-  let _        = concolic_loop program [ Val (Boolean true) ] in
+  print_endline "";
+  let _        = concolic_loop program [ ] in
   ()
 
 let _ = main
