@@ -18,8 +18,15 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
     (EvalConcrete.eval cstore e, EvalSymbolic.eval sstore e)
 
   let is_true (exprs : t list) : bool =
-    let values,expressions = List.split exprs in
-    (EvalConcrete.is_true values) || (EvalSymbolic.is_true expressions)
+    let v,_ = List.split exprs in
+    EvalConcrete.is_true v
+
+  let test_assert (exprs : t list) : bool * Model.t =
+    let _,e = List.split exprs in
+    if (EvalSymbolic.is_true e) then
+      true,Some (Encoding.get_model ())
+    else
+      false,None
 
   let negate (e : t) : t =
     let value,expression = e in
@@ -27,22 +34,19 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
 
   let to_string (e : t) : string =
     let value,expression = e in
-    "Concrete:\n" ^ (EvalConcrete.to_string value) ^ "\nSymbolic\n" ^ (EvalSymbolic.to_string expression)
+    "(" ^ (EvalConcrete.to_string value) ^ ", " ^ (EvalSymbolic.to_string expression) ^ ")"
 
   let print (e : t) : unit =
     to_string e |> print_endline
 
-  let make_fresh_symb_generator (pref : string) : (unit -> string) =
-    let count = ref 1 in
-    fun () -> let x = !count in
-      count := x+1; pref ^ (string_of_int x)
-
-  let generate_fresh_var = make_fresh_symb_generator Parameters.symbol_prefix
-
   let make_symbol (name : string) =
-    let symb_name   = generate_fresh_var() ^ "__" ^ name in
-    let symb_value  = Value.SymbVal symb_name in
-    let init_value  = Random.int 100 in
-    Some (Value.Integer init_value, Expression.Val symb_value)
-
+    let symbolic_name  = Parameters.symbol_prefix ^ name in
+    let symbolic_value = Expression.make_symb_value symbolic_name in
+    let concrete_value =
+    match (SymbMap.map symbolic_name) with
+      | None   -> Value.Integer (Random.int Parameters.max_int)
+      | Some v -> v
+    in
+    Some (concrete_value, symbolic_value)
+  
 end

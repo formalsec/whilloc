@@ -18,7 +18,10 @@ module M : Eval.M with type t = Value.t = struct
     match v' with
     | Integer n -> if n!=0 then true else false
     | Boolean b -> b
-    | SymbVal _ -> failwith "InternalError: EvalConcrete.is_true, Symbolic Values cannot be evaluated to true or false at the level of concrete evaluations"
+    | SymbVal _ -> failwith "InternalError: EvalConcrete.is_true, symbolic values cannot be evaluated to true or false in concrete evaluation contexts"
+
+  let test_assert (exprs : t list) : bool * Model.t =
+    is_true exprs,None
 
   let negate (v : t) : t = 
     match v with
@@ -26,11 +29,11 @@ module M : Eval.M with type t = Value.t = struct
     | Boolean false -> Boolean true
     | _             -> failwith "InternalError: EvalConcrete.negate, tried to negate a non boolean value"
 
-  let to_string (e : t) : string =
-    Value.string_of_value e
+  let to_string (v : t) : string =
+    Value.string_of_value v
   
-  let print (e : t) : unit =
-    to_string e |> print_endline
+  let print (v : t) : unit =
+    to_string v |> print_endline
 
   let make_symbol (name : string) =
     let _ = name in

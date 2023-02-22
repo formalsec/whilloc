@@ -42,6 +42,12 @@ module M : Eval.M with type t = Expression.t = struct
   let is_true (exprs : t list) : bool =
     Encoding.is_sat exprs
 
+  let test_assert (exprs : t list) : bool * Model.t =
+    if Encoding.is_sat exprs then
+      true,Some (Encoding.get_model ())
+    else
+      false,None
+
   let negate (e : t) : t = 
     Expression.negate e
     
@@ -59,7 +65,7 @@ module M : Eval.M with type t = Expression.t = struct
   let generate_fresh_var = make_fresh_symb_generator Parameters.symbol_prefix
 
   let make_symbol (name : string) =
-    let symb_name   = generate_fresh_var() ^ "__" ^ name in
+    let symb_name   = generate_fresh_var() ^ name in
     let symb_value  = Value.SymbVal symb_name in 
     Some (Val symb_value)
 
