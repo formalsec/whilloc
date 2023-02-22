@@ -7,6 +7,12 @@ type t = Val     of Value.t
        | UnOp    of uop * t
        | BinOp   of bop * t * t
 
+let make_symb_value (name : string) : t = Val (Value.SymbVal name)
+let make_true  : t = Val (Value.Boolean (true))
+let make_false : t = Val (Value.Boolean (false))
+let make_uoperation (op : uop) (e : t) : t = UnOp (op, e)
+let make_boperation (op : bop) (e1 : t) (e2 : t) : t = BinOp (op, e1, e2)
+
 let negate (e : t) : t = 
   UnOp (Not, e)
 
@@ -37,7 +43,7 @@ let string_of_bop (op : bop) : string =
     | Equals  -> "=="
     | NEquals -> "!="
     | Or      -> "OR" (* ∨ *)
-    | And     -> "∧"
+    | And     -> "AND"  (* ∧ *)
     | Xor     -> "⊕"
     | ShiftL  -> "<<"
     | ShiftR  -> ">>"
