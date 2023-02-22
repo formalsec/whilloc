@@ -2,13 +2,14 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
 
   open Program
   open Outcome
+  open Parameters
 
   type t = Eval.t
 
   (* Evaluates an expressions *)
   let eval    = Eval.eval
 
-  (* Asserts wheter a given expression is true or not *)
+  (* Evaluates a boolean expression *)
   let is_true = Eval.is_true
 
   (* Negates an expression *)
@@ -17,13 +18,16 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
   (* Creates a fresh symbol *)
   let make_symbol = Eval.make_symbol
 
+  (* Asserts whether a given expression is true or not *)
+  let test_assert = Eval.test_assert
+
   (* Adds an expression to a path condition *)
   let add_condition = PathCondition.add_condition
 
   (* Selects which state to expand given a set of candidate states *)
   let pick = Search.pick
 
-  (* Merges the set of candidate states with the new set of states returned by the 'step' function *)
+  (* Merges the set of candidate states with the set of states returned by the 'step' function *)
   let join = Search.join
 
   (* Integer constant that bounds the number of steps performed by the interpreter *)
@@ -31,23 +35,23 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
 
   (* Helper functions, common to both concrete and symbolic contexts *)
   let create_initial_state program =
-    let main  = Program.get_function Parameters.main_id program in
-    let store = Store.create_empty_store Parameters.size in
-    let cs    = Callstack.create_callstack in
-    let pathc = PathCondition.create_pathcondition in
+    let main  = Program.get_function main_id program in
+    let store = Store.create_empty_store size        in
+    let cs    = Callstack.create_callstack           in
+    let pathc = PathCondition.create_pathcondition   in
     (Skip, [main.body], store, cs, pathc)
   
   let is_final result =
     let state,out = result in
     let (stmt',cont',_,_,_) = state in
-    if stmt'=Skip && cont'=[] && out=Cont then failwith "BadProgram: functions should always return a value"
+    if stmt'=Program.Skip && cont'=[] && out=Outcome.Cont then failwith "BadProgram: functions should always return a value"
     else
     match out with
     | Cont     -> false
     | AssumeF  -> true
-    | Error    -> true
+    | Error  _ -> true
     | Return _ -> true
-  
+
   (* -------------------------------------------------------------------------------- *)
   (* The interpreter itself. It consists of a 'step' function and a 'search' function *)
   (* -------------------------------------------------------------------------------- *)
@@ -106,8 +110,8 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
           | Callstack.Toplevel  -> [ (Skip, cont, store, cs', pc), Return (Eval.to_string v) ])
   
     | IfElse (e, s1, s2) ->
-        let e'  = eval store e   in
-        let e'' = negate e' in
+        let e'  = eval store e in
+        let e'' = negate e'    in
   
         let then_pc = add_condition pc e'  in
         let else_pc = add_condition pc e'' in
@@ -124,7 +128,7 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
   
     | While (e,body) as while_stmt ->
         let e'  = eval store e  in
-        let e'' = negate e' in
+        let e'' = negate e'     in
 
         let true_pc  = add_condition pc e'  in
         let false_pc = add_condition pc e'' in
@@ -139,20 +143,20 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
   
         body_branch @ skip_branch
   
+    | Assume e ->
+      let e        = eval store e in
+      let pc'      = add_condition pc e in
+      let continue = is_true pc' in
+      if continue then [ (Skip, cont, store, cs, pc'), Cont    ] 
+      else             [ (Skip, cont, store, cs, pc ), AssumeF ]
+
     | Assert e ->
         let e       = eval store e in
         let pc'     = add_condition pc e in
         let test_pc = add_condition pc (negate e) in
-        let passed  = is_true test_pc in
-        if passed then [ (Skip, cont, store, cs, pc ), Error ]
-        else           [ (Skip, cont, store, cs, pc'), Cont  ]
-  
-    | Assume e ->
-        let e       = eval store e in
-        let pc'     = add_condition pc e in
-        let passed  = is_true pc' in
-        if passed then [ (Skip, cont, store, cs, pc'), Cont    ] 
-        else           [ (Skip, cont, store, cs, pc ), AssumeF ]
+        let error,m = test_assert test_pc in
+        if error then [ (Skip, cont, store, cs, pc ), Error m]
+        else          [ (Skip, cont, store, cs, pc'), Cont   ]
   
     | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
   
