@@ -1,13 +1,16 @@
-type t = Cont | Return of string | AssumeF | Error
+type t = Cont | Return of string | AssumeF | Error of Model.t
 
-let string_of_outcome (o : t) : string =
+let to_string (o : t) : string =
   match o with
   | Cont     -> "Continue"
-  | Error    -> "Assertion evaluated to false"
+  | Error e  -> "Assertion violated, counter example:" ^ (Model.to_string e)
   | AssumeF  -> "Assumption evaluated to false"
   | Return e -> "Returned " ^ e
 
 let should_halt (o : t) : bool =
   match o with
-  | Error | AssumeF -> true
+  | Error _ | AssumeF -> true
   | _ -> false
+
+let print (o : t) : unit =
+  to_string o |> print_endline
