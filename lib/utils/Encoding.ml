@@ -8,6 +8,10 @@ let ctx =
 	mk_context
 		[ ("model", "true"); ("proof", "false"); ("unsat_core", "false") ]
 
+(* Solver *)
+
+let solver = ref (Z3.Solver.mk_solver ctx None)
+
 (* Types *)
 
 let ints_sort  = Z3.Arithmetic.Integer.mk_sort ctx
@@ -51,10 +55,10 @@ let mk_xor = fun e1 e2 -> Z3.Boolean.mk_xor ctx e1 e2
 
 let z3_sort, lit_operations =
   (* Type constructors  *)
-  let esl_bool_constructor =
+  let bool_constructor =
     Z3.Datatype.mk_constructor ctx (mk_string_symb "Bool") (mk_string_symb "isBool")
       [(mk_string_symb "boolValue")] [Some bools_sort] [0] in
-  let esl_int_constructor =
+  let int_constructor =
     Z3.Datatype.mk_constructor ctx (mk_string_symb "Int") (mk_string_symb "isInt")
       [(mk_string_symb "intValue")] [Some ints_sort] [0] in
 
@@ -63,27 +67,27 @@ let z3_sort, lit_operations =
       ctx
       (mk_string_symb "Symb_Literal") 
       [
-          esl_bool_constructor;
-          esl_int_constructor 
+          bool_constructor;
+          int_constructor 
       ] in
 
   try
     (*  Constructors  *)
-    let z3_esl_constructors = Z3.Datatype.get_constructors aux_sort in
-    let bool_constructor    = List.nth z3_esl_constructors 0 in
-    let int_constructor     = List.nth z3_esl_constructors 1 in
+    let z3_constructors = Z3.Datatype.get_constructors aux_sort in
+    let bool_constructor    = List.nth z3_constructors 0 in
+    let int_constructor     = List.nth z3_constructors 1 in
 
     (*  Accessors  *)
-    let z3_esl_accessors    = Z3.Datatype.get_accessors aux_sort in
-    let bool_accessor       = List.nth (List.nth z3_esl_accessors 0) 0 in
-    let int_accessor        = List.nth (List.nth z3_esl_accessors 1) 0 in
+    let z3_accessors    = Z3.Datatype.get_accessors aux_sort in
+    let bool_accessor       = List.nth (List.nth z3_accessors 0) 0 in
+    let int_accessor        = List.nth (List.nth z3_accessors 1) 0 in
 
     (*  Recognizers  *)
-    let z3_esl_recognizers  = Z3.Datatype.get_recognizers aux_sort in
-    let bool_recognizer     = List.nth z3_esl_recognizers 0 in
-    let int_recognizer      = List.nth z3_esl_recognizers 1 in
+    let z3_recognizers  = Z3.Datatype.get_recognizers aux_sort in
+    let bool_recognizer     = List.nth z3_recognizers 0 in
+    let int_recognizer      = List.nth z3_recognizers 1 in
     
-    let esl_literal_operations   = {
+    let literal_operations   = {
       (*  Constructors  *)
       bool_constructor   = bool_constructor;
       int_constructor    = int_constructor;
@@ -96,28 +100,56 @@ let z3_sort, lit_operations =
       bool_recognizer    = bool_recognizer;
       int_recognizer     = int_recognizer
     } in 
-    aux_sort, esl_literal_operations
+    aux_sort, literal_operations
   with _ -> raise (Failure ("InternalError: construction of z3_sort"))
 
 (* Solver helper functions *)
 
-let get_model_from_opt (mdl : Z3.Model.model option) : Z3.Model.model =
-  match mdl with  (* None case -> either last Check was UNSAT, the model production was not enabled, or Check wasn't invoked before *)
-  | None   -> failwith "InternalError: Encoding.get_model_from_opt, tried to retrieve a Z3 model from None"
-  | Some s -> s
+let push (solver : Z3.Solver.solver) : unit =
+  Z3.Solver.push solver
 
 let pop (solver : Z3.Solver.solver) (lvl : int) : unit =
-	Z3.Solver.pop solver lvl
+  Z3.Solver.pop solver lvl
 
-let push (solver : Z3.Solver.solver) : unit = Z3.Solver.push solver
+let get_model ?(print_model=false) () : (string*Value.t) list = 
 
-let model (solver : Z3.Solver.solver) : unit =
-  print_endline "Printing model:";
-  let m =
-  match Z3.Solver.get_model solver with
-  | None -> ""
-  | Some model -> Z3.Model.to_string model;
-  in print_endline (m^"\n")
+  let res =
+    
+  match (Z3.Solver.get_model !solver) with
+    | None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
+    | Some model ->
+      List.map
+      (fun const ->
+        let name 	  = Z3.Symbol.to_string (Z3.FuncDecl.get_name const) 		in
+        let _ 	  	= Z3.Sort.to_string   (Z3.FuncDecl.get_range const)  	in
+        let interp  = Z3.Model.get_const_interp model const |> Option.get in
+        let interp' = Z3.Expr.to_string interp in
+
+        let symb		= Z3.Expr.mk_const ctx (mk_string_symb name) z3_sort in 
+
+        let get_type_z3 = (*get the type in the form "(Int" or "(Bool" or ... i.e., "(TYPE"; then, remove the left paranthesis *)
+          fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
+
+        match get_type_z3 interp' with
+
+        | "Int"  ->
+            let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in 
+            let v = Z3.Model.eval model x true |> Option.get in
+            let s = Z3.Arithmetic.Integer.numeral_to_string v in
+            (name, Integer (int_of_string s))
+
+        | "Bool" ->
+            let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in 
+            let v = Z3.Model.eval model x true |> Option.get in
+            let s = Z3.Expr.to_string v in
+            (name, Boolean (bool_of_string s))
+
+        | t 		 -> failwith ("InternalError: Encoding.string_binds, there is no corresponding type with " ^ t);
+        )
+
+      (Z3.Model.get_const_decls model) in
+      if print_model then List.iter (fun (x,y) -> print_endline (x ^ ": " ^ (Value.string_of_value y))) res else (); 
+      res
 
 (* Encoding of expressions *)
 
@@ -202,17 +234,16 @@ let is_sat (exprs : Expression.t list) : bool =
     let exprs'  = List.map encode_expr exprs in
     let exprs'' = List.map (fun x -> Z3.Expr.mk_app ctx lit_operations.bool_accessor [ x ]) exprs' in
 
-    let solver = Z3.Solver.mk_solver ctx None in
-    Z3.Solver.add solver exprs'';
+    Z3.Solver.reset !solver;
+    Z3.Solver.add   !solver exprs'';
 
-    let eval  = Z3.Solver.check solver [] in
-    (*let ()    = model solver in*)
-    let _,b = match eval with
-    | Z3.Solver.SATISFIABLE 	-> "SAT"   ,true
-    | Z3.Solver.UNSATISFIABLE -> "UNSAT" ,false
-    | Z3.Solver.UNKNOWN 			-> "Unkown",false
-    in b
-   
+    let status  = Z3.Solver.check !solver [] in
+
+    match status with
+    | Z3.Solver.SATISFIABLE 	-> true
+    | Z3.Solver.UNSATISFIABLE -> false
+    | Z3.Solver.UNKNOWN 			-> false
+
   with (Failure msg) ->
     Printf.printf "InternalError: Z3: call to solver failed with exception %s\n" msg; 
-    false 
+    false
