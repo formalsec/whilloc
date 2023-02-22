@@ -1,50 +1,29 @@
 open Lib
+open Utils
 
-let file = ref ""
-let mode = ref ""
-let out = ref ""
-let verbose = ref false
+module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M)
+module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M)
+module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
+    
+let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : CC.t Return.t list) : CC.t Return.t list = 
 
+  if Encoding.is_sat global_pc then
 
-let create_program (funcs : Program.func list) : Program.program =
-  let prog    = Hashtbl.create Parameters.size in
-  let replace =
-    fun (prog : Program.program) (func : Program.func) ->
-      let f = (Hashtbl.find_opt prog func.id) in
-      match f with
-        | None   -> Hashtbl.replace prog func.id func
-        | Some _ -> failwith "BadProgram: function names must pairwise distinct" in
-  List.iter (fun func -> replace prog func) funcs;
-  prog
+    let model  = Encoding.get_model () in
+    let ()     = SymbMap.update model  in
 
-let parse_program (str : string) : Program.func list =
-  let lexbuf = Lexing.from_string str in
-  let funcs  = Parser.program_target Lexer.read lexbuf in
-  funcs
+    let returns = CC.interpret program in
 
-let read_file (fname : string) : string =
-  let ch = open_in fname in
-  let str_file = really_input_string ch (in_channel_length ch) in
-  close_in ch;
-  str_file
+    let return  = List.hd returns in
+    let state,_ = return          in
 
-let write_file (fname : string) (text : string) : unit =
-  let oc = open_out fname in
-  Printf.fprintf oc "%s\n" text;
-  close_out oc
+    let _,pc   = List.split (State.get_pathcondition state) in
+    let neg_pc = PathCondition.negate pc                    in
 
-let arguments () =
-
-  let usage_msg = "Usage: -i <path> -mode <c/p> -o <path> [-v|-s] -h <path> [--parse]" in
-  Arg.parse
-    [
-      ("-i"   , Arg.String (fun f -> file := f ), "Input file");
-      ("-m"   , Arg.String (fun m -> mode := m ), "Mode to run: c - Concrete / s - Symbolic ");
-      ("-o"   , Arg.String (fun o -> out  := o ), "Output file");
-      ("-v"   , Arg.Set verbose, "Verbose")
-    ]
-    (fun s -> Printf.printf "Ignored Argument: %s" s)
-    usage_msg
+    concolic_loop program (neg_pc :: global_pc) (return::outs)
+  
+  else
+    outs
 
 let main =
   print_string "\n=====================\n\tÆnima\n=====================\n\n";
@@ -52,26 +31,28 @@ let main =
 
   if (!file = "" && !mode = "" && !out = "") then (print_string "\nNo option selected. Use -h\n";)
   else if (!file = "") then (print_string "No input file. Use -i\n\n=====================\n\tFINISHED\n=====================\n";)
-  else if (!mode = "") then (print_string "No mode selected. Use -mode\n\n=====================\n\tFINISHED\n=====================\n";)
+  else if (!mode = "") then (print_string "No mode selected. Use -m\n\n=====================\n\tFINISHED\n=====================\n";)
   else if (!out  = "") then (print_string "No output file. Use -o\n\n=====================\n\tFINISHED\n=====================\n";)
   
   else
 
   let program  = !file |> read_file |> parse_program |> create_program in
-  let module S = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) in
-  let module C = MakeInterpreter.M (EvalConcrete.M) (DFS.M) in
 
   let str_of_returns =
-
   match !mode with
-    | "c" -> let returns        = C.interpret program in
-             String.concat "\n" (List.map (Return.string_of_return Value.string_of_value) returns)
+
+    | "c"   -> let returns        = C.interpret program in
+               String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string) returns)
              
-    | "s" -> let returns        = S.interpret program in
-             String.concat "\n" (List.map (Return.string_of_return Expression.string_of_expression) returns)
+    | "s"   -> let returns        = S.interpret program in
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+    
+    | "cc"  -> let returns        = concolic_loop program [ ] [ ] in
+               String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string) returns)
              
     | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  s : for symbolic interpretation\n  c : for concrete interpretation\n"
 
-  in write_file !out str_of_returns
+  in write_file !out str_of_returns;
+  print_string "\n=====================\n\tExiting\n=====================\n\n"
 
 let _ = main
