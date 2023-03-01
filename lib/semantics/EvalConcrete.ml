@@ -16,9 +16,9 @@ module M : Eval.M with type t = Value.t = struct
     let v' = try List.hd v
     with _ -> failwith "InternalError: EvalConcrete.is_true, tried to evaluate an empty list of values" in 
     match v' with
-    | Integer n -> if n!=0 then true else false
     | Boolean b -> b
-    | SymbVal _ -> failwith "InternalError: EvalConcrete.is_true, symbolic values cannot be evaluated to true or false in concrete evaluation contexts"
+    | Integer _ -> failwith ("InternalError: EvalConcrete.is_true, guard expressions must be of type boolean")
+    | SymbVal s -> failwith ("InternalError: EvalConcrete.is_true, symbolic values " ^ s ^ " cannot be evaluated to true or false in concrete evaluation contexts")
 
   let test_assert (exprs : t list) : bool * Model.t =
     is_true exprs,None
