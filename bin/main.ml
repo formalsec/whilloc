@@ -36,7 +36,8 @@ let main =
   
   else
 
-  let program  = !file |> read_file |> parse_program |> create_program in
+  let program   = !file |> read_file |> parse_program |> create_program in
+  let meta_data = Printf.sprintf ("Input file: %s\nExecution mode: %s\nOutput file: %s\n\n") !file !mode !out in 
 
   let str_of_returns =
   match !mode with
@@ -52,7 +53,7 @@ let main =
              
     | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  s : for symbolic interpretation\n  c : for concrete interpretation\n"
 
-  in write_file !out str_of_returns;
+  in write_file !out (meta_data ^ str_of_returns);
   print_string "\n=====================\n\tExiting\n=====================\n\n"
 
 let _ = main
