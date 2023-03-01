@@ -144,12 +144,12 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
         body_branch @ skip_branch
   
     | Assume e ->
-      let e        = eval store e in
-      let pc'      = add_condition pc e in
-      let pc''     = add_condition pc (negate e) in
-      let continue = is_true pc' in
-      if continue then [ (Skip, cont, store, cs, pc' ), Cont    ] 
-      else             [ (Skip, cont, store, cs, pc''), AssumeF ]
+        let e        = eval store e in
+        let pc'      = add_condition pc e in
+        let pc''     = add_condition pc (negate e) in
+        let continue = is_true pc' in
+        if continue then [ (Skip, cont, store, cs, pc' ), Cont    ] 
+        else             [ (Skip, cont, store, cs, pc''), AssumeF ]
 
     | Assert e ->
         let e     = eval store e in
