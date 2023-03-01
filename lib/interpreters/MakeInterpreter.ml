@@ -146,20 +146,20 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
     | Assume e ->
       let e        = eval store e in
       let pc'      = add_condition pc e in
+      let pc''     = add_condition pc (negate e) in
       let continue = is_true pc' in
-      if continue then [ (Skip, cont, store, cs, pc'), Cont    ] 
-      else             [ (Skip, cont, store, cs, pc ), AssumeF ]
+      if continue then [ (Skip, cont, store, cs, pc' ), Cont    ] 
+      else             [ (Skip, cont, store, cs, pc''), AssumeF ]
 
     | Assert e ->
-        let e       = eval store e in
-        let pc'     = add_condition pc e in
-        let test_pc = add_condition pc (negate e) in
-        let error,m = test_assert test_pc in
-        if error then [ (Skip, cont, store, cs, pc ), Error m]
-        else          [ (Skip, cont, store, cs, pc'), Cont   ]
+        let e     = eval store e in
+        let pc'   = add_condition pc e in
+        let pc''  = add_condition pc (negate e) in
+        let err,model = test_assert pc'' in
+        if err then [ (Skip, cont, store, cs, pc ), Error model ]
+        else        [ (Skip, cont, store, cs, pc'), Cont        ]
   
     | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
-  
 
   (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler of states *)
   let rec search (gas : int) (prog : program) (states : t State.t list) (returns : t Return.t list) : t Return.t list = 
