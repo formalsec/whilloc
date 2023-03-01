@@ -111,7 +111,7 @@ let push (solver : Z3.Solver.solver) : unit =
 let pop (solver : Z3.Solver.solver) (lvl : int) : unit =
   Z3.Solver.pop solver lvl
 
-let get_model ?(print_model=false) () : (string*Value.t) list = 
+let get_model ?(print_model=false) () : (string * Value.t) list = 
 
   let res =
     
