@@ -1,6 +1,5 @@
 module M (ConcreteEval : Eval.M) (SymbolicEval : Eval.M) : Eval.M with type t = (ConcreteEval.t * SymbolicEval.t) = struct
-                                                            (*ConcreteEval.t = Value.t and SymbolicEval.t = Expression.t and*)
-  
+
   type   t = ConcreteEval.t * SymbolicEval.t
   type  st = t Store.t
 
