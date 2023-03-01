@@ -60,7 +60,7 @@ module M : Eval.M with type t = Expression.t = struct
   let make_fresh_symb_generator (pref : string) : (unit -> string) =
     let count = ref 1 in
     fun () -> let x = !count in
-      count := x+1; pref ^ (string_of_int x)
+      count := x+1; pref ^ (string_of_int x) ^ "_"
 
   let generate_fresh_var = make_fresh_symb_generator Parameters.symbol_prefix
 
