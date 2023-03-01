@@ -1,5 +1,5 @@
 function aenima() {
-    x = symbol("testing");
+    x = symbol("73");
     if (x>10) {
         x = 9
     }

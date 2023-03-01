@@ -3,14 +3,6 @@ function f(x,y) {
 };
 
 function aenima() {
-    skip;
-    x = false;
-    if (x) {
-        print(true)
-    }
-    else {
-        print(false)
-    };
     y = 10;
     while (y<12) {
         y=y+1;
