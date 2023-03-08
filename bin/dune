@@ -15,3 +15,9 @@
  (name concolic)
  (modules concolic)
  (libraries lib))
+
+(executable
+ (public_name Hybrid)
+ (name hybrid)
+ (modules hybrid)
+ (libraries lib))
