@@ -1,6 +1,6 @@
 open Lib
 
-module C = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
+module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
 
 let create_program (funcs : Program.func list) : Program.program =
   let prog    = Hashtbl.create Parameters.size in
@@ -31,8 +31,8 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
     let model  = Encoding.get_model() in
     let ()     = SymbMap.update model in
 
-    let returns = C.interpret program in
-    let return  = List.hd returns     in
+    let returns,_ = CC.interpret program () in
+    let return    = List.hd returns                in
     
     let state,outcome = return in
 
@@ -44,6 +44,7 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
     concolic_loop program (neg_pc :: global_pc)
   
   else
+    let () = print_endline "No assertion violated\n\nExiting now..." in
     true
 
 let main =
