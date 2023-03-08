@@ -17,6 +17,9 @@ let get (store : 'v t) (var : string) : 'v =
   | None    -> failwith ("NameError: Store.get, name '" ^ var ^ "' is not defined") 
   | Some v  -> v)
 
+let get_opt (store : 'v t) (var : string) : 'v option =
+  Hashtbl.find_opt store var
+
 let dup (store : 'v t) : 'v t =
   Hashtbl.copy store
 
@@ -34,3 +37,6 @@ let fold (f : 'a -> 'b -> 'c -> 'c) ( htbl : ('a, 'b) Hashtbl.t) (init : 'c) : '
 
 let to_string (str : 'v -> string ) (store : 'v t) : string =
   "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (str y)) :: z ) store [])
+
+let print (str : 'v -> string ) (store : 'v t) : unit =
+  to_string str store |> print_endline
