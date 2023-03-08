@@ -7,11 +7,11 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
   module EvalSymbolic = EvalSymbolic.M
 
   let project_store (store : st) : Value.t Store.t * Expression.t Store.t =
-    let key_values  = Store.fold (fun k v z -> (k, fst v) :: z) store [] in
-    let key_symbols = Store.fold (fun k v z -> (k, snd v) :: z) store [] in
-    let cstore = Store.create_store key_values  in
-    let sstore = Store.create_store key_symbols in
-    (cstore, sstore)
+    let key_values     = Store.fold (fun k v z -> (k, fst v) :: z) store [] in
+    let key_symbols    = Store.fold (fun k v z -> (k, snd v) :: z) store [] in
+    let concrete_store = Store.create_store key_values  in
+    let symbolic_store = Store.create_store key_symbols in
+    (concrete_store, symbolic_store)
 
   let eval (store : st) (e : Expression.t) : t =
     let cstore,sstore = project_store store in
@@ -23,10 +23,7 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
 
   let test_assert (exprs : t list) : bool * Model.t =
     let _,e = List.split exprs in
-    if (EvalSymbolic.is_true e) then
-      true,Some (Encoding.get_model ())
-    else
-      false,None
+    EvalSymbolic.test_assert e
 
   let negate (e : t) : t =
     let value,expression = e in
@@ -48,5 +45,5 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
       | Some v -> v
     in
     Some (concrete_value, symbolic_value)
-  
+
 end

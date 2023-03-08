@@ -10,5 +10,5 @@ module type M = sig
     val print       : t -> unit
 
     val make_symbol : string -> t option
-
+    
 end
