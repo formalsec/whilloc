@@ -2,7 +2,6 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
 
   open Program
   open Outcome
-  open Parameters
 
   type t = Eval.t
 
@@ -33,14 +32,15 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
   (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
 
-  (* Helper functions, common to both concrete and symbolic contexts *)
-  let create_initial_state program =
-    let main  = Program.get_function main_id program in
-    let store = Store.create_empty_store size        in
+  (* Helper functions, common across many different contexts (concrete, symbolic, concolic,...) *)
+  
+  let initial_state (program : Program.program) =
+    let main  = Program.get_function Parameters.main_id program in
+    let store = Store.create_empty_store Parameters.size        in
     let cs    = Callstack.create_callstack           in
     let pathc = PathCondition.create_pathcondition   in
     (Skip, [main.body], store, cs, pathc)
-  
+
   let is_final result =
     let state,out = result in
     let (stmt',cont',_,_,_) = state in
@@ -152,29 +152,29 @@ module M (Eval : Eval.M) (Search : Search.M) : Interpreter.M with type t = Eval.
         else             [ (Skip, cont, store, cs, pc''), AssumeF ]
 
     | Assert e ->
-        let e     = eval store e in
-        let pc'   = add_condition pc e in
-        let pc''  = add_condition pc (negate e) in
+        let e        = eval store e in
+        let pc'      = add_condition pc e in
+        let pc''     = add_condition pc (negate e) in
         let err,model = test_assert pc'' in
         if err then [ (Skip, cont, store, cs, pc ), Error model ]
         else        [ (Skip, cont, store, cs, pc'), Cont        ]
   
-    | Sequence [ ] -> failwith "InternalError: Interpreter, reached the empty program"
+    | Sequence [ ] -> failwith "InternalError: Interpreter.step, reached an empty program"
 
   (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler of states *)
-  let rec search (gas : int) (prog : program) (states : t State.t list) (returns : t Return.t list) : t Return.t list = 
+  let rec search (gas : int) (prog : program) (states : t State.t list) (returns : t Return.t list) : t Return.t list * t State.t list = 
   
-    if gas=0 || states=[] then returns else
+    if gas=0 || states=[] then returns,states else
   
-    let state, states' = pick states in  
+    let state, states' = pick states     in  
     let branches       = step prog state in
 
     let branches_final, branches_cont = List.partition is_final branches in
-    let states_cont   , _             = List.split branches_cont in
+    let states_cont   , _             = List.split branches_cont         in
   
     search (gas-1) prog (join states_cont states') (returns @ branches_final)
   
-  let interpret (prog : program) : t Return.t list = 
-    search tank prog [create_initial_state prog] [ ]
+  let interpret (prog : program) ?(origin=initial_state prog) () : t Return.t list * t State.t list =
+    search tank prog [origin] [ ]
 
 end
