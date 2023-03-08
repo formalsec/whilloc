@@ -5,25 +5,22 @@ module M : Eval.M with type t = Expression.t = struct
   
   type   t =   Expression.t
   type  st = t Store.t
-
-  let is_symbolic_value (v : Value.t) : bool =
-    match v with
-    | SymbVal _ -> true
-    | _         -> false
   
-  let rec is_symbolic (store : st) (e : t) : bool =
+  let rec is_symbolic (store : t Store.t) (e : t) : bool =
+    let is_symbolic' = is_symbolic store in
     match e with
-    | Val v           -> is_symbolic_value v
-    | Var x           -> Store.get store x |> is_symbolic store 
-    | UnOp  (_, e)    -> is_symbolic store e
-    | BinOp (_,e1,e2) -> is_symbolic store e1 || is_symbolic store e2
-  
+    | Val v           -> Value.is_symbolic_value v
+    | Var x           -> is_symbolic' (Store.get store x)
+    | UnOp  (_, e)    -> is_symbolic' e
+    | BinOp (_,e1,e2) -> is_symbolic' e1 || is_symbolic' e2
+
   let rec simplify_expression (store : st) (e : t) : t =
+    let simplify_expr = simplify_expression store in
     match e with
     | Val _            -> e
     | Var x            -> Store.get store x
-    | UnOp  (op, e)    -> UnOp (op, simplify_expression store e)
-    | BinOp (op,e1,e2) -> BinOp(op, simplify_expression store e1, simplify_expression store e2)
+    | UnOp  (op, e)    -> UnOp (op, simplify_expr e)
+    | BinOp (op,e1,e2) -> BinOp(op, simplify_expr e1, simplify_expr e2)
   
   let rec eval (store : st) (e : Expression.t) : t = 
   
@@ -57,15 +54,8 @@ module M : Eval.M with type t = Expression.t = struct
   let print (e : t) : unit =
     to_string e |> print_endline
 
-  let make_fresh_symb_generator (pref : string) : (unit -> string) =
-    let count = ref 1 in
-    fun () -> let x = !count in
-      count := x+1; pref ^ (string_of_int x) ^ "_"
-
-  let generate_fresh_var = make_fresh_symb_generator Parameters.symbol_prefix
-
   let make_symbol (name : string) =
-    let symb_name   = generate_fresh_var() ^ name in
+    let symb_name   = Parameters.symbol_prefix ^ name in
     let symb_value  = Value.SymbVal symb_name in 
     Some (Val symb_value)
 
