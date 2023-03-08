@@ -1,0 +1,12 @@
+function aenima() {
+    x = symbol("x");
+    x = x+1;
+    if (x>0) {
+        y = true
+    }
+    else {
+        y = false
+    };
+    print(y);
+    return x
+}
