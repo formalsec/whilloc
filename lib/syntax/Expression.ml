@@ -27,6 +27,21 @@ let get_value_from_expr (e : t) : Value.t =
   | Val v -> v
   | _     -> failwith "InternalError: Expression.get_value_from_expr, tried to retrieve a value from a non value constructor" 
 
+let rec flatten (e : t) : t list = 
+  match e with
+  | Val _ -> [e]
+  | Var _ -> [e]
+  | UnOp  (_, e)      -> flatten e
+  | BinOp (_, e1, e2) -> (flatten e1) @ (flatten e2)
+
+let rec get_symbols (e : t) : string list =
+  match e with
+  | Val SymbVal s -> [s]
+  | Val _ -> []
+  | Var _ -> []
+  | UnOp  (_, e)      -> get_symbols e
+  | BinOp (_, e1, e2) -> (get_symbols e1) @ (get_symbols e2)
+
 let string_of_uop (op : uop) : string =
   match op with
     | Neg -> "-"
