@@ -148,8 +148,13 @@ let get_model ?(print_model=false) () : (string * Value.t) list =
         )
 
       (Z3.Model.get_const_decls model) in
-      if print_model then List.iter (fun (x,y) -> print_endline (x ^ ": " ^ (Value.string_of_value y))) res else (); 
-      res
+
+      if print_model then let _ = print_endline "Z3 Model" in
+                          List.iter (fun (x,y) -> print_endline (x ^ ": " ^ (Value.string_of_value y))) res;
+                          print_endline ""
+      else ();
+
+  res
 
 (* Encoding of expressions *)
 
@@ -229,7 +234,7 @@ let rec encode_expr (e : Expression.t) : Z3.Expr.expr =
       encode_binop op e1' e2'
 
 let is_sat (exprs : Expression.t list) : bool =
-
+  
   try
     let exprs'  = List.map encode_expr exprs in
     let exprs'' = List.map (fun x -> Z3.Expr.mk_app ctx lit_operations.bool_accessor [ x ]) exprs' in
