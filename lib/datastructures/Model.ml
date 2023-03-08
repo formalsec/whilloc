@@ -8,8 +8,9 @@ let rec value_of (model : t) (var : string) : Value.t =
 
 let to_string (model : t) : string =
   match model with
-  | None   -> "No model"
-  | Some m -> "\n\t\t\t\t" ^ (String.concat "\n\t\t\t\t" ( List.map (fun (x,v) -> (x ^ ": " ^ Value.string_of_value v)) m ))
+  | None    -> "No model"
+  | Some [] -> "Empty model"
+  | Some m  -> "\n\t\t\t\t" ^ (String.concat "\n\t\t\t\t" ( List.map (fun (x,v) -> (x ^ ": " ^ Value.string_of_value v)) m ))
 
 let print (model : t) : unit =
   to_string model |> print_endline
