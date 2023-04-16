@@ -3,7 +3,7 @@
 (library
  (name lib)
  (libraries z3)
- (modules_without_implementation Interpreter Eval Search))
+ (modules_without_implementation Interpreter Eval Search Heap))
 
 (ocamllex
   (modules Lexer)
