@@ -42,3 +42,5 @@ let arguments () =
     ]
     (fun s -> Printf.printf "Ignored Argument: %s" s)
     usage_msg
+
+let random_int () = Random.int Parameters.max_int
