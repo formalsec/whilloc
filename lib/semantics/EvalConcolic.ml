@@ -41,7 +41,7 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
     let symbolic_value = Expression.make_symb_value symbolic_name in
     let concrete_value =
     match (SymbMap.map symbolic_name) with
-      | None   -> Value.Integer (Random.int Parameters.max_int)
+      | None   -> Value.Integer (Utils.random_int ())
       | Some v -> v
     in
     Some (concrete_value, symbolic_value)
