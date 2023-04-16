@@ -1,7 +1,8 @@
 function aenima() {
-    x = new(5+3);
-    x[3+2] = 2*3;
-    y = x[2+3];
+    x = new(8);
+    x[3] = 5;
+    y = x[3];
+    print (y); 
     delete x;
     return x
 }

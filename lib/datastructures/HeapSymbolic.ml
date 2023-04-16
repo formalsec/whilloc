@@ -5,13 +5,13 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
-  let malloc h (sz : vt) (pc : t PathCondition.t) : (t * vt * t PathCondition.t) list =
+  let malloc h (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     ignore sz;
     ignore pc;
     ignore h;
     []
   
-  let update h (arr : string) (index : vt) (v : vt) (pc : t PathCondition.t)  : (t * t PathCondition.t) list =
+  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
     ignore arr;  
     ignore v;
     ignore index;
@@ -19,14 +19,14 @@ module M : Heap.M with type vt = Expression.t = struct
     ignore h;
     []
 
-  let lookup h (arr : string) (index : vt) (pc : t PathCondition.t) : (t * vt * t PathCondition.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     ignore index;
     ignore arr;
     ignore h;
     ignore pc;
     []
 
-  let free h (arr : string) (pc : t PathCondition.t) : (t * t PathCondition.t) list =
+  let free h (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
     ignore arr;
     ignore pc;
     ignore h;
