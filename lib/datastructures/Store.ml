@@ -20,6 +20,9 @@ let get (store : 'v t) (var : string) : 'v =
 let get_opt (store : 'v t) (var : string) : 'v option =
   Hashtbl.find_opt store var
 
+let remove (store : 'v t) (var : string) : unit =
+  Hashtbl.remove store var
+
 let dup (store : 'v t) : 'v t =
   Hashtbl.copy store
 
