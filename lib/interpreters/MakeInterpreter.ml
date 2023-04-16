@@ -161,31 +161,61 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
         else        [ (Skip, cont, store, cs, pc', heap), Cont        ]
 
     | New (x, e) ->
-        ignore x;
-        let _ = eval store e in
-        (*
-        let l,heap',pc' = Heap.malloc e' pc in (*loc, heap, pc*)
-        
-        Store.set store x l;
-        *)
-        [ (Skip, cont, store, cs, pc, heap), Cont ]
+        let size = eval store e in 
+        let lst = Heap.malloc heap size pc in
+        let dup = (List.length lst) > 1 in  
+        List.map (fun (hp, loc, pc') -> 
+          let store', cs' = 
+            if dup then Store.dup store, Callstack.dup cs else store, cs in 
+          Store.set store' x loc;
+          (Skip, cont, store', cs', pc', hp), Cont          
+        ) lst
   
-    | Update (a, expr_index, e) ->
-        ignore a;  
-        ignore expr_index;
-        ignore e;
-        [ (Skip, cont, store, cs, pc, heap), Cont ]
+    | Update (a, index, e) ->
+        (match Store.get_opt store a with 
+        | Some loc -> 
 
-    | LookUp (x, a, expr_index) ->
-        ignore x;
-        ignore a;
-        ignore expr_index;
-        [ (Skip, cont, store, cs, pc, heap), Cont ]
+          let index_v = eval store index in
+          let v = eval store e in  
+          let lst = Heap.update heap loc index_v v pc in 
+          let dup = (List.length lst) > 1 in 
+          
+          List.map (fun (hp, pc') -> 
+            let store', cs' = 
+              if dup then Store.dup store, Callstack.dup cs else store, cs in 
+            (Skip, cont, store', cs', pc', hp), Cont          
+          ) lst
+        | None -> failwith "InternalError: array is not defined")
+        
+
+    | LookUp (x, a, index) ->
+        (match Store.get_opt store a with 
+        | Some loc -> 
+          let index_v = eval store index in  
+          let lst = Heap.lookup heap loc index_v pc in 
+          let dup = (List.length lst) > 1 in 
+          
+          List.map (fun (hp, v, pc') -> 
+            let store', cs' = 
+              if dup then Store.dup store, Callstack.dup cs else store, cs in 
+            Store.set store' x v;
+            (Skip, cont, store', cs', pc', hp), Cont          
+          ) lst
+        | None -> failwith "InternalError: array is not defined")
+  
 
     | Delete a ->
-        (*let h',pc' = Heap.free a pc;*)
-        Store.remove store a;
-        [ (Skip, cont, store, cs, pc, heap), Cont ]
+      (match Store.get_opt store a with 
+      | Some loc -> 
+        let lst = Heap.free heap loc pc in 
+        let dup = (List.length lst) > 1 in 
+        
+        List.map (fun (hp, pc') -> 
+          let store', cs' = 
+            if dup then Store.dup store, Callstack.dup cs else store, cs in 
+          (Skip, cont, store', cs', pc', hp), Cont          
+        ) lst
+      | None -> failwith "InternalError: array is not defined")
 
     | Sequence [ ] -> failwith "InternalError: Interpreter.step, reached an empty program"
 
