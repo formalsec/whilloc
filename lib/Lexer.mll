@@ -57,6 +57,8 @@ rule read =
   | ">>"              { SHR }
   | '('               { LPAREN }
   | ')'               { RPAREN }
+  | '['               { LBRACKET }
+  | ']'               { RBRACKET }
   | '{'               { LBRACE }
   | '}'               { RBRACE }
   | int               { INT (int_of_string (Lexing.lexeme lexbuf)) }
@@ -76,6 +78,8 @@ rule read =
   | "clear"           { CLEAR }
   | "print"           { PRINT }
   | "symbol"          { SYMBOL }
+  | "new"             { NEW }
+  | "delete"          { DELETE }
   | '"'               { read_string (Buffer.create 16) lexbuf }
   (*| letter(letter|digit|'_')* as id { try
                                         Hashtbl.find keyword_table id

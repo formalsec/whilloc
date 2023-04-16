@@ -9,9 +9,12 @@
 %token ASSERT
 %token CLEAR
 %token SYMBOL
+%token NEW
+%token DELETE
 
 %token LPAREN RPAREN 
 %token LBRACE RBRACE
+%token LBRACKET RBRACKET
 %token COMMA SEMICOLON
 
 %token <int>    INT
@@ -101,6 +104,15 @@ statement:
     { Program.Print exprs }
   | v = VAR; DEFEQ; SYMBOL; LPAREN; s = STRING; RPAREN;
     { Program.Symbol (v, s)}
+  | arr = VAR; DEFEQ; NEW; LPAREN; e = expression; RPAREN;
+    { Program.New (arr, e) }
+  | arr = VAR; LBRACKET; e1 = expression; RBRACKET; DEFEQ; e2 = expression;
+    { Program.Update (arr, e1, e2) }
+  | v = VAR; DEFEQ; arr = VAR; LBRACKET; e = expression; RBRACKET;
+    { Program.LookUp (v, arr, e) }
+  | DELETE; arr = VAR;
+    { Program.Delete (arr) }
+
 
 statement_sequence:
   | s = separated_nonempty_list (SEMICOLON, statement);
