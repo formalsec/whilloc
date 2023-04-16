@@ -52,12 +52,12 @@ let main =
 	let symb_z = (SymbVal "symb_val_z") in
 	let symb_w = (SymbVal "symb_val_w") in
 
-	let e2 = BinOp (Lt , Val symb_y, Val symb_z) in
-	let e3 = BinOp (Lt, Val symb_x, Val symb_y) in
-	let e4 = BinOp (Lt, Val symb_x, Val i3) in
-	let e5 = BinOp (Gte, Val symb_x, Val i1) in
-	let e6 = BinOp (Lte, Val symb_z, Val i3) in
-	let e7 = UnOp (Not, Val symb_w) in
+	let e2 = BinOp (Lt , symb_y, symb_z) in
+	let e3 = BinOp (Lt, symb_x, symb_y) in
+	let e4 = BinOp (Lt, symb_x, Val i3) in
+	let e5 = BinOp (Gte, symb_x, Val i1) in
+	let e6 = BinOp (Lte, symb_z, Val i3) in
+	let e7 = UnOp (Not, symb_w) in
 
 	let r = Encoding.is_sat [e2; e3; e4; e5; e6; e7] in
 

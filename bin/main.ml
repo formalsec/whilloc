@@ -1,11 +1,11 @@
 open Lib
 open Utils
 
-module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M)
-module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M)
-module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
+module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
+module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapSymbolic.M)
+module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M)
 
-let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : CC.t Return.t list) : CC.t Return.t list = 
+let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = 
 
   if Encoding.is_sat global_pc then
 

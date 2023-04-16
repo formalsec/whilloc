@@ -1,7 +1,8 @@
+(*
 open Lib
 
-module S  = MakeInterpreter.M (EvalSymbolic.M) (BFS.M)
-module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
+module S  = MakeInterpreter.M (EvalSymbolic.M) (BFS.M) (HeapConcrete.M)
+module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcrete.M)
 
 let create_program (funcs : Program.func list) : Program.program =
   let prog    = Hashtbl.create Parameters.size in
@@ -27,7 +28,7 @@ let read_file (fname : string) : string =
 
 let rec symbvalues2variables (e : Expression.t) : Expression.t =
   match e with
-  | Val SymbVal s -> Var s
+  | SymbVal s -> Var s
   | Val _ -> e
   | Var _ -> e
   | UnOp  (op, e)      -> UnOp  (op, symbvalues2variables e)
@@ -47,14 +48,25 @@ let symb2conc_store (store : S.t Store.t) (model : (string * Value.t) list) : CC
   let symbvalues = get_symbvalues store                             in
 
   let symbstore  = Store.create_store model in
-  let add_symb x = if Store.exists symbstore x then () else Store.set symbstore x (Value.Integer (Random.int Parameters.max_int)) in
+  let add_symb x = if Store.exists symbstore x then ()
+                   else let rnd_int = Utils.random_int () in Store.set symbstore x (Value.Integer rnd_int) in
   let ()         = List.iter add_symb symbvalues in
+  
+  let () = print_endline "model:" in
+  let () = Model.print (Some model) in
+  let () = print_endline "symbstore:" in
+  let () = Store.print Value.string_of_value symbstore in
+  let () = print_endline "store:" in
+  let () = Store.print Expression.string_of_expression store in
 
-  let update var = let e_s = Store.get store var |> symbvalues2variables in
-                   let e_c = EvalConcrete.M.eval symbstore e_s in
-                   Store.set store' var (e_c, e_s)
+  let eval var =  let e_s  = Store.get store var in
+                  let e_s' = symbvalues2variables e_s in
+                  let e_c  = EvalConcrete.M.eval symbstore e_s' in
+                  Store.set store' var (e_c, e_s)
   in
-  let ()     = List.iter update variables in
+  let ()     = List.iter eval variables in
+  let () = print_endline "store':" in
+  let () = Store.print EvalConcolic.M.to_string store' in
   store'
 
 let symb2conc_callstack (cs : S.t Callstack.t) (model : (string * Value.t) list) : CC.t Callstack.t =
@@ -98,8 +110,8 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
   let returns,conts = CC.interpret program ~origin () in
   ignore conts;
 
-  let return  = List.hd returns      in
-  let pc_cc   = Return.get_pc return in
+  let return = List.hd returns      in
+  let pc_cc  = Return.get_pc return in
 
   let _,pc_s     = List.split pc_cc          in
   let neg_pc     = PathCondition.negate pc_s in
@@ -113,11 +125,29 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
     let _ = SymbMap.clear () in
     return::outs
 
+(*
+let hybrid_alternate (program : Program.program) : CC.t Return.t list = 
+  
+  let finals,conts = S.interpret program ()           in
+  let conts        = List.map symb2conc_state  conts  in
+  let finals       = List.map symb2conc_return finals in
+
+  let rec iter_concolic res = function
+    | [ ]  -> res
+    | s::t -> let _,pc   = List.split (State.get_pathcondition s) in
+              let rets,_ = CC.interpret program () ~origin:s in
+              iter_concolic (res@rets) t
+  in
+  finals @ (iter_concolic [] conts)
+*)
+
 let hybrid_search (program : Program.program) : CC.t Return.t list = 
   
   let finals,conts = S.interpret program ()           in
   let conts        = List.map symb2conc_state  conts  in
   let finals       = List.map symb2conc_return finals in
+
+  if List.length conts = 0 then print_endline "empty" else ();
 
   let rec iter_concolic res = function
     | [ ]  -> res
@@ -142,5 +172,8 @@ let main =
   let program  = filename |> read_file |> parse_program |> create_program in
   let returns  = hybrid_search program in
   print_endline (String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string) returns))
+*)
+
+let main = print_endline "TEMP"
 
 let _ = main

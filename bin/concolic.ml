@@ -1,6 +1,7 @@
+(*
 open Lib
 
-module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M)
+module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcrete.M)
 
 let create_program (funcs : Program.func list) : Program.program =
   let prog    = Hashtbl.create Parameters.size in
@@ -54,5 +55,7 @@ let main =
   print_endline "";
   let _        = concolic_loop program [ ] in
   ()
+*)
+let main = print_endline "TEMP"
 
 let _ = main
