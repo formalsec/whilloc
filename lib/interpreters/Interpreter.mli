@@ -1,4 +1,5 @@
 module type M = sig
     type t
-    val interpret : Program.program -> ?origin:t State.t -> unit -> t Return.t list * t State.t list
+    type h
+    val interpret : Program.program -> ?origin: (t,h) State.t -> unit -> (t,h) Return.t list * (t,h) State.t list
 end
