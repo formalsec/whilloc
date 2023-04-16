@@ -203,7 +203,7 @@ let encode_value (v : Value.t) : Z3.Expr.expr =
         | false -> Boolean.mk_false ctx in
       Z3.Expr.mk_app ctx lit_operations.bool_constructor [bool_arg]
 
-  | SymbVal s -> Z3.Expr.mk_const ctx (mk_string_symb s) z3_sort
+  | Loc l -> invalid_arg ("InternalError: Encoding.encode_value, tried to encode a location value " ^ (string_of_int l))
 
 let encode_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) : Z3.Expr.expr =
   match op with
@@ -232,6 +232,7 @@ let rec encode_expr (e : Expression.t) : Z3.Expr.expr =
   | BinOp (op, e1, e2) ->
       let e1' = encode_expr e1 and e2' = encode_expr e2 in
       encode_binop op e1' e2'
+  | SymbVal s -> Z3.Expr.mk_const ctx (mk_string_symb s) z3_sort
 
 let is_sat (exprs : Expression.t list) : bool =
   
