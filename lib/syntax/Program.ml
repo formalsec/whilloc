@@ -10,6 +10,10 @@ type stmt = Skip
           | Clear
           | Print       of Expression.t list
           | Symbol      of string * string
+          | New         of string * Expression.t
+          | Update      of string * Expression.t * Expression.t
+          | LookUp      of string * string * Expression.t
+          | Delete      of string
 
 type func = {
   id   : string;
@@ -39,6 +43,10 @@ let rec string_of_stmt (s : stmt) : string =
   | IfElse  (expr, s1, s2) -> "If (" ^ (Expression.string_of_expression expr) ^ ")\n  " ^ string_of_stmt s1 ^ "\nElse\n  " ^ string_of_stmt s2
   | FunCall (x,f,args)     -> "Function Call: " ^ x ^ "=" ^ f ^ "(" ^ String.concat ", " (List.map (fun e -> Expression.string_of_expression e) args)
   | While   (expr, s)      -> "While (" ^ Expression.string_of_expression expr ^ ")\n   " ^ string_of_stmt s
+  | New    (arr, sz)   -> "New array: " ^ arr ^ " has size " ^ (Expression.string_of_expression sz)
+  | Update (arr,e1,e2) -> "Update: " ^ arr ^ " at loc " ^ (Expression.string_of_expression e1) ^ " is assigned " ^ (Expression.string_of_expression e2)
+  | LookUp (x,arr,e)   -> "LookUp: " ^ x ^ " is assigned the value at loc " ^ (Expression.string_of_expression e) ^ " from arr " ^ arr
+  | Delete arr -> "Delete: " ^ arr
 
 let string_of_function (f : func) : string =
   "Function id: "  ^ f.id                      ^ "\n" ^
