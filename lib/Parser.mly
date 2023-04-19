@@ -9,10 +9,11 @@
 %token ASSERT
 %token CLEAR
 %token SYMBOL
+%token SYMBOL_INT
 %token NEW
 %token DELETE
 
-%token LPAREN RPAREN 
+%token LPAREN RPAREN
 %token LBRACE RBRACE
 %token LBRACKET RBRACKET
 %token COMMA SEMICOLON
@@ -94,7 +95,7 @@ statement:
     { Program.Assign (v, e) }
   | v = VAR; DEFEQ; f = VAR; LPAREN; args = separated_list(COMMA, expression); RPAREN;
     { Program.FunCall (v,f,args)}
-  | IF; LPAREN; e = expression; RPAREN; LBRACE; s1 = statement_sequence; RBRACE; ELSE; LBRACE; s2 = statement_sequence; RBRACE; 
+  | IF; LPAREN; e = expression; RPAREN; LBRACE; s1 = statement_sequence; RBRACE; ELSE; LBRACE; s2 = statement_sequence; RBRACE;
     { Program.IfElse(e, s1, s2) }
   | WHILE; LPAREN; e = expression; RPAREN; LBRACE; s = statement_sequence; RBRACE;
     { Program.While (e, s) }
@@ -104,6 +105,8 @@ statement:
     { Program.Print exprs }
   | v = VAR; DEFEQ; SYMBOL; LPAREN; s = STRING; RPAREN;
     { Program.Symbol (v, s)}
+  | v = VAR; DEFEQ; SYMBOL_INT; LPAREN; s = STRING; RPAREN;
+    { Program.Symbol_int (v, s)}
   | arr = VAR; DEFEQ; NEW; LPAREN; e = expression; RPAREN;
     { Program.New (arr, e) }
   | arr = VAR; LBRACKET; e1 = expression; RBRACKET; DEFEQ; e2 = expression;
@@ -154,7 +157,7 @@ statement_sequence:
 (*------------------------------------*)
 (*---------------graveyard------------*)
 (*------------------------------------*)
-  
+
 (*%token MAX MIN*) (*%token INT_TYPE BOOL_TYPE STR_TYPE SYMBOL_TYPE*)
 
   (*| MAX; LPAREN; e1 = expression; e2 = expression; RPAREN;

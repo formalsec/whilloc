@@ -2,7 +2,8 @@ open Lib
 open Utils
 
 module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
-module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapSymbolic.M)
+(* module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapSymbolic.M) *)
+module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M)
 module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M)
 
 let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = 

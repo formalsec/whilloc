@@ -3,10 +3,11 @@ type uop = Neg | Not | Abs | StringOfInt
 type bop = Plus | Minus | Times | Div | Modulo | Pow | Gt | Lt | Gte | Lte | Equals | NEquals | Or | And | Xor | ShiftL | ShiftR
 
 type t = Val     of Value.t
-       | Var     of string 
+       | Var     of string
        | UnOp    of uop * t
        | BinOp   of bop * t * t
        | SymbVal of string
+       | SymbInt of string
 
 let make_true  : t = Val (Value.Boolean (true))
 let make_false : t = Val (Value.Boolean (false))
@@ -20,15 +21,15 @@ let make_uoperation (op : uop) (e : t) : t =
 let make_boperation (op : bop) (e1 : t) (e2 : t) : t =
   BinOp (op, e1, e2)
 
-let negate (e : t) : t = 
+let negate (e : t) : t =
   UnOp (Not, e)
-  
+
 let get_value_from_expr (e : t) : Value.t =
   match e with
   | Val v -> v
-  | _     -> failwith "InternalError: Expression.get_value_from_expr, tried to retrieve a value from a non value constructor" 
+  | _     -> failwith "InternalError: Expression.get_value_from_expr, tried to retrieve a value from a non value constructor"
 
-let rec flatten (e : t) : t list = 
+let rec flatten (e : t) : t list =
   match e with
   | UnOp  (_, e)      -> flatten e
   | BinOp (_, e1, e2) -> (flatten e1) @ (flatten e2)
@@ -37,6 +38,7 @@ let rec flatten (e : t) : t list =
 let rec get_symbols (e : t) : string list =
   match e with
   | SymbVal s -> [s]
+  | SymbInt i -> [i]
   | Val _ -> []
   | Var _ -> []
   | UnOp  (_, e)      -> get_symbols e
@@ -73,6 +75,7 @@ let rec string_of_expression (e : t) : string =
   "(" ^
   (match e with
   | SymbVal s -> "SymbVal " ^ s
+  | SymbInt s -> "SymbInt " ^ s
   | Var x -> "Var " ^ x
   | Val v -> "Val " ^ Value.string_of_value v
   | UnOp  (op, v)      -> (string_of_uop op) ^ (string_of_expression v)

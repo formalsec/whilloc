@@ -10,6 +10,7 @@ type stmt = Skip
           | Clear
           | Print       of Expression.t list
           | Symbol      of string * string
+          | Symbol_int  of string * string
           | New         of string * Expression.t
           | Update      of string * Expression.t * Expression.t
           | LookUp      of string * string * Expression.t
@@ -28,13 +29,14 @@ type program = (string, func) Hashtbl.t
 let get_function (id : string) (prog : program) : func =
   try Hashtbl.find prog id
   with _ -> failwith ("NameError: Program.get_function, name " ^ id ^ " is not defined")
-  
+
 let rec string_of_stmt (s : stmt) : string =
   match s with
   | Skip         -> "Skip"
   | Clear        -> "Clear\n"
   | Assign (x,e) -> "Assignment: " ^ x ^ "=" ^ (Expression.string_of_expression e)
   | Symbol (s,v) -> "Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
+  | Symbol_int (s,v) -> "Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
   | Sequence s   -> "Sequence:\n  " ^ String.concat "  " (List.map string_of_stmt s)
   | Return e     -> "Return: " ^ Expression.string_of_expression e
   | Assert e     -> "Assert: " ^ Expression.string_of_expression e

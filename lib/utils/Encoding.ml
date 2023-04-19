@@ -65,10 +65,10 @@ let z3_sort, lit_operations =
   let aux_sort =
     Z3.Datatype.mk_sort
       ctx
-      (mk_string_symb "Symb_Literal") 
+      (mk_string_symb "Symb_Literal")
       [
           bool_constructor;
-          int_constructor 
+          int_constructor
       ] in
 
   try
@@ -86,7 +86,7 @@ let z3_sort, lit_operations =
     let z3_recognizers  = Z3.Datatype.get_recognizers aux_sort in
     let bool_recognizer     = List.nth z3_recognizers 0 in
     let int_recognizer      = List.nth z3_recognizers 1 in
-    
+
     let literal_operations   = {
       (*  Constructors  *)
       bool_constructor   = bool_constructor;
@@ -99,7 +99,7 @@ let z3_sort, lit_operations =
       (*  Recognizers  *)
       bool_recognizer    = bool_recognizer;
       int_recognizer     = int_recognizer
-    } in 
+    } in
     aux_sort, literal_operations
   with _ -> raise (Failure ("InternalError: construction of z3_sort"))
 
@@ -111,10 +111,10 @@ let push (solver : Z3.Solver.solver) : unit =
 let pop (solver : Z3.Solver.solver) (lvl : int) : unit =
   Z3.Solver.pop solver lvl
 
-let get_model ?(print_model=false) () : (string * Value.t) list = 
+let get_model ?(print_model=false) () : (string * Value.t) list =
 
   let res =
-    
+
   match (Z3.Solver.get_model !solver) with
     | None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
     | Some model ->
@@ -125,7 +125,7 @@ let get_model ?(print_model=false) () : (string * Value.t) list =
         let interp  = Z3.Model.get_const_interp model const |> Option.get in
         let interp' = Z3.Expr.to_string interp in
 
-        let symb		= Z3.Expr.mk_const ctx (mk_string_symb name) z3_sort in 
+        let symb		= Z3.Expr.mk_const ctx (mk_string_symb name) z3_sort in
 
         let get_type_z3 = (*get the type in the form "(Int" or "(Bool" or ... i.e., "(TYPE"; then, remove the left paranthesis *)
           fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
@@ -133,13 +133,13 @@ let get_model ?(print_model=false) () : (string * Value.t) list =
         match get_type_z3 interp' with
 
         | "Int"  ->
-            let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in 
+            let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in
             let v = Z3.Model.eval model x true |> Option.get in
             let s = Z3.Arithmetic.Integer.numeral_to_string v in
             (name, Integer (int_of_string s))
 
         | "Bool" ->
-            let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in 
+            let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in
             let v = Z3.Model.eval model x true |> Option.get in
             let s = Z3.Expr.to_string v in
             (name, Boolean (bool_of_string s))
@@ -158,9 +158,9 @@ let get_model ?(print_model=false) () : (string * Value.t) list =
 
 (* Encoding of expressions *)
 
-let encode_unop (op : uop) (e : Z3.Expr.expr) : Z3.Expr.expr = 
-  match op with 
-  | Not -> 
+let encode_unop (op : uop) (e : Z3.Expr.expr) : Z3.Expr.expr =
+  match op with
+  | Not ->
       let e'  = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ e ] in
       let e'' = Z3.Boolean.mk_not ctx e' in
       Z3.Expr.mk_app ctx lit_operations.bool_constructor [ e'' ]
@@ -174,7 +174,7 @@ let binop_numbers_to_numbers (mk_op : Z3.Expr.expr -> Z3.Expr.expr -> Z3.Expr.ex
   let e1' = Z3.Expr.mk_app ctx lit_operations.int_accessor [ e1 ] in
   let e2' = Z3.Expr.mk_app ctx lit_operations.int_accessor [ e2 ] in
   let e'  = mk_op e1' e2' in
-  Z3.Expr.mk_app ctx lit_operations.int_constructor [ e' ] 
+  Z3.Expr.mk_app ctx lit_operations.int_constructor [ e' ]
 
 let binop_numbers_to_booleans (mk_op : Z3.Expr.expr -> Z3.Expr.expr -> Z3.Expr.expr) (e1 : Z3.Expr.expr) (e2 : Z3.Expr.expr) : Z3.Expr.expr =
   let e1' = Z3.Expr.mk_app ctx lit_operations.int_accessor [ e1 ] in
@@ -186,12 +186,12 @@ let binop_booleans_to_booleans (mk_op : Z3.Expr.expr -> Z3.Expr.expr -> Z3.Expr.
   let e1' = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ e1 ] in
   let e2' = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ e2 ] in
   let e' = mk_op e1' e2' in
-  Z3.Expr.mk_app ctx lit_operations.bool_constructor [ e' ] 
+  Z3.Expr.mk_app ctx lit_operations.bool_constructor [ e' ]
 
 let encode_value (v : Value.t) : Z3.Expr.expr =
 
   match v with
-  
+
   | Integer i ->
       let int_arg = Z3.Arithmetic.Integer.mk_numeral_i ctx i in
       Z3.Expr.mk_app ctx lit_operations.int_constructor [int_arg]
@@ -207,8 +207,8 @@ let encode_value (v : Value.t) : Z3.Expr.expr =
 
 let encode_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) : Z3.Expr.expr =
   match op with
-  | Plus 		-> binop_numbers_to_numbers   mk_add v1 v2 
-  | Minus		-> binop_numbers_to_numbers   mk_sub v1 v2 
+  | Plus 		-> binop_numbers_to_numbers   mk_add v1 v2
+  | Minus		-> binop_numbers_to_numbers   mk_sub v1 v2
   | Times 	-> binop_numbers_to_numbers   mk_mul v1 v2
   | Div    	-> binop_numbers_to_numbers   mk_div v1 v2
   | Pow    	-> binop_numbers_to_numbers   mk_pow v1 v2
@@ -233,9 +233,10 @@ let rec encode_expr (e : Expression.t) : Z3.Expr.expr =
       let e1' = encode_expr e1 and e2' = encode_expr e2 in
       encode_binop op e1' e2'
   | SymbVal s -> Z3.Expr.mk_const ctx (mk_string_symb s) z3_sort
+  | SymbInt s -> Z3.Expr.mk_app ctx lit_operations.int_constructor [Z3.Expr.mk_const ctx (mk_string_symb s) ints_sort]
 
 let is_sat (exprs : Expression.t list) : bool =
-  
+
   try
     let exprs'  = List.map encode_expr exprs in
     let exprs'' = List.map (fun x -> Z3.Expr.mk_app ctx lit_operations.bool_accessor [ x ]) exprs' in
@@ -251,5 +252,5 @@ let is_sat (exprs : Expression.t list) : bool =
     | Z3.Solver.UNKNOWN 			-> false
 
   with (Failure msg) ->
-    Printf.printf "InternalError: Z3: call to solver failed with exception %s\n" msg; 
+    Printf.printf "InternalError: Z3: call to solver failed with exception %s\n" msg;
     false

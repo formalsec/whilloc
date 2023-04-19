@@ -78,6 +78,7 @@ rule read =
   | "clear"           { CLEAR }
   | "print"           { PRINT }
   | "symbol"          { SYMBOL }
+  | "symbol_int"      { SYMBOL_INT }
   | "new"             { NEW }
   | "delete"          { DELETE }
   | '"'               { read_string (Buffer.create 16) lexbuf }

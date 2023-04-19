@@ -6,10 +6,8 @@
  (modules_without_implementation Interpreter Eval Search Heap))
 
 (ocamllex
-  (modules Lexer)
-)
+ (modules Lexer))
 
 (menhir
-  (modules Parser)
-  (flags --explain --dump)
-)
+ (modules Parser)
+ (flags --explain --dump))
