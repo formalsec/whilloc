@@ -47,13 +47,13 @@ module M : Eval.M with type t = Expression.t = struct
       | ITE (_, _, _) -> failwith "InternalError: concrete ITE not implemented"
 
   let is_true (exprs : t list) : bool =
-    Encoding.is_sat exprs
+    Translator.is_sat exprs
 
   let test_assert (exprs : t list) : bool * Model.t =
-    if Encoding.is_sat exprs then
-      true,Some (Encoding.get_model ())
+    if Translator.is_sat exprs then
+      true, Some (Translator.get_model ())
     else
-      false,None
+      false, None
 
   let negate (e : t) : t =
     Expression.negate e
