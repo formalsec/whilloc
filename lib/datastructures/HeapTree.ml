@@ -12,9 +12,23 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
+  let tree_to_json (idx : int) (tree : tree_t) : unit =
+    let rec iter_tree (tree : tree_t) : string = 
+      match tree with
+      | Leaf ((l, r), v)  -> "{ \"leaf\": { \"range\": \"[" ^ Expression.string_of_expression l ^ 
+                             ", " ^ Expression.string_of_expression r ^ "[\", \"value\": " ^ "\"" ^
+                             Expression.string_of_expression v ^ "\"" ^ " } }"
+      | Node ((l, r), ch) -> "{ \"node\": { \"range\": \"[" ^ Expression.string_of_expression l ^ 
+                             ", " ^ Expression.string_of_expression r ^ "[\", \"children\": " ^  
+                             "[ " ^ String.concat (", ") (List.map iter_tree ch) ^ " ]" ^ " } }"
+    in
+    let f = open_out ("output/" ^ (string_of_int idx) ^ "_tree.json") in
+    let tree_json = iter_tree tree in
+    Printf.fprintf f "%s\n" tree_json
+
   let to_string (h : t) : string =
-    ignore h;
-    failwith "Not Implemented"
+    Hashtbl.iter tree_to_json h;
+    "Json files created in output directory."
     
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tree = Leaf ((Expression.Val (Integer 0), sz), Expression.Val (Integer 0)) in
@@ -140,6 +154,8 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
   let free h (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
+    let ign = to_string h in
+    ignore ign;
     begin
     match arr with
     | Val (Loc i) ->
@@ -151,7 +167,7 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Expression.string_of_expression arr) (Expression.string_of_expression i) (PathCondition.to_string Expression.string_of_expression pc);
+    (* Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Expression.string_of_expression arr) (Expression.string_of_expression i) (PathCondition.to_string Expression.string_of_expression pc); *)
     match arr with  
     |  Val Loc l-> 
       (match Hashtbl.find_opt heap l with 
