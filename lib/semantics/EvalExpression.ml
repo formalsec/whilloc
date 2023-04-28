@@ -73,6 +73,9 @@ let eval_unop_expr (op : Expression.uop) (v : t) : t =
   | Abs -> abs v
   | StringOfInt -> stoi v
 
+let eval_ite (_ : Expression.t) (_ : Expression.t) (_ : Expression.t) : t =
+  assert false
+
 let eval_binop_expr (op : Expression.bop) (v1 : t) (v2 : t) : t =
   let f =
   match op with

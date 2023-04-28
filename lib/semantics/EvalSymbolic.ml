@@ -15,6 +15,7 @@ module M : Eval.M with type t = Expression.t = struct
     | Var x           -> is_symbolic' (Store.get store x)
     | UnOp  (_, e)    -> is_symbolic' e
     | BinOp (_,e1,e2) -> is_symbolic' e1 || is_symbolic' e2
+    | ITE (_, _, _) -> true
 
   let rec simplify_expression (store : st) (e : t) : t =
     let simplify_expr = simplify_expression store in
@@ -25,6 +26,8 @@ module M : Eval.M with type t = Expression.t = struct
     | Var x            -> Store.get store x
     | UnOp  (op, e)    -> UnOp (op, simplify_expr e)
     | BinOp (op,e1,e2) -> BinOp(op, simplify_expr e1, simplify_expr e2)
+    | ITE (e1, e2, e3) ->
+      ITE (simplify_expr e1, simplify_expr e2, simplify_expr e3)
 
   let rec eval (store : st) (e : t) : t =
 
@@ -41,6 +44,7 @@ module M : Eval.M with type t = Expression.t = struct
       | BinOp (op, e1, e2) -> Val ( eval_binop_expr op (eval store e1 |> get_val) (eval store e2 |> get_val) )
       | SymbVal _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic value")
       | SymbInt _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic value")
+      | ITE (_, _, _) -> failwith "InternalError: concrete ITE not implemented"
 
   let is_true (exprs : t list) : bool =
     Encoding.is_sat exprs

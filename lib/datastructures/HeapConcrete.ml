@@ -7,6 +7,10 @@ module M : Heap.M with type vt = Value.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
+  let to_string (h : t) : string =
+    ignore h;
+    failwith "Not Implemented"
+    
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tbl, next = h in 
     match sz with
@@ -52,6 +56,14 @@ module M : Heap.M with type vt = Value.t = struct
          [ h, pc ]
       | _ -> failwith ("InternalError: illegal free"))
     | _ -> failwith ("InternalError: HeapConcrete.update, arr must be location")
+
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    ignore heap;
+    ignore pc;
+
+    ignore v;
+    ignore i;
+    failwith "not implemented"
 end
 
 (*

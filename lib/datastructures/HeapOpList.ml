@@ -106,4 +106,13 @@ module M : Heap.M with type vt = Expression.t = struct
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]
 
+
+
+
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    ignore pc;
+    ignore heap;
+    ignore v;
+    ignore i;
+    failwith "not implemented"
 end

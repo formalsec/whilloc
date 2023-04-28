@@ -5,6 +5,10 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
+  let to_string (h : t) : string =
+    ignore h;
+    failwith "Not Implemented"
+    
   let malloc h (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     ignore sz;
     ignore pc;
@@ -32,6 +36,13 @@ module M : Heap.M with type vt = Expression.t = struct
     ignore h;
     []
 
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    ignore heap;
+    ignore v;
+    ignore pc;
+
+    ignore i;
+    failwith "not implemented"
 end
 
 (*

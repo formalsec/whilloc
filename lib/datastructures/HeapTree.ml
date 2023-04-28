@@ -12,6 +12,10 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
+  let to_string (h : t) : string =
+    ignore h;
+    failwith "Not Implemented"
+    
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tree = Leaf ((Expression.Val (Integer 0), sz), Expression.Val (Integer 0)) in
     let l = Hashtbl.length h in
@@ -91,6 +95,15 @@ module M : Heap.M with type vt = Expression.t = struct
     | None -> failwith "Out of bounds access"
 
 
+  let must_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool =
+    let lower, upper = r in
+    
+    let e1 = Expression.BinOp (Lt, index, lower) in
+    let e2 = Expression.BinOp (Gte, index, upper) in
+    let e3 = Expression.BinOp (Or, e1, e2) in
+
+    not (Encoding.is_sat ([e3] @ pc))
+
   let may_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool =
     let lower, upper = r in
     
@@ -135,4 +148,18 @@ module M : Heap.M with type vt = Expression.t = struct
     end;
     [h, pc]
 
+
+
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Expression.string_of_expression arr) (Expression.string_of_expression i) (PathCondition.to_string Expression.string_of_expression pc);
+    match arr with  
+    |  Val Loc l-> 
+      (match Hashtbl.find_opt heap l with 
+      | Some tree -> 
+        (match tree with 
+          | Leaf (r, _)
+          | Node (r, _) -> must_within_range r i pc)
+      | _ -> failwith ("InternalError: HeapTree.lookup, accessed tree is not in the heap"))
+    | _ -> failwith ("InternalError: HeapTree.lookup, arr must be location")
+    
 end

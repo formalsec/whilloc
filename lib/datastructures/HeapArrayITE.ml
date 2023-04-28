@@ -7,6 +7,10 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
+  let to_string (h : t) : string =
+    ignore h;
+    failwith "Not Implemented"
+    
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tbl, next = h in 
     match sz with
@@ -42,7 +46,7 @@ module M : Heap.M with type vt = Expression.t = struct
           (
             match Hashtbl.find_opt tbl l with 
             | Some arr ->
-                let _ = Array.mapi (fun j old_expr -> ITE (BinOp(Equals,index,Val (Integer j)), v, old_expr )) arr in
+                let _ = Array.mapi (fun j old_expr -> Expression.ITE (BinOp(Equals,index,Val (Integer j)), v, old_expr )) arr in
                 [ (h, pc) ]
             | _ -> failwith ("InternalError: HeapBlockITE, accessed array is not in the heap")          
           )
@@ -113,6 +117,14 @@ module M : Heap.M with type vt = Expression.t = struct
          [ h, pc ]
       | _ -> failwith ("InternalError: HeapBlockITE.free, illegal free"))
     | _ -> failwith ("InternalError: HeapBlockITE.free, arr must be location")
+
+
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    ignore pc;
+    ignore heap;
+    ignore v;
+    ignore i;
+    failwith "not implemented"
 end
 
 (*

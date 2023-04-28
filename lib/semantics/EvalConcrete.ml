@@ -13,6 +13,7 @@ module M : Eval.M with type t = Value.t = struct
     | BinOp (op, e1, e2) -> eval_binop_expr op (eval store e1) (eval store e2)
     | SymbVal s -> failwith("InternalError: EvalConcrete.eval, tried to evaluate a symbolic expression" ^ s ^ "in a concrete execution context")
     | SymbInt s -> failwith("InternalError: EvalConcrete.eval, tried to evaluate a symbolic expression" ^ s ^ "in a concrete execution context")
+    | ITE (e1, e2, e3) -> eval_ite e1 e2 e3
 
   let is_true (v : t list) : bool =
     let v' = try List.hd v
@@ -21,7 +22,8 @@ module M : Eval.M with type t = Value.t = struct
     | Boolean b -> b
     | Integer _ -> failwith ("InternalError: EvalConcrete.is_true, guard expressions must be of type boolean")
     | Loc     l -> failwith ("InternalError: EvalConcrete.is_true, location value " ^ (string_of_int l) ^ " cannot be evaluated to true or false in concrete evaluation contexts")
-
+    | Error     -> failwith ("ERROR ERROR")
+    
   let test_assert (exprs : t list) : bool * Model.t =
     is_true exprs,None
 

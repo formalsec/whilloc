@@ -8,6 +8,7 @@ type t = Val     of Value.t
        | BinOp   of bop * t * t
        | SymbVal of string
        | SymbInt of string
+       | ITE of t * t * t
 
 let make_true  : t = Val (Value.Boolean (true))
 let make_false : t = Val (Value.Boolean (false))
@@ -43,6 +44,7 @@ let rec get_symbols (e : t) : string list =
   | Var _ -> []
   | UnOp  (_, e)      -> get_symbols e
   | BinOp (_, e1, e2) -> (get_symbols e1) @ (get_symbols e2)
+  | ITE (e1, e2, e3) -> get_symbols e1 @ get_symbols e2 @ get_symbols e3
 
 let string_of_uop (op : uop) : string =
   match op with
@@ -79,7 +81,10 @@ let rec string_of_expression (e : t) : string =
   | Var x -> "Var " ^ x
   | Val v -> "Val " ^ Value.string_of_value v
   | UnOp  (op, v)      -> (string_of_uop op) ^ (string_of_expression v)
-  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ " " ^ (string_of_bop op) ^ " " ^ (string_of_expression v2) )
+  | BinOp (op, v1, v2) -> (string_of_expression v1) ^ " " ^ (string_of_bop op) ^ " " ^ (string_of_expression v2) 
+  | ITE (e1, e2, e3) ->
+    string_of_expression e1 ^ " " ^ string_of_expression e2 ^ " "
+    ^ string_of_expression e3)
   ^ ")"
 
 let print_expression (e : t) : unit =

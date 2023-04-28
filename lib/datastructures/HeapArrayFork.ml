@@ -18,6 +18,10 @@ let find_block (heap : t) (loc : vt) : int * bt =
 
 let init () : t = (Hashtbl.create Parameters.size, 0)
 
+let to_string (h : t) : string =
+  ignore h;
+  failwith "Not Implemented"
+  
 let malloc (heap : t) (size : vt) (path : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
   let (heap', curr) = heap in
   match size with
@@ -75,3 +79,12 @@ let block_str (block : bt) : string =
 let str (heap: t) : string =
   let (heap', _) = heap in 
   Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
+
+
+let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+  ignore heap;
+  ignore pc;
+
+  ignore v;
+  ignore i;
+  failwith "not implemented"

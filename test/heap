@@ -1,0 +1,17 @@
+function aenima() {    
+    /*i = symbol("i");
+    v = symbol("v");*/
+
+    i = symbol_int("i");
+    v = symbol_int("v");
+    /*v = 123; */
+    x = new(8);
+
+    x[i] = v;
+    y = x[i];
+
+    assert(y == v);
+
+    delete x;
+    return x
+}

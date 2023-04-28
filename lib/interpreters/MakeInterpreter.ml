@@ -184,14 +184,17 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
 
           let index_v = eval store index in
           let v = eval store e in
-          let lst = Heap.update heap loc index_v v pc in
-          let dup = (List.length lst) > 1 in
+          let b = Heap.in_bounds heap loc index_v pc in
+          if b then
+            let lst = Heap.update heap loc index_v v pc in
+            let dup = (List.length lst) > 1 in
 
-          List.map (fun (hp, pc') ->
-            let store', cs' =
-              if dup then Store.dup store, Callstack.dup cs else store, cs in
-            (Skip, cont, store', cs', pc', hp), Cont
-          ) lst
+            List.map (fun (hp, pc') ->
+              let store', cs' =
+                if dup then Store.dup store, Callstack.dup cs else store, cs in
+              (Skip, cont, store', cs', pc', hp), Cont
+            ) lst
+          else failwith "Index out of bounds"
         | None -> failwith "InternalError: array is not defined")
 
 
