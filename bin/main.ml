@@ -30,6 +30,7 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
     outs
 
 let main =
+
   print_string "\n=====================\n\tÆnima\n=====================\n\n";
   arguments();
 
