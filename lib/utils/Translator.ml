@@ -16,17 +16,17 @@ let translate_binop (op : bop) (v1 : Enc.Expression.t) (v2 : Enc.Expression.t) :
   | Plus 		-> Enc.Integer.mk_add v1 v2
   | Minus		-> Enc.Integer.mk_sub v1 v2
   | Times 	-> Enc.Integer.mk_mul v1 v2
-  | Div    	-> 
-  | Pow    	-> 
-  | Gt 			-> 
-  | Lt			-> 
-  | Gte			-> 
-  | Lte 		-> 
-  | Equals 	-> 
+  | Div    	-> Enc.Integer.mk_div v1 v2
+  | Pow    	-> assert false
+  | Gt 			-> Enc.Integer.mk_gt  v1 v2
+  | Lt			-> Enc.Integer.mk_lt  v1 v2
+  | Gte			-> Enc.Integer.mk_gte v1 v2
+  | Lte 		-> Enc.Integer.mk_lte v1 v2
+  | Equals 	-> Enc.Integer.mk_eq  v1 v2
 
-  | Or 			-> Enc.Boolean.mk_or v1 v2
-  | And 		-> 
-  | Xor 		-> 
+  | Or 			-> Enc.Boolean.mk_or  v1 v2
+  | And 		-> Enc.Boolean.mk_and v1 v2
+  | Xor 		-> Enc.Boolean.mk_xor v1 v2
   | _ 			-> failwith ("TODO: Encoding.encode_binop, missing implementation of " ^ string_of_bop op)
 
 let rec translate (e : Expression.t) : Enc.Expression.t =
