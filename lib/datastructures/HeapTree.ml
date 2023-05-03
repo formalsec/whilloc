@@ -44,7 +44,7 @@ module M : Heap.M with type vt = Expression.t = struct
           let l_right = Expression.BinOp (Lt, index, right) in
           let cond = Expression.BinOp (And, ge_left, l_right) in
           let pc' = cond :: pc in
-          if Encoding.is_sat pc' then
+          if Translator.is_sat pc' then
               let index_plus_1 = Expression.BinOp (Plus, index, Val (Integer 1)) in
               let leaves =
                 [
@@ -61,7 +61,7 @@ module M : Heap.M with type vt = Expression.t = struct
           let l_right = Expression.BinOp(Lt, index, right) in
           let cond = Expression.BinOp (And, ge_left, l_right) in
           let pc' = cond :: pc in
-          if Encoding.is_sat pc' then
+          if Translator.is_sat pc' then
             let l = List.map (fun t -> update_tree t index v pc') trees in
             let t1, t2, t3 = match trees with
             | t1 :: t2 :: [t3] -> t1, t2, t3
@@ -116,7 +116,7 @@ module M : Heap.M with type vt = Expression.t = struct
     let e2 = Expression.BinOp (Gte, index, upper) in
     let e3 = Expression.BinOp (Or, e1, e2) in
 
-    not (Encoding.is_sat ([e3] @ pc))
+    not (Translator.is_sat ([e3] @ pc))
 
   let may_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool =
     let lower, upper = r in
@@ -124,7 +124,7 @@ module M : Heap.M with type vt = Expression.t = struct
     let e1 = Expression.BinOp (Gte, index, lower) in
     let e2 = Expression.BinOp (Lt, index, upper) in
   
-    Encoding.is_sat ([e1; e2] @ pc)
+    Translator.is_sat ([e1; e2] @ pc)
   
   let rec search_tree (index : vt) (pc : vt PathCondition.t) (tree : tree_t) : (vt * vt PathCondition.t) list = 
       (match tree with 

@@ -1,46 +1,47 @@
 open Lib
 open Value
 open Expression
-open Encoding
+(* open Translator *)
 
-	let get_model' () : (string*Value.t) list = 
+module Enc = Encoding
 
-		match (Z3.Solver.get_model !solver) with
-		
-			| None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
-			| Some model -> (*print_endline ("\nModel:\n"^Z3.Model.to_string model);*)
-				
-				List.map
-				(fun const ->
-					let name 	  = Z3.Symbol.to_string (Z3.FuncDecl.get_name const) 		in
-					let _ 	  	= Z3.Sort.to_string   (Z3.FuncDecl.get_range const)  	in
-					let interp  = Z3.Model.get_const_interp model const |> Option.get in
-					let interp' = Z3.Expr.to_string interp in
+let get_model' () : (string*Value.t) list = 
+	assert false
+	(* match (Z3.Solver.get_model ! (ref (Translator.solver.solver))) with
 	
-					let symb		= Z3.Expr.mk_const ctx (mk_string_symb name) z3_sort in 
-	
-					let get_type_z3 = (*get the type in the form "(Int", "(Bool",..., i.e. "(TYPE"; and then remove the left paranthesis *)
-						fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
-	
-					match get_type_z3 interp' with
-	
-					| "Int"  ->
-							let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in 
-							let v = Z3.Model.eval model x true |> Option.get in
-							let s = Z3.Arithmetic.Integer.numeral_to_string v in
-							(name, Integer (int_of_string s))
-							(*print_endline (Z3.Arithmetic.Integer.numeral_to_string v ^ " with sort " ^ sort ^ " with name " ^ name);*)
-	
-					| "Bool" ->
-							let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in 
-							let v = Z3.Model.eval model x true |> Option.get in
-							let s = Z3.Expr.to_string v in
-							(name, Boolean (bool_of_string s))
-	
-					| t 		 -> failwith ("InternalError: Encoding.string_binds, there is no corresponding type with " ^ t);
-					)
-	
-				(Z3.Model.get_const_decls model)
+		| None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
+		| Some model -> (*print_endline ("\nModel:\n"^Z3.Model.to_string model);*)
+			
+			List.map
+			(fun const ->
+				let name 	  = Z3.Symbol.to_string (Z3.FuncDecl.get_name const) 		in
+				let _ 	  	= Z3.Sort.to_string   (Z3.FuncDecl.get_range const)  	in
+				let interp  = Z3.Model.get_const_interp model const |> Option.get in
+				let interp' = Z3.Expr.to_string interp in
+
+				let symb		= Z3.Expr.mk_const Enc.Z3_mappings.ctx (Enc.Z3_mappings.StrZ3Op.encode_str name) z3_sort in 
+
+				let get_type_z3 = (*get the type in the form "(Int", "(Bool",..., i.e. "(TYPE"; and then remove the left paranthesis *)
+					fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
+
+				match get_type_z3 interp' with
+
+				| "Int"  ->
+						let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in 
+						let v = Z3.Model.eval model x true |> Option.get in
+						let s = Z3.Arithmetic.Integer.numeral_to_string v in
+						(name, Integer (int_of_string s))
+
+				| "Bool" ->
+						let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in 
+						let v = Z3.Model.eval model x true |> Option.get in
+						let s = Z3.Expr.to_string v in
+						(name, Boolean (bool_of_string s))
+
+				| t 		 -> failwith ("InternalError: Encoding.string_binds, there is no corresponding type with " ^ t);
+				)
+
+			(Z3.Model.get_const_decls model) *)
 let main = 
 	print_endline "";
 	let i1 = (Integer (-1)) in
@@ -59,7 +60,7 @@ let main =
 	let e6 = BinOp (Lte, symb_z, Val i3) in
 	let e7 = UnOp (Not, symb_w) in
 
-	let r = Encoding.is_sat [e2; e3; e4; e5; e6; e7] in
+	let r = Translator.is_sat [e2; e3; e4; e5; e6; e7] in
 
 	let m = get_model' () in
 

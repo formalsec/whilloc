@@ -51,7 +51,7 @@ module M : Eval.M with type t = Expression.t = struct
 
   let test_assert (exprs : t list) : bool * Model.t =
     if Translator.is_sat exprs then
-      true, Some (Translator.get_model ())
+      true, None
     else
       false, None
 
