@@ -1,4 +1,4 @@
-Input file: test/heap4
+Input file: test/heap3
 Execution mode: s
 Output file: output/output
 
@@ -15,15 +15,15 @@ Output file: output/output
 
 
 #RETURN:
- -Outcome   : Returned (Val Loc 0)
+ -Outcome   : Assertion violated, counter example:No model
  -Store     : 
 		x  ->  (Val Loc 0)
 		k  ->  (SymbVal $_k)
 		v  ->  (SymbVal $_v)
 		i  ->  (SymbVal $_i)
-		y  ->  (Val Int 42)
+		y  ->  (SymbVal $_v)
 		j  ->  (SymbVal $_j)
- -Path cond.: (Val Bool true) AND (((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_j) < (SymbVal $_i))) AND (((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_j) < (Val Int 8))) AND (((SymbVal $_i) >= (Val Int 0)) AND ((SymbVal $_i) < (Val Int 8))) AND ((SymbVal $_k) < (Val Int 8)) AND ((SymbVal $_k) >= (Val Int 5)) AND ((SymbVal $_j) < (Val Int 3)) AND ((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_i) < (Val Int 8)) AND ((SymbVal $_i) >= (Val Int 4)) AND ((SymbVal $_k) < (Val Int 8)) AND ((SymbVal $_k) >= (Val Int 0)) AND ((SymbVal $_k) < ((SymbVal $_i) + (Val Int 1))) AND ((SymbVal $_k) >= (SymbVal $_i))
+ -Path cond.: (((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_j) < (SymbVal $_i))) AND (((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_j) < (Val Int 8))) AND (((SymbVal $_i) >= (Val Int 0)) AND ((SymbVal $_i) < (Val Int 8))) AND ((SymbVal $_k) < (Val Int 8)) AND ((SymbVal $_k) >= (Val Int 5)) AND ((SymbVal $_j) < (Val Int 3)) AND ((SymbVal $_j) >= (Val Int 0)) AND ((SymbVal $_i) < (Val Int 8)) AND ((SymbVal $_i) >= (Val Int 4)) AND ((SymbVal $_k) < (Val Int 8)) AND ((SymbVal $_k) >= (Val Int 0)) AND ((SymbVal $_k) < ((SymbVal $_i) + (Val Int 1))) AND ((SymbVal $_k) >= (SymbVal $_i))
 
 
 #RETURN:
