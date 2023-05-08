@@ -7,27 +7,28 @@ module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M)
 module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M)
 
 let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = 
-
-  if Translator.is_sat global_pc then
-
-    let model   = Translator.get_model ~print_model:true () in
-    let ()      = SymbMap.update model  in
-
-    let returns,conts = CC.interpret program () in
-    
-    ignore conts;
-
-    let return  = List.hd returns in
-    let state,_ = return          in
-
-    let _,pc    = List.split (State.get_pathcondition state) in
-    let neg_pc  = PathCondition.negate pc                    in
-
-    concolic_loop program (neg_pc::global_pc) (return::outs)
   
-  else
-    let _ = SymbMap.clear () in
-    outs
+
+  let model = Translator.find_model global_pc () in
+  match model with
+  | true, Some model ->
+      let ()      = SymbMap.update model  in
+
+      let returns,conts = CC.interpret program () in
+      
+      ignore conts;
+
+      let return  = List.hd returns in
+      let state,_ = return          in
+
+      let _,pc    = List.split (State.get_pathcondition state) in
+      let neg_pc  = PathCondition.negate pc                    in
+
+      concolic_loop program (neg_pc::global_pc) (return::outs)
+  | false, _ -> 
+      let _ = SymbMap.clear () in
+      outs
+  | _ -> failwith "Unreachable"
 
 let main =
 

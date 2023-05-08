@@ -27,6 +27,7 @@ module M : Heap.M with type vt = Expression.t = struct
     Printf.fprintf f "%s\n" tree_json
 
   let to_string (h : t) : string =
+    Printf.printf "%d\n" (Hashtbl.length h);
     Hashtbl.iter tree_to_json h;
     "Json files created in output directory."
     

@@ -48,8 +48,8 @@ let rec translate (e : Expression.t) : Enc.Expression.t =
       let e1' = translate e1 
       and e2' = translate e2 in
       translate_binop op e1' e2'
-  | SymbVal s -> Enc.Expression.mk_symbol `IntType s (* TODO: Booleans*)
-  | SymbInt s -> Enc.Expression.mk_symbol `IntType s
+  | SymbVal s -> Enc.Expression.mk_symbol_s `IntType s (* TODO: Booleans*)
+  | SymbInt s -> Enc.Expression.mk_symbol_s `IntType s
   | ITE (e1, e2, e3) ->
       let e1' = translate e1
       and e2' = translate e2
@@ -60,4 +60,26 @@ let is_sat (exprs : Expression.t list) : bool =
   let exprs' = List.map translate exprs in
   Enc.Batch.check_sat solver exprs'
 
-let get_model ?(print_model=false) () = ignore print_model; assert false
+
+let translate_val_from_encoding (vl : Enc.Value.t) : Value.t =
+  match vl with
+  | Int v  -> Integer v
+  | Bool v -> Boolean v
+  | Real _ -> failwith "Error: Type doesn't exist"
+  | Num _  -> failwith "Error: Type doesn't exist"
+  | Str _  -> failwith "Error: Type doesn't exist"
+
+let translate_from_encoding (expr : Enc.Symbol.t * Enc.Value.t) : string * Value.t =
+  match expr with
+  | symb, vl -> Enc.Symbol.to_string symb, translate_val_from_encoding vl
+
+let find_model (exprs : Expression.t list) ?(print_model=false) () = 
+  let t_exprs = List.map translate exprs in
+  let t_model = Enc.Batch.find_model solver t_exprs in
+  match t_model with
+  | [] -> false, None
+  | _  -> let model = Some (List.map translate_from_encoding t_model) in
+          if print_model then Model.print model else ();
+          true, model
+
+
