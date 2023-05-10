@@ -36,7 +36,7 @@ let arguments () =
   Arg.parse
     [
       ("-i"   , Arg.String (fun f -> file := f ), "Input file");
-      ("-m"   , Arg.String (fun m -> mode := m ), "Mode to run: c - Concrete / s - Symbolic ");
+      ("-m"   , Arg.String (fun m -> mode := m ), "Mode to run: c - Concrete / saf - Symbolic with Array Fork Memory / saite - Symbolic with Array ITE Memory / sopl - Symbolic with Operation List Memory / st - Symbolic with Tree Memory");
       ("-o"   , Arg.String (fun o -> out  := o ), "Output file");
       ("-v"   , Arg.Set verbose, "Verbose")
     ]

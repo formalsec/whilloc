@@ -2,8 +2,12 @@ open Lib
 open Utils
 
 module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
-(* module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapSymbolic.M) *)
-module S  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M)
+
+module SAF  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)
+module SAITE  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M)
+module ST  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M)
+module SOPL  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapOpList.M)
+
 module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M)
 
 let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = 
@@ -48,16 +52,30 @@ let main =
   let str_of_returns =
   match !mode with
 
-    | "c"   -> let returns,_ = C.interpret program () in
+    | "c"     -> let returns,_ = C.interpret program () in
                String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string) returns)
              
-    | "s"   -> let returns,_ = S.interpret program () in
+    | "saf"     -> let returns,_ = SAF.interpret program () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
-    
-    | "cc"  -> let returns   = concolic_loop program [ ] [ ] in
+
+    | "saite" -> let returns,_ = SAITE.interpret program () in
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+
+    | "sopl"  -> let returns,_ = SOPL.interpret program () in
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+
+    | "st"    -> let returns,_ = ST.interpret program () in
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+
+    | "cc"    -> let returns   = concolic_loop program [ ] [ ] in
                String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string) returns)
-             
-    | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  c : for concrete interpretation\n  s : for symbolic interpretation\n  cc : for concolic interpretation"
+
+    | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  c : for concrete interpretation\n  
+                                                                         saf : for symbolic interpretation with array fork memory\n
+                                                                         saite : for symbolic interpretation with array ite memory\n  
+                                                                         sopl : for symbolic interpretation with op list memory\n  
+                                                                         st : for symbolic interpretation with tree memory\n   
+                                                                         cc : for concolic interpretation"
 
   in write_file !out (meta_data ^ str_of_returns);
   print_string "\n=====================\n\tExiting\n=====================\n\n"
