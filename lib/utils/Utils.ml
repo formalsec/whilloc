@@ -26,7 +26,9 @@ let read_file (fname : string) : string =
   str_file
 
 let write_file (fname : string) (text : string) : unit =
-  let oc = open_out fname in
+  let out_file = fname ^ "/output" in
+  if not (Sys.file_exists fname) then ignore (Sys.command ("mkdir -p " ^ fname));
+  let oc = open_out out_file in
   Printf.fprintf oc "%s\n" text;
   close_out oc
 
