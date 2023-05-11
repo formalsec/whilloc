@@ -53,22 +53,22 @@ let main =
   match !mode with
 
     | "c"     -> let returns,_ = C.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string (fun _ -> "")) returns)
              
     | "saf"     -> let returns,_ = SAF.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayFork.M.to_string) returns)
 
     | "saite" -> let returns,_ = SAITE.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayITE.M.to_string) returns)
 
     | "sopl"  -> let returns,_ = SOPL.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns)
 
     | "st"    -> let returns,_ = ST.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns)
 
     | "cc"    -> let returns   = concolic_loop program [ ] [ ] in
-               String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string (fun _ -> "")) returns)
 
     | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  c : for concrete interpretation\n  
                                                                          saf : for symbolic interpretation with array fork memory\n
