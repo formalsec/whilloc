@@ -17,6 +17,10 @@ module M : Heap.M with type vt = Expression.t = struct
     let (heap', _) = heap in 
     Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
   
+  let copy (heap : t) : t =
+    let heap', i = heap in
+    (Hashtbl.copy heap', i)
+
   let find_block (heap : t) (loc : vt) : int * bt = 
     let (heap', _) = heap in
     match loc with
@@ -48,7 +52,7 @@ module M : Heap.M with type vt = Expression.t = struct
       let blockList = Array.to_list block in
       List.mapi (fun index' expr -> 
         let cond = BinOp (Equals, (SymbInt sym), (Val (Integer index'))) in
-        (heap, expr, PathCondition.add_condition path cond)
+        (copy heap, expr, PathCondition.add_condition path cond)
       ) blockList
     | _ -> failwith "Invalid index"
 
@@ -79,6 +83,9 @@ module M : Heap.M with type vt = Expression.t = struct
     let _ = Hashtbl.remove heap' loc' in
     [(heap, path)]
       
+  (* let free (heap : t) (loc : vt) (path : vt PathCondition.t) : (t * vt PathCondition.t) list =
+    ignore loc;
+    [(heap, path)]    *)
 
   let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
     let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
