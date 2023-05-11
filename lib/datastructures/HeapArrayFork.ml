@@ -9,29 +9,33 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
+
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
     String.concat ", " (List.map (fun el -> Expression.string_of_expression el) blockList)
+
 
   let to_string (heap: t) : string =
     let (heap', _) = heap in 
     Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
   
+
   let copy (heap : t) : t =
     let heap', i = heap in
     (Hashtbl.copy heap', i)
 
+
   let find_block (heap : t) (loc : vt) : int * bt = 
     let (heap', _) = heap in
     match loc with
-    | Val Loc loc' -> Printf.printf "Index: %d\n" (loc');
-      Printf.printf "Heap: %s\n" (to_string heap);
+    | Val Loc loc' ->
       let block = Hashtbl.find_opt heap' loc' in ( 
         match block with 
         | Some block' -> (loc', block')
         | None -> failwith "Block does not exist"
       )
     | _ -> failwith "Location needs to be a concrete value"
+
 
   let malloc (heap : t) (size : vt) (path : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let (heap', curr) = heap in
@@ -41,7 +45,8 @@ module M : Heap.M with type vt = Expression.t = struct
       let _ = Hashtbl.add heap' curr block in
       [((heap', curr + 1), Val (Loc curr), path)]
       | _ -> failwith "Size needs to be a concrete integer"
-      
+
+
   let lookup (heap : t) (loc : vt) (index : vt) (path : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let (_, block) = find_block heap loc in
     match index with
@@ -56,13 +61,14 @@ module M : Heap.M with type vt = Expression.t = struct
       ) blockList
     | _ -> failwith "Invalid index"
 
+
   let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt PathCondition.t) : (t * vt PathCondition.t) list =
     let (heap', curr) = heap in
     let (loc, block) = find_block heap loc in
     match index with
     | Val Integer index' -> 
       let _ = Array.set block index' v in
-      let _ = Hashtbl.replace heap' index' block in
+      let _ = Hashtbl.replace heap' loc block in
       [((heap', curr), path)]
     | SymbVal sym -> (* SymbInt ?? *)
       let blockList = Array.to_list block in
@@ -77,15 +83,13 @@ module M : Heap.M with type vt = Expression.t = struct
       temp
     | _ -> failwith "Invalid index"
       
+
   let free (heap : t) (loc : vt) (path : vt PathCondition.t) : (t * vt PathCondition.t) list =
     let (heap', _) = heap in
     let (loc', _) = find_block heap loc in
     let _ = Hashtbl.remove heap' loc' in
     [(heap, path)]
       
-  (* let free (heap : t) (loc : vt) (path : vt PathCondition.t) : (t * vt PathCondition.t) list =
-    ignore loc;
-    [(heap, path)]    *)
 
   let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
     let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in

@@ -31,6 +31,7 @@ let translate_binop (op : bop) (v1 : Enc.Expression.t) (v2 : Enc.Expression.t) :
   | Gte			-> Enc.Integer.mk_ge  v1 v2
   | Lte 		-> Enc.Integer.mk_le  v1 v2
   | Equals 	-> Enc.Integer.mk_eq  v1 v2
+  | NEquals -> Enc.Integer.mk_ne  v1 v2
 
   | Or 			-> Enc.Boolean.mk_or  v1 v2
   | And 		-> Enc.Boolean.mk_and v1 v2
