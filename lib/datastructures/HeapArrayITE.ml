@@ -2,14 +2,19 @@ open Expression
 
 module M : Heap.M with type vt = Expression.t = struct
   
-  type   t = ((int, Expression.t array) Hashtbl.t * int)
+  type  bt = Expression.t array
+  type   t = (int, bt) Hashtbl.t * int
   type  vt = Expression.t
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let to_string (h : t) : string =
-    ignore h;
-    failwith "Not Implemented"
+  let block_str (block : bt) : string =
+    let blockList = Array.to_list block in
+    String.concat ", " (List.map (fun el -> Expression.string_of_expression el) blockList)
+
+  let to_string (heap: t) : string =
+    let (heap', _) = heap in 
+    Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
     
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tbl, next = h in 
@@ -83,7 +88,7 @@ module M : Heap.M with type vt = Expression.t = struct
               let aux = Array.mapi (fun j e -> (BinOp(Equals,index,Val (Integer j)), e)) arr in
 
               let f = fun (bop,e) l -> ITE (bop, e, l) in
-              let expr = Array.fold_right f aux (Val Error) in
+              let expr = Array.fold_right f aux (Val Error) in  (* Error ??? *)
               [ (h,expr,pc) ]
 
             | _ -> failwith ("InternalError: HeapBlockITE, accessed array is not in the heap")          
@@ -119,12 +124,21 @@ module M : Heap.M with type vt = Expression.t = struct
     | _ -> failwith ("InternalError: HeapBlockITE.free, arr must be location")
 
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    ignore pc;
-    ignore heap;
-    ignore v;
-    ignore i;
-    failwith "not implemented"
+  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
+    let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
+    let e2 = Expression.BinOp (Gte, index, Val (Value.Integer (sz))) in
+    let e3 = Expression.BinOp (Or, e1, e2) in
+
+    not (Translator.is_sat ([e3] @ pc))
+
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    let (h, _) = heap in 
+      match arr with  
+      |  Val Loc l -> 
+        (match Hashtbl.find_opt h l with 
+        | Some a -> is_within (Array.length a) i pc
+        | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, accessed array is not in the heap"))
+      | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, arr must be location")
 end
 
 (*

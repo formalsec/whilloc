@@ -176,7 +176,7 @@ module M : Heap.M with type vt = Expression.t = struct
         (match tree with 
           | Leaf (r, _)
           | Node (r, _) -> must_within_range r i pc)
-      | _ -> failwith ("InternalError: HeapTree.lookup, accessed tree is not in the heap"))
-    | _ -> failwith ("InternalError: HeapTree.lookup, arr must be location")
+      | _ -> failwith ("InternalError: HeapTree.in_bounds, accessed tree is not in the heap"))
+    | _ -> failwith ("InternalError: HeapTree.in_bounds, arr must be location")
     
 end

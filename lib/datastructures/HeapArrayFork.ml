@@ -7,10 +7,21 @@ module M : Heap.M with type vt = Expression.t = struct
   type   t = (int, bt) Hashtbl.t * int
   type  vt = Expression.t
 
+  let init () : t = (Hashtbl.create Parameters.size, 0)
+
+  let block_str (block : bt) : string =
+    let blockList = Array.to_list block in
+    String.concat ", " (List.map (fun el -> Expression.string_of_expression el) blockList)
+
+  let to_string (heap: t) : string =
+    let (heap', _) = heap in 
+    Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
+  
   let find_block (heap : t) (loc : vt) : int * bt = 
     let (heap', _) = heap in
     match loc with
-    | Val Loc loc' -> 
+    | Val Loc loc' -> Printf.printf "Index: %d\n" (loc');
+      Printf.printf "Heap: %s\n" (to_string heap);
       let block = Hashtbl.find_opt heap' loc' in ( 
         match block with 
         | Some block' -> (loc', block')
@@ -18,12 +29,6 @@ module M : Heap.M with type vt = Expression.t = struct
       )
     | _ -> failwith "Location needs to be a concrete value"
 
-  let init () : t = (Hashtbl.create Parameters.size, 0)
-
-  let to_string (h : t) : string =
-    ignore h;
-    failwith "Not Implemented"
-    
   let malloc (heap : t) (size : vt) (path : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let (heap', curr) = heap in
     match size with
@@ -39,7 +44,7 @@ module M : Heap.M with type vt = Expression.t = struct
     | Val Integer index' -> 
       let ret = Array.get block index' in
       [(heap, ret, path)]
-    | SymbInt sym -> 
+    | SymbVal sym -> (* SymbInt ?? *)
       let blockList = Array.to_list block in
       List.mapi (fun index' expr -> 
         let cond = BinOp (Equals, (SymbInt sym), (Val (Integer index'))) in
@@ -55,7 +60,7 @@ module M : Heap.M with type vt = Expression.t = struct
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap' index' block in
       [((heap', curr), path)]
-    | SymbInt sym -> 
+    | SymbVal sym -> (* SymbInt ?? *)
       let blockList = Array.to_list block in
       let temp = List.mapi (fun index' _ ->
         let newBlock = Array.copy block in
@@ -74,20 +79,21 @@ module M : Heap.M with type vt = Expression.t = struct
     let _ = Hashtbl.remove heap' loc' in
     [(heap, path)]
       
-  (* let block_str (block : bt) : string =
-    let blockList = Array.to_list block in
-    String.concat ", " (List.map (fun el -> Expression.string_of_expression el) blockList) *)
 
-  (* let str (heap: t) : string =
-    let (heap', _) = heap in 
-    Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' "" *)
+  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
+    let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
+    let e2 = Expression.BinOp (Gte, index, Val (Value.Integer (sz))) in
+    let e3 = Expression.BinOp (Or, e1, e2) in
+
+    not (Translator.is_sat ([e3] @ pc))
 
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    ignore heap;
-    ignore pc;
-
-    ignore v;
-    ignore i;
-    failwith "not implemented"
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    let (h, _) = heap in 
+      match arr with  
+      |  Val Loc l -> 
+        (match Hashtbl.find_opt h l with 
+        | Some a -> is_within (Array.length a) i pc
+        | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, accessed array is not in the heap"))
+      | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, arr must be location")
 end
