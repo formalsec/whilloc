@@ -8,9 +8,9 @@ module M : Heap.M with type vt = Expression.t = struct
     | Leaf of range * vt
     | Node of range * tree_t list
 
-  type t = (int, tree_t) Hashtbl.t
+  type t = (int, tree_t) Hashtbl.t * int
 
-  let init () : t = Hashtbl.create Parameters.size
+  let init () : t = Hashtbl.create Parameters.size, 0
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =
     let rec iter_tree (tree : tree_t) : string = 
@@ -27,17 +27,19 @@ module M : Heap.M with type vt = Expression.t = struct
     Printf.fprintf f "%s\n" tree_json
 
   let to_string (h : t) : string =
-    Printf.printf "%d\n" (Hashtbl.length h);
-    Hashtbl.iter tree_to_json h;
+    let h', _ = h in
+    Hashtbl.iter tree_to_json h';
     "Json files created in output directory."
     
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
+    let h', _ = h in
     let tree = Leaf ((Expression.Val (Integer 0), sz), Expression.Val (Integer 0)) in
-    let l = Hashtbl.length h in
-    Hashtbl.replace h l tree;
+    let l = Hashtbl.length h' in
+    Hashtbl.replace h' l tree;
     [ (h, Expression.Val (Loc l), pc) ]
 
   let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
+    let h', next = h in
     let rec update_tree (tree : tree_t) (index : vt) (v : vt) (pc : vt PathCondition.t) : ((tree_t * vt PathCondition.t) list) option =
       match tree with
       | Leaf ((left, right), old_v) ->
@@ -97,16 +99,16 @@ module M : Heap.M with type vt = Expression.t = struct
       | _ -> failwith "Invalid allocation index"
       end
     in
-    let tree = Hashtbl.find h i in
+    let tree = Hashtbl.find h' i in
     let new_trees =
       update_tree tree index v pc
     in
     match new_trees with
-    | Some new_trees  -> List.map
-      (fun (new_tree, pc') ->
-        let new_h = Hashtbl.copy h in
-        Hashtbl.replace new_h i new_tree;
-        new_h, pc') new_trees
+    | Some new_trees  -> 
+        List.map (fun (new_tree, pc') -> 
+          let new_h = Hashtbl.copy h' in 
+          Hashtbl.replace new_h i new_tree;
+          (new_h, next), pc') new_trees
     | None -> failwith "Out of bounds access"
 
 
@@ -145,7 +147,7 @@ module M : Heap.M with type vt = Expression.t = struct
                                   
 
   let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
-    let tbl = h in 
+    let tbl, _ = h in 
     match arr with  
     | Val Loc l -> 
       (match Hashtbl.find_opt tbl l with 
@@ -155,12 +157,13 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
   let free h (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
+    let h', _ = h in
     let ign = to_string h in
     ignore ign;
     begin
     match arr with
     | Val (Loc i) ->
-        Hashtbl.remove h i
+        Hashtbl.remove h' i
     | _ -> failwith "Invalid allocation index"
     end;
     [h, pc]
@@ -169,9 +172,10 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
     (* Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Expression.string_of_expression arr) (Expression.string_of_expression i) (PathCondition.to_string Expression.string_of_expression pc); *)
+    let h', _ = heap in
     match arr with  
     |  Val Loc l-> 
-      (match Hashtbl.find_opt heap l with 
+      (match Hashtbl.find_opt h' l with 
       | Some tree -> 
         (match tree with 
           | Leaf (r, _)
