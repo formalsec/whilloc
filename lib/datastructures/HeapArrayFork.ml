@@ -19,6 +19,22 @@ module M : Heap.M with type vt = Expression.t = struct
     let (heap', _) = heap in 
     Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
   
+  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
+    let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
+    let e2 = Expression.BinOp (Gte, index, Val (Value.Integer (sz))) in
+    let e3 = Expression.BinOp (Or, e1, e2) in
+
+    not (Translator.is_sat ([e3] @ pc))
+
+
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+    let (h, _) = heap in 
+      match arr with  
+      |  Val Loc l -> 
+        (match Hashtbl.find_opt h l with 
+        | Some a -> is_within (Array.length a) i pc
+        | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, accessed array is not in the heap"))
+      | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, arr must be location")
 
   let copy (heap : t) : t =
     let heap', i = heap in
@@ -92,21 +108,4 @@ module M : Heap.M with type vt = Expression.t = struct
     let _ = Hashtbl.remove heap' loc' in
     [(heap, path)]
       
-
-  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
-    let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
-    let e2 = Expression.BinOp (Gte, index, Val (Value.Integer (sz))) in
-    let e3 = Expression.BinOp (Or, e1, e2) in
-
-    not (Translator.is_sat ([e3] @ pc))
-
-
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    let (h, _) = heap in 
-      match arr with  
-      |  Val Loc l -> 
-        (match Hashtbl.find_opt h l with 
-        | Some a -> is_within (Array.length a) i pc
-        | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, accessed array is not in the heap"))
-      | _ -> failwith ("InternalError: HeapArrayFork.in_bounds, arr must be location")
 end

@@ -32,11 +32,10 @@ module M : Heap.M with type vt = Expression.t = struct
     "Json files created in output directory."
     
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
-    let h', _ = h in
+    let h', curr = h in
     let tree = Leaf ((Expression.Val (Integer 0), sz), Expression.Val (Integer 0)) in
-    let l = Hashtbl.length h' in
-    Hashtbl.replace h' l tree;
-    [ (h, Expression.Val (Loc l), pc) ]
+    Hashtbl.replace h' curr tree;
+    [ ((h', curr+1), Expression.Val (Loc curr), pc) ]
 
   let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
     let h', next = h in

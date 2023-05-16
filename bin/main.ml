@@ -62,7 +62,7 @@ let main =
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayITE.M.to_string) returns)
 
     | "sopl"  -> let returns,_ = SOPL.interpret program () in
-               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns)
+               String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapOpList.M.to_string) returns)
 
     | "st"    -> let returns,_ = ST.interpret program () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns)
