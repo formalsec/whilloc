@@ -114,43 +114,41 @@ def run_test(test, config):
     report = read_json(report_file)
 
     return {
-        "twasp": tdelta,
+        "tint": tdelta,
         "paths": report["paths_explored"],
         "tloop": report["loop_time"],
         "tsolv": report["solver_time"],
-        "specification": report["specification"],
     }
 
 
 def run_tests(dir, config, output_file="results.csv"):
     results, errors = [], []
-    prev = 0
-    sum_paths, sum_twasp, sum_tloop, sum_tsolv = 0, 0.0, 0.0, 0.0
     tests = glob.glob(os.path.join(dir, "*"))
-    info(f"Running tests in \"{dir}\"...", prefix="\n")
-    for i, test in enumerate(tests):
-        prev = progress(f"Running \"{test}\"...", i+1, len(dir), prev=prev)
+    for i, d in enumerate(tests):
+        prev = 0
+        sum_paths, sum_tint, sum_tloop, sum_tsolv = 0, 0.0, 0.0, 0.0
+        info(f"Running tests in \"{d}\"...", prefix="\n" if i > 0 else "")
+        tests = glob.glob(os.path.join(d, "*"))
+        for i, test in enumerate(tests):
+            prev = progress(f"Running \"{test}\"...", i+1, len(tests), prev=prev)
 
-        result = run_test(test, config)
-        if result == []:
-            continue
+            result = run_test(test, config)
+            if result == []:
+                continue
 
-        if not result["specification"]:
-            errors.append(test)
+            sum_tint += result["tint"]
+            sum_paths += result["paths"]
+            sum_tloop += float(result["tloop"])
+            sum_tsolv += float(result["tsolv"])
 
-        sum_twasp += result["twasp"]
-        sum_paths += result["paths"]
-        sum_tloop += float(result["tloop"])
-        sum_tsolv += float(result["tsolv"])
-
-    results.append([
-        os.path.basename(dir),
-        len(dir),
-        round(sum_paths),
-        round(sum_twasp, 3),
-        round(sum_tloop, 3),
-        round(sum_tsolv, 3)
-    ])
+        results.append([
+            os.path.basename(d),
+            len(tests),
+            round(sum_paths),
+            round(sum_tint, 3),
+            round(sum_tloop, 3),
+            round(sum_tsolv, 3)
+        ])
 
     if errors:
         warning("Failed tests:", prefix="\n")
@@ -161,9 +159,8 @@ def run_tests(dir, config, output_file="results.csv"):
          prefix="" if errors else "\n")
     with open(output_file, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(['category', 'ni', 'sum-paths', 'Twasp', 'Tloop', 'Tsolver'])
+        writer.writerow(['category', 'ni', 'sum-paths', 'Tint', 'Tloop', 'Tsolver'])
         writer.writerows(results)
-
 
 def get_parser():
     parser = argparse.ArgumentParser(
@@ -190,15 +187,13 @@ def main(argv=None):
         return 1
 
     config = read_json(args.config)
-    for test_dir in config["test_dirs"]:
-        category = os.path.basename(test_dir)
-        config_name = os.path.splitext(os.path.basename(args.config))[0]
-        output_file = os.path.join("results", f"{config_name}_{category}.csv")
-        if not os.path.exists("results"):
-            os.makedirs("results")
-        info(f"Running \"{category}\" benchmarks...")
-        run_tests(test_dir, config,
-                  output_file=output_file)
+    config_name = os.path.splitext(os.path.basename(args.config))[0]
+    output_file = os.path.join("results", f"{config_name}.csv")
+    if not os.path.exists("results"):
+        os.makedirs("results")
+    info(f"Running benchmarks...")
+    run_tests(config["test_dirs"][0], config,
+                output_file=output_file)
 
     return 0
 

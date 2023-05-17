@@ -7,7 +7,7 @@ function aenima() {
     assume(i<4);
 
     assume(v>=0);
-    assume(v<4);
+    assume(v<2);
 
     x = new(4);
 

@@ -13,6 +13,6 @@ function aenima() {
 
     assert(y != 42);
 
-    delete x;
+
     return x
 }

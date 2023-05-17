@@ -1,6 +1,6 @@
 { 
   "tool"      : "whilloc",
-  "tool_args" : ["-m", "st"],
+  "tool_args" : ["-m", "saf"],
   "workspace" : "output",
   "test_dirs" : ["test/passing"],
   "time_limit" : 60,
