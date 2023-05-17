@@ -243,7 +243,37 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
 
     search (gas-1) prog (join states_cont states') (returns @ branches_final)
 
-  let interpret (prog : program) ?(origin=initial_state prog) () : (t,h) Return.t list * (t,h) State.t list =
-    search tank prog [origin] [ ]
 
+  let save_file path data =
+    if not (Sys.file_exists path) then ignore (Sys.command ("mkdir -p " ^ path));
+    let oc = open_out (path ^ "/report.json") in
+    output_string oc data;
+    close_out oc
+
+  let write_report (loop_time : float) (paths : int) (step_count : int) (out : string) : unit =
+    let solver_time =
+      !Encoding.Incremental.solver_time +. !Encoding.Batch.solver_time
+    in
+    let solver_count =
+      !Encoding.Incremental.solver_count + !Encoding.Batch.solver_count
+    in
+    let report_str =
+      "{" ^ "\"loop_time\" : \"" ^ string_of_float loop_time ^ "\", "
+      ^ "\"solver_time\" : \"" ^ string_of_float solver_time
+      ^ "\", " ^ "\"paths_explored\" : " ^ string_of_int paths ^ ", "
+      ^ "\"solver_counter\" : " ^ string_of_int solver_count ^ ", "
+      ^ "\"instruction_counter\" : " ^ string_of_int step_count ^ "}"
+    in
+    save_file out report_str
+  
+  let loop_start = ref 0.0
+  
+  let interpret (prog : program) (out : string) ?(origin=initial_state prog) () : (t,h) Return.t list * (t,h) State.t list =
+    loop_start := Sys.time ();
+    let ret = search tank prog [origin] [ ] in
+    let rets, _ = ret in
+    let loop_time = Sys.time () -. !loop_start in
+    let paths = List.length rets in
+    write_report loop_time paths 0 out;
+    ret
 end

@@ -71,10 +71,13 @@ module M : Heap.M with type vt = Expression.t = struct
       [(heap, ret, path)]
     | SymbVal sym -> (* SymbInt ?? *)
       let blockList = Array.to_list block in
-      List.mapi (fun index' expr -> 
+      let temp = List.mapi (fun index' expr -> 
         let cond = BinOp (Equals, (SymbInt sym), (Val (Integer index'))) in
         (copy heap, expr, PathCondition.add_condition path cond)
-      ) blockList
+      ) blockList in
+      List.filteri (fun index' _ ->   (* can be optimized *)
+        let e = BinOp(Equals,index,Val (Integer index')) in 
+        if Translator.is_sat ([e] @ path) then true else false) temp
     | _ -> failwith "Invalid index"
 
 

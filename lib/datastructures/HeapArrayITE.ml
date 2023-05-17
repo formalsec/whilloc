@@ -90,14 +90,19 @@ module M : Heap.M with type vt = Expression.t = struct
         | Val (Loc l) ->
           (match Hashtbl.find_opt tbl l with 
             | Some arr ->
-              let aux = Array.mapi (fun j e -> (BinOp(Equals,index,Val (Integer j)), e)) arr in
-              let f = fun (bop,e) l -> ITE (bop, e, l) in
-              let expr = Array.fold_right f aux (Val Error) in  (* Error ??? *)
+              let aux = Array.of_list (List.filteri (fun index' _ ->   (* can be optimized *)
+                        let e = BinOp(Equals,index,Val (Integer index')) in 
+                        if Translator.is_sat ([e] @ pc) then true else false) 
+                        (Array.to_list (Array.mapi (fun j e -> (BinOp(Equals,index,Val (Integer j)), e)) arr)))  in
+              let f = fun (bop,e) l -> 
+                (match e with
+                | ITE (a, b, _) -> ITE (BinOp(And, bop, a), b, l)
+                | _ -> ITE (bop, e, l)) in
+              let expr = Array.fold_right f aux (Val (Integer (0))) in
               [(h,expr,pc)]
-
             | _ -> failwith ("InternalError: HeapArrayITE, accessed array is not in the heap"))
         | _ -> failwith("InternalError:  HeapArrayITE.update, arr must be a location"))
-    
+  
 
   let free (h : t) (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
     let tbl, _ = h in 

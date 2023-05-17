@@ -18,7 +18,7 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
   | true, Some model ->
       let ()      = SymbMap.update model  in
 
-      let returns,conts = CC.interpret program () in
+      let returns,conts = CC.interpret program !out () in
       
       ignore conts;
 
@@ -52,19 +52,19 @@ let main =
   let str_of_returns =
   match !mode with
 
-    | "c"     -> let returns,_ = C.interpret program () in
+    | "c"     -> let returns,_ = C.interpret program !out () in
                String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string (fun _ -> "")) returns)
              
-    | "saf"     -> let returns,_ = SAF.interpret program () in
+    | "saf"     -> let returns,_ = SAF.interpret program !out () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayFork.M.to_string) returns)
 
-    | "saite" -> let returns,_ = SAITE.interpret program () in
+    | "saite" -> let returns,_ = SAITE.interpret program !out () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayITE.M.to_string) returns)
 
-    | "sopl"  -> let returns,_ = SOPL.interpret program () in
+    | "sopl"  -> let returns,_ = SOPL.interpret program !out () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapOpList.M.to_string) returns)
 
-    | "st"    -> let returns,_ = ST.interpret program () in
+    | "st"    -> let returns,_ = ST.interpret program !out () in
                String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns)
 
     | "cc"    -> let returns   = concolic_loop program [ ] [ ] in
