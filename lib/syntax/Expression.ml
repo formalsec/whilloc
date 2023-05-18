@@ -6,15 +6,18 @@ type t = Val     of Value.t
        | Var     of string
        | UnOp    of uop * t
        | BinOp   of bop * t * t
-       | SymbVal of string
+       | SymbBool of string
        | SymbInt of string
        | ITE of t * t * t
 
 let make_true  : t = Val (Value.Boolean (true))
 let make_false : t = Val (Value.Boolean (false))
 
-let make_symb_value (name : string) : t =
-  SymbVal name
+let make_symb_bool (name : string) : t =
+  SymbBool name
+
+let make_symb_int (name : string) : t =
+  SymbInt name
 
 let make_uoperation (op : uop) (e : t) : t =
   UnOp (op, e)
@@ -38,7 +41,7 @@ let rec flatten (e : t) : t list =
 
 let rec get_symbols (e : t) : string list =
   match e with
-  | SymbVal s -> [s]
+  | SymbBool b -> [b]
   | SymbInt i -> [i]
   | Val _ -> []
   | Var _ -> []
@@ -76,7 +79,7 @@ let string_of_bop (op : bop) : string =
 let rec string_of_expression (e : t) : string =
   "(" ^
   (match e with
-  | SymbVal s -> "SymbVal " ^ s
+  | SymbBool s -> "SymbBool " ^ s
   | SymbInt s -> "SymbInt " ^ s
   | Var x -> "Var " ^ x
   | Val v -> "Val " ^ Value.string_of_value v

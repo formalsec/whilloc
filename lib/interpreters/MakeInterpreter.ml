@@ -77,14 +77,14 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
         [ (Skip, cont, store, cs, pc, heap), Cont ]
 
     | Symbol (x,s) ->
-        let symb_opt = make_symbol s in
+        let symb_opt = make_symbol s "bool" in
         (match symb_opt with
         | None          -> failwith "ApplicationError: tried to create a symbolic value in a concrete execution context"
         | Some symb_val -> Store.set store x symb_val;
                            [ (Skip, cont, store, cs, pc, heap), Cont ])
 
     | Symbol_int (x,s) ->
-        let symb_opt = make_symbol s in
+        let symb_opt = make_symbol s "int" in
         (match symb_opt with
         | None          -> failwith "ApplicationError: tried to create a symbolic value in a concrete execution context"
         | Some symb_val -> Store.set store x symb_val;

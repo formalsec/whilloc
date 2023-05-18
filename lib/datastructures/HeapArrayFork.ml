@@ -69,7 +69,7 @@ module M : Heap.M with type vt = Expression.t = struct
     | Val Integer index' -> 
       let ret = Array.get block index' in
       [(heap, ret, path)]
-    | SymbVal sym -> (* SymbInt ?? *)
+    | SymbInt sym ->
       let blockList = Array.to_list block in
       let temp = List.mapi (fun index' expr -> 
         let cond = BinOp (Equals, (SymbInt sym), (Val (Integer index'))) in
@@ -89,7 +89,7 @@ module M : Heap.M with type vt = Expression.t = struct
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap' loc block in
       [((heap', curr), path)]
-    | SymbVal sym -> (* SymbInt ?? *)
+    | SymbInt sym ->
       let blockList = Array.to_list block in
       let temp = List.mapi (fun index' _ ->
         let newBlock = Array.copy block in

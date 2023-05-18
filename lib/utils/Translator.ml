@@ -49,7 +49,7 @@ let rec translate (e : Expression.t) : Enc.Expression.t =
       let e1' = translate e1 
       and e2' = translate e2 in
       translate_binop op e1' e2'
-  | SymbVal s -> Enc.Expression.mk_symbol_s `IntType s (* TODO: Booleans*)
+  | SymbBool s -> Enc.Expression.mk_symbol_s `BoolType s
   | SymbInt s -> Enc.Expression.mk_symbol_s `IntType s
   | ITE (e1, e2, e3) ->
       let e1' = translate e1

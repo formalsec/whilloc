@@ -36,9 +36,12 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
   let print (e : t) : unit =
     to_string e |> print_endline
 
-  let make_symbol (name : string) =
+  let make_symbol (name : string) (tp : string) =
     let symbolic_name  = Parameters.symbol_prefix ^ name in
-    let symbolic_value = Expression.make_symb_value symbolic_name in
+    let symbolic_value = 
+      if String.equal "bool" tp 
+        then Expression.make_symb_bool symbolic_name
+      else Expression.make_symb_int symbolic_name in
     let concrete_value =
     match (SymbMap.map symbolic_name) with
       | None   -> Value.Integer (Utils.random_int ())

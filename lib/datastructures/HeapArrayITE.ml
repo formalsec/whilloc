@@ -66,7 +66,7 @@ module M : Heap.M with type vt = Expression.t = struct
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap' loc block in
       [((heap', curr), path)]
-  | SymbVal _ -> (* SymbInt ?? *)
+  | SymbInt _ ->
       let block' = Array.mapi (fun j old_expr -> 
         let e = BinOp(Equals,index,Val (Integer j)) in 
         if Translator.is_sat ([e] @ path) then Expression.ITE(e, v, old_expr)
@@ -85,7 +85,7 @@ module M : Heap.M with type vt = Expression.t = struct
             | Some arr -> [(h, arr.(i), pc)]
             | _ -> failwith ("InternalError: HeapArrayITE, accessed array is not in the heap"))
         | _ -> failwith("InternalError:  HeapArrayITE.update, arr must be a location"))
-    | _ -> (* quando o 'index' tem tipo "expression", por exemplo: BinOp(+,x_hat,2), SymbVal y_hat,... *)
+    | _ -> (* quando o 'index' tem tipo "expression", por exemplo: BinOp(+,x_hat,2), Symb y_hat,... *)
       (match arr with
         | Val (Loc l) ->
           (match Hashtbl.find_opt tbl l with 

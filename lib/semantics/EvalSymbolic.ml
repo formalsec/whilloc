@@ -10,7 +10,7 @@ module M : Eval.M with type t = Expression.t = struct
     let is_symbolic' = is_symbolic store in
     match e with
     | Val _           -> false
-    | SymbVal _       -> true
+    | SymbBool _       -> true
     | SymbInt _       -> true
     | Var x           -> is_symbolic' (Store.get store x)
     | UnOp  (_, e)    -> is_symbolic' e
@@ -21,7 +21,7 @@ module M : Eval.M with type t = Expression.t = struct
     let simplify_expr = simplify_expression store in
     match e with
     | Val _            -> e
-    | SymbVal _        -> e
+    | SymbBool _        -> e
     | SymbInt _        -> e
     | Var x            -> Store.get store x
     | UnOp  (op, e)    -> UnOp (op, simplify_expr e)
@@ -42,8 +42,8 @@ module M : Eval.M with type t = Expression.t = struct
       | Var x              -> Store.get store x
       | UnOp  (op, e)      -> Val ( eval store e |> get_val |> eval_unop_expr op )
       | BinOp (op, e1, e2) -> Val ( eval_binop_expr op (eval store e1 |> get_val) (eval store e2 |> get_val) )
-      | SymbVal _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic value")
-      | SymbInt _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic value")
+      | SymbBool _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic boolean")
+      | SymbInt _          -> failwith ("InternalError: EvalSymbolic.eval, tried to evaluate a symbolic integer")
       | ITE (_, _, _) -> failwith "InternalError: concrete ITE not implemented"
 
   let is_true (exprs : t list) : bool =
@@ -61,9 +61,11 @@ module M : Eval.M with type t = Expression.t = struct
   let print (e : t) : unit =
     to_string e |> print_endline
 
-  let make_symbol (name : string) =
+  let make_symbol (name : string) (tp : string) =
     let symb_name   = Parameters.symbol_prefix ^ name in
-    let symb_value  = SymbVal symb_name in
+    let symb_value  = (if String.equal "bool" tp 
+      then Expression.make_symb_bool symb_name
+    else Expression.make_symb_int symb_name) in
     Some symb_value
 
 end

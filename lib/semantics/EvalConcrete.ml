@@ -11,7 +11,7 @@ module M : Eval.M with type t = Value.t = struct
     | Var x -> Store.get store x
     | UnOp  (op, e)      -> eval_unop_expr  op (eval store e)
     | BinOp (op, e1, e2) -> eval_binop_expr op (eval store e1) (eval store e2)
-    | SymbVal s -> failwith("InternalError: EvalConcrete.eval, tried to evaluate a symbolic expression" ^ s ^ "in a concrete execution context")
+    | SymbBool s -> failwith("InternalError: EvalConcrete.eval, tried to evaluate a symbolic expression" ^ s ^ "in a concrete execution context")
     | SymbInt s -> failwith("InternalError: EvalConcrete.eval, tried to evaluate a symbolic expression" ^ s ^ "in a concrete execution context")
     | ITE (e1, e2, e3) -> eval_ite e1 e2 e3
 
@@ -39,8 +39,8 @@ module M : Eval.M with type t = Value.t = struct
   let print (v : t) : unit =
     to_string v |> print_endline
 
-  let make_symbol (name : string) =
-    let _ = name in
+  let make_symbol (name : string) (tp : string) =
+    let _ = name, tp in
     None
 
 end

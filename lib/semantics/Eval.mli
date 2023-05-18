@@ -9,6 +9,6 @@ module type M = sig
     val to_string   : t -> string
     val print       : t -> unit
 
-    val make_symbol : string -> t option
+    val make_symbol : string -> string -> t option
     
 end
