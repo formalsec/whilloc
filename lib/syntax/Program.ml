@@ -1,20 +1,21 @@
 type stmt = Skip
-          | Assign      of string * Expression.t
-          | Sequence    of stmt list
-          | FunCall     of string * string * Expression.t list
-          | IfElse      of Expression.t * stmt * stmt
-          | While       of Expression.t * stmt
-          | Return      of Expression.t
-          | Assert      of Expression.t
-          | Assume      of Expression.t
+          | Assign       of string * Expression.t
+          | Sequence     of stmt list
+          | FunCall      of string * string * Expression.t list
+          | IfElse       of Expression.t * stmt * stmt
+          | While        of Expression.t * stmt
+          | Return       of Expression.t
+          | Assert       of Expression.t
+          | Assume       of Expression.t
           | Clear
-          | Print       of Expression.t list
-          | Symbol      of string * string
-          | Symbol_int  of string * string
-          | New         of string * Expression.t
-          | Update      of string * Expression.t * Expression.t
-          | LookUp      of string * string * Expression.t
-          | Delete      of string
+          | Print        of Expression.t list
+          | Symbol_bool  of string * string
+          | Symbol_int   of string * string
+          | Symbol_int_c of string * string * Expression.t
+          | New          of string * Expression.t
+          | Update       of string * Expression.t * Expression.t
+          | LookUp       of string * string * Expression.t
+          | Delete       of string
 
 type func = {
   id   : string;
@@ -35,8 +36,9 @@ let rec string_of_stmt (s : stmt) : string =
   | Skip         -> "Skip"
   | Clear        -> "Clear\n"
   | Assign (x,e) -> "Assignment: " ^ x ^ "=" ^ (Expression.string_of_expression e)
-  | Symbol (s,v) -> "Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
-  | Symbol_int (s,v) -> "Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
+  | Symbol_bool (s,v) -> "Boolean Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
+  | Symbol_int (s,v) -> "Integer Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
+  | Symbol_int_c (s,v,e) -> "Integer Symbol declaration: name=" ^ s ^ ", value=§__" ^ v ^ ", cond=" ^ Expression.string_of_expression e
   | Sequence s   -> "Sequence:\n  " ^ String.concat "  " (List.map string_of_stmt s)
   | Return e     -> "Return: " ^ Expression.string_of_expression e
   | Assert e     -> "Assert: " ^ Expression.string_of_expression e

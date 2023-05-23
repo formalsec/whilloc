@@ -77,8 +77,9 @@ rule read =
   | "skip"            { SKIP }
   | "clear"           { CLEAR }
   | "print"           { PRINT }
-  | "symbol"          { SYMBOL }
+  | "symbol_bool"     { SYMBOL_BOOL }
   | "symbol_int"      { SYMBOL_INT }
+  | "symbol_int_c"    { SYMBOL_INT_C }
   | "new"             { NEW }
   | "delete"          { DELETE }
   | '"'               { read_string (Buffer.create 16) lexbuf }

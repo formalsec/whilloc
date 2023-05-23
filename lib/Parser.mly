@@ -8,8 +8,9 @@
 %token ASSUME
 %token ASSERT
 %token CLEAR
-%token SYMBOL
+%token SYMBOL_BOOL
 %token SYMBOL_INT
+%token SYMBOL_INT_C
 %token NEW
 %token DELETE
 
@@ -103,10 +104,12 @@ statement:
     { Program.Return e }
   | PRINT; LPAREN; exprs = separated_nonempty_list(COMMA, expression); RPAREN;
     { Program.Print exprs }
-  | v = VAR; DEFEQ; SYMBOL; LPAREN; s = STRING; RPAREN;
-    { Program.Symbol (v, s)}
+  | v = VAR; DEFEQ; SYMBOL_BOOL; LPAREN; s = STRING; RPAREN;
+    { Program.Symbol_bool (v, s)}
   | v = VAR; DEFEQ; SYMBOL_INT; LPAREN; s = STRING; RPAREN;
     { Program.Symbol_int (v, s)}
+  | v = VAR; DEFEQ; SYMBOL_INT_C; LPAREN; s = STRING; COMMA; c = expression; RPAREN;
+    { Program.Symbol_int_c (v, s, c)}
   | arr = VAR; DEFEQ; NEW; LPAREN; e = expression; RPAREN;
     { Program.New (arr, e) }
   | arr = VAR; LBRACKET; e1 = expression; RBRACKET; DEFEQ; e2 = expression;

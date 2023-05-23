@@ -76,7 +76,7 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
         Store.set store x e';
         [ (Skip, cont, store, cs, pc, heap), Cont ]
 
-    | Symbol (x,s) ->
+    | Symbol_bool (x,s) ->
         let symb_opt = make_symbol s "bool" in
         (match symb_opt with
         | None          -> failwith "ApplicationError: tried to create a symbolic value in a concrete execution context"
@@ -90,6 +90,18 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
         | Some symb_val -> Store.set store x symb_val;
                            [ (Skip, cont, store, cs, pc, heap), Cont ])
 
+    | Symbol_int_c (x,s,c) ->
+        let symb_opt = make_symbol s "int" in
+        (match symb_opt with
+        | None          -> failwith "ApplicationError: tried to create a symbolic value in a concrete execution context"
+        | Some symb_val -> Store.set store x symb_val);
+        let e        = eval store c in
+        let pc'      = add_condition pc e in
+        let pc''     = add_condition pc (negate e) in
+        let continue = is_true pc' in
+        if continue then [ (Skip, cont, store, cs, pc', heap), Cont ]
+        else             [ (Skip, cont, store, cs, pc'', heap ), AssumeF ]
+                 
     | Print exprs ->
         let exprs = List.map (eval store) exprs in
         let ()    = print_endline ">Program Print" in
