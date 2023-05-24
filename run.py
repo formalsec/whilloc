@@ -187,13 +187,15 @@ def main(argv=None):
         return 1
 
     config = read_json(args.config)
-    config_name = os.path.splitext(os.path.basename(args.config))[0]
-    output_file = os.path.join("results", f"{config_name}.csv")
-    if not os.path.exists("results"):
-        os.makedirs("results")
-    info(f"Running benchmarks...")
-    run_tests(config["test_dirs"][0], config,
-                output_file=output_file)
+    for test_dir in config["test_dirs"]:
+        category = os.path.basename(test_dir)
+        config_name = os.path.splitext(os.path.basename(args.config))[0]
+        output_file = os.path.join("results", f"{config_name}_{category}.csv")
+        if not os.path.exists("results"):
+            os.makedirs("results")
+        info(f"Running \"{category}\" benchmarks...")
+        run_tests(test_dir, config,
+                    output_file=output_file)
 
     return 0
 
