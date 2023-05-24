@@ -1,0 +1,25 @@
+function aenima() {    
+
+    x = new(50000);
+
+    x[5000] = 42;
+    x[15000] = 24;
+    x[35000] = 100;
+
+    j = symbol_int_c("j", j>=0 && j<12500);
+    k = symbol_int_c("k", k>=12500 && k<25000);
+    l = symbol_int_c("l", l>=25000 && l<37500);
+    m = symbol_int_c("m", m>=37500 && m<50000);
+
+    a = x[j];
+    b = x[k];
+    c = x[l];
+    d = x[m];
+
+    assert(a == 42 || a == 0);
+    assert(b == 24 || b == 0);
+    assert(c == 100 || c == 0);
+    assert(d == 0);
+
+    return x
+}

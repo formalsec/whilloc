@@ -2,7 +2,7 @@
   "tool"      : "whilloc",
   "tool_args" : ["-m", "saf"],
   "workspace" : "output",
-  "test_dirs" : ["test/passing"],
+  "test_dirs" : ["test/large_arrays_pass"],
   "time_limit" : 60,
   "memory_limit" : 15000000
 }
