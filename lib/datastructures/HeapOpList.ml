@@ -81,7 +81,7 @@ module M : Heap.M with type vt = Expression.t = struct
           List.fold_left
             (fun ac (i, v, _) ->
               Expression.ITE (Expression.BinOp (Expression.Equals, index, i), v, ac))
-            (Expression.Val (Value.Integer (0))) ops
+            (Expression.Val (Value.Integer (0))) (List.rev ops)
         in
         [ (h, v, pc) ]
     else failwith "out of bounds"
