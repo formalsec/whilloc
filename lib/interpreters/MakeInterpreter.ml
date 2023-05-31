@@ -214,15 +214,18 @@ module M (Eval : Eval.M) (Search : Search.M) (Heap : Heap.M with type vt = Eval.
         (match Store.get_opt store a with
         | Some loc ->
           let index_v = eval store index in
-          let lst = Heap.lookup heap loc index_v pc in
-          let dup = (List.length lst) > 1 in
+          let b = Heap.in_bounds heap loc index_v pc in
+          if b then
+            let lst = Heap.lookup heap loc index_v pc in
+            let dup = (List.length lst) > 1 in
 
-          List.map (fun (hp, v, pc') ->
-            let store', cs' =
-              if dup then Store.dup store, Callstack.dup cs else store, cs in
-            Store.set store' x v;
-            (Skip, cont, store', cs', pc', hp), Cont
-          ) lst
+            List.map (fun (hp, v, pc') ->
+              let store', cs' =
+                if dup then Store.dup store, Callstack.dup cs else store, cs in
+              Store.set store' x v;
+              (Skip, cont, store', cs', pc', hp), Cont
+            ) lst
+          else failwith "Index out of bounds"
         | None -> failwith "InternalError: array is not defined")
 
 

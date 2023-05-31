@@ -59,33 +59,27 @@ module M : Heap.M with type vt = Expression.t = struct
   let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)
       : (t * vt PathCondition.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
-    let arr' = Hashtbl.find_opt h.map lbl in
-    let size, _ = Option.get arr' in
-                
-    if is_within size index pc then
-      let f ((sz, oplist) : size * op list) : unit =
-        Hashtbl.replace h.map lbl (sz, (index, v, pc) :: oplist)
-      in
-      Option.fold ~none:() ~some:f arr';
-      [ (h, pc) ]
-    else failwith "out of bounds"
+    let arr' = Hashtbl.find_opt h.map lbl in                
+    let f ((sz, oplist) : size * op list) : unit =
+      Hashtbl.replace h.map lbl (sz, (index, v, pc) :: oplist)
+    in
+    Option.fold ~none:() ~some:f arr';
+    [ (h, pc) ]
 
 
   let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) :
       (t * vt * vt PathCondition.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find h.map lbl in
-    let size, ops = arr' in
-    if is_within size index pc then
-        let v =
-          List.fold_left
-            (fun ac (i, v, _) ->
-              Expression.ITE (Expression.BinOp (Expression.Equals, index, i), v, ac))
-            (Expression.Val (Value.Integer (0))) (List.rev ops)
-        in
-        [ (h, v, pc) ]
-    else failwith "out of bounds"
-      
+    let _, ops = arr' in
+    let v =
+      List.fold_left
+        (fun ac (i, v, _) ->
+          Expression.ITE (Expression.BinOp (Expression.Equals, index, i), v, ac))
+        (Expression.Val (Value.Integer (0))) (List.rev ops)
+    in
+    [ (h, v, pc) ]
+  
 
   let free h (arr : vt) (pc : vt PathCondition.t) :
       (t * vt PathCondition.t) list =

@@ -128,29 +128,34 @@ module M : Heap.M with type vt = Expression.t = struct
   
     Translator.is_sat ([e1; e2] @ pc)
   
-  let rec search_tree (index : vt) (pc : vt PathCondition.t) (tree : tree_t) : (vt * vt PathCondition.t) list = 
+  let rec search_tree (index : vt) (pc : vt PathCondition.t) (tree : tree_t) : (vt * vt) list = 
       (match tree with 
       | Leaf (r, v) -> let lower, upper = r in
                     let in_range = may_within_range r index pc in
                     if in_range then
-                      [(v, pc @ [Expression.BinOp (Lt, index, upper); Expression.BinOp (Gte, index, lower)])]
+                      [v, Expression.BinOp (And, Expression.BinOp (Lt, index, upper), Expression.BinOp (Gte, index, lower))]
                     else  
                       []
-      | Node (r, tree_list) ->   let lower, upper = r in
-                            let in_range = may_within_range r index pc in
+      | Node (r, tree_list) -> let in_range = may_within_range r index pc in
                             if in_range then
-                              List.concat (List.map (search_tree index (pc @ [Expression.BinOp (Lt, index, upper); Expression.BinOp (Gte, index, lower)])) tree_list)
-                            else  
+                              List.concat (List.map (search_tree index (pc)) tree_list)
+                            else
                               []
       )
                                   
 
   let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
-    let tbl, _ = h in 
+    let tbl, _ = h in
+    
     match arr with  
     | Val Loc l -> 
       (match Hashtbl.find_opt tbl l with 
-      | Some tree -> List.map (fun (a,b) -> (h, a,b)) (search_tree index pc tree)
+      | Some tree -> let v =          
+                            List.fold_left
+                              (fun ac (v, c) ->
+                              Expression.ITE (c, v, ac))
+                              (Expression.Val (Value.Integer (0))) (search_tree index pc tree) in
+                     [h, v, pc]
       | _ -> failwith ("InternalError: HeapTree.lookup, accessed tree is not in the heap"))
     | _ -> failwith ("InternalError: HeapTree.lookup, arr must be location")
 
