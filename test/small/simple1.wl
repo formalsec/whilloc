@@ -6,5 +6,6 @@ function aenima() {
   } else {
     y = x + 200
   }; 
-  assert (y != 42)
+  assert (y != 42);
+  return 0
 }
