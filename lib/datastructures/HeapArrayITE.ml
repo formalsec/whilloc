@@ -115,6 +115,8 @@ module M : Heap.M with type vt = Expression.t = struct
       | _ -> failwith ("InternalError: HeapArrayITE.free, illegal free"))
     | _ -> failwith ("InternalError: HeapArrayITE.free, arr must be location")
 
+    let clone _ = assert false
+      
 
 
 end

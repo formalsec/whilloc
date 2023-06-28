@@ -64,6 +64,9 @@ module M : Heap.M with type vt = Value.t = struct
     ignore v;
     ignore i;
     failwith "not implemented"
+  
+    let clone _ = assert false
+      
 end
 
 (*

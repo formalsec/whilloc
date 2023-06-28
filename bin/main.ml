@@ -1,15 +1,22 @@
 open Lib
 open Utils
 
-module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
 
-module SAF  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)
+module Choice = ListChoice.Make (EvalSymbolic.M)(HeapArrayFork.M)
+module SAF  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)(Choice)
+
+
+
+(*
+module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
 module SAITE  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M)
 module ST  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M)
 module SOPL  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapOpList.M)
-
 module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M)
+*)
 
+
+(*
 let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = 
   
 
@@ -33,8 +40,10 @@ let rec concolic_loop (program : Program.program) (global_pc : Expression.t Path
       let _ = SymbMap.clear () in
       outs
   | _ -> failwith "Unreachable"
+*)
 
-let main =
+
+let main () =
 
   print_string "\n=====================\n\tÆnima\n=====================\n\n";
   arguments();
@@ -48,7 +57,23 @@ let main =
 
   let program   = !file |> read_file |> parse_program |> create_program in
   let meta_data = Printf.sprintf ("Input file: %s\nExecution mode: %s\nOutput file: %s\n\n") !file !mode !out in
+  
+  let str_of_returns =
+    match !mode with
+    | "saf"     -> 
+      let rets = SAF.interpret program in
+      let ret_str = 
+        List.map 
+          (fun (out,_)-> 
+            Printf.sprintf "Outcome: %s" (Outcome.to_string out);
+          ) rets in
+      String.concat "\n" ret_str    
+    | _ -> assert false 
+    in 
+    write_file !out (meta_data ^ str_of_returns);
+    print_string "\n=====================\n\tExiting\n=====================\n\n"
 
+ (* 
   let str_of_returns =
   match !mode with
 
@@ -77,7 +102,7 @@ let main =
                                                                          st : for symbolic interpretation with tree memory\n   
                                                                          cc : for concolic interpretation"
 
-  in write_file !out (meta_data ^ str_of_returns);
-  print_string "\n=====================\n\tExiting\n=====================\n\n"
+*)
 
-let _ = main
+
+let _ = main ()

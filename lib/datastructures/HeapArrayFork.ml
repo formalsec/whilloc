@@ -110,5 +110,7 @@ module M : Heap.M with type vt = Expression.t = struct
     let (loc', _) = find_block heap loc in
     let _ = Hashtbl.remove heap' loc' in
     [(heap, path)]
+
+  let clone _ = assert false
       
 end

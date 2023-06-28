@@ -186,5 +186,7 @@ module M : Heap.M with type vt = Expression.t = struct
           | Node (r, _) -> must_within_range r i pc)
       | _ -> failwith ("InternalError: HeapTree.in_bounds, accessed tree is not in the heap"))
     | _ -> failwith ("InternalError: HeapTree.in_bounds, arr must be location")
-    
+  
+    let clone _ = assert false
+      
 end

@@ -87,4 +87,6 @@ module M : Heap.M with type vt = Expression.t = struct
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]
 
+    let clone _ = assert false
+      
 end

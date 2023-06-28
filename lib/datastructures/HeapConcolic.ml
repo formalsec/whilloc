@@ -42,6 +42,9 @@ module M : Heap.M with type vt = Value.t * Expression.t = struct
     ignore v;
     ignore i;
     failwith "not implemented"
+
+    let clone _ = assert false
+      
 end
 
 (*

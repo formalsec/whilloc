@@ -10,5 +10,6 @@ module type M = sig
     val update : t -> vt -> vt -> vt -> vt PathCondition.t -> (t * vt PathCondition.t) list
     val free   : t -> vt -> vt PathCondition.t -> (t * vt PathCondition.t) list
     val in_bounds : t -> vt -> vt -> vt PathCondition.t -> bool
+    val clone : t -> t 
 
 end
