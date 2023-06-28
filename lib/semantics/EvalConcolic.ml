@@ -1,5 +1,5 @@
-module M : Eval.M with type t = Value.t * Expression.t = struct
-  
+module M : Eval_intf.M with type t = Value.t * Expression.t = struct
+
   type   t = Value.t * Expression.t
   type  st = t Store.t
 
@@ -38,8 +38,8 @@ module M : Eval.M with type t = Value.t * Expression.t = struct
 
   let make_symbol (name : string) (tp : string) =
     let symbolic_name  = Parameters.symbol_prefix ^ name in
-    let symbolic_value = 
-      if String.equal "bool" tp 
+    let symbolic_value =
+      if String.equal "bool" tp
         then Expression.make_symb_bool symbolic_name
       else Expression.make_symb_int symbolic_name in
     let concrete_value =

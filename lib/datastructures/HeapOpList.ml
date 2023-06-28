@@ -1,4 +1,4 @@
-module M : Heap.M with type vt = Expression.t = struct
+module M : Heap_intf.M with type vt = Expression.t = struct
 
   type addr = int
   type size = Expression.t
@@ -10,8 +10,8 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let to_string (h : t) : string =
     Hashtbl.fold
-      (fun k (sz, ops) accum -> 
-        accum 
+      (fun k (sz, ops) accum ->
+        accum
         ^ Int.to_string k
         ^ " -> ("
         ^ Expression.string_of_expression sz
@@ -27,7 +27,7 @@ module M : Heap.M with type vt = Expression.t = struct
       h.map ""
 
 
-  let is_within (sz : vt) (index : vt) (pc : vt PathCondition.t) : bool = 
+  let is_within (sz : vt) (index : vt) (pc : vt PathCondition.t) : bool =
     let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
     let e2 = Expression.BinOp (Gte, index, sz) in
     let e3 = Expression.BinOp (Or, e1, e2) in
@@ -35,11 +35,11 @@ module M : Heap.M with type vt = Expression.t = struct
     not (Translator.is_sat ([e3] @ pc))
 
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    match v with  
-    | Val Loc l -> 
-      (match Hashtbl.find_opt heap.map l with 
-      | Some (sz, _)  -> 
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
+    match v with
+    | Val Loc l ->
+      (match Hashtbl.find_opt heap.map l with
+      | Some (sz, _)  ->
           (match sz with
           | Val (Integer _)
           | SymbInt _ -> is_within sz i pc
@@ -59,7 +59,7 @@ module M : Heap.M with type vt = Expression.t = struct
   let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)
       : (t * vt PathCondition.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
-    let arr' = Hashtbl.find_opt h.map lbl in                
+    let arr' = Hashtbl.find_opt h.map lbl in
     let f ((sz, oplist) : size * op list) : unit =
       Hashtbl.replace h.map lbl (sz, (index, v, pc) :: oplist)
     in
@@ -79,7 +79,7 @@ module M : Heap.M with type vt = Expression.t = struct
         (Expression.Val (Value.Integer (0))) (List.rev ops)
     in
     [ (h, v, pc) ]
-  
+
 
   let free h (arr : vt) (pc : vt PathCondition.t) :
       (t * vt PathCondition.t) list =
@@ -88,5 +88,5 @@ module M : Heap.M with type vt = Expression.t = struct
     [ (h, pc) ]
 
     let clone _ = assert false
-      
+
 end

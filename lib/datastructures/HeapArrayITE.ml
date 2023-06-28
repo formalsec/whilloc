@@ -1,7 +1,7 @@
 open Expression
 
-module M : Heap.M with type vt = Expression.t = struct
-  
+module M : Heap_intf.M with type vt = Expression.t = struct
+
   type  bt = Expression.t array
   type   t = (int, bt) Hashtbl.t * int
   type  vt = Expression.t
@@ -15,11 +15,11 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
   let to_string (heap: t) : string =
-    let (heap', _) = heap in 
+    let (heap', _) = heap in
     Hashtbl.fold (fun _ b acc -> (block_str b) ^ "\n" ^ acc) heap' ""
-  
-  
-  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool = 
+
+
+  let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool =
     let e1 = Expression.BinOp (Lt, index, Val (Value.Integer (0))) in
     let e2 = Expression.BinOp (Gte, index, Val (Value.Integer (sz))) in
     let e3 = Expression.BinOp (Or, e1, e2) in
@@ -27,22 +27,22 @@ module M : Heap.M with type vt = Expression.t = struct
     not (Translator.is_sat ([e3] @ pc))
 
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
-    let (h, _) = heap in 
-      match arr with  
-      |  Val Loc l -> 
-        (match Hashtbl.find_opt h l with 
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool =
+    let (h, _) = heap in
+      match arr with
+      |  Val Loc l ->
+        (match Hashtbl.find_opt h l with
         | Some a -> is_within (Array.length a) i pc
         | _ -> failwith ("InternalError: HeapArrayITE.in_bounds, accessed array is not in the heap"))
       | _ -> failwith ("InternalError: HeapArrayITE.in_bounds, arr must be location")
 
 
-  let find_block (heap : t) (loc : vt) : int * bt = 
+  let find_block (heap : t) (loc : vt) : int * bt =
     let (heap', _) = heap in
     match loc with
     | Val Loc loc' ->
-      let block = Hashtbl.find_opt heap' loc' in ( 
-        match block with 
+      let block = Hashtbl.find_opt heap' loc' in (
+        match block with
         | Some block' -> (loc', block')
         | None -> failwith "Block does not exist"
       )
@@ -50,7 +50,7 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
-    let tbl, next = h in 
+    let tbl, next = h in
     match sz with
     | Val (Integer i) ->
         Hashtbl.replace tbl next (Array.make i (Val (Integer 0)));
@@ -62,13 +62,13 @@ module M : Heap.M with type vt = Expression.t = struct
   let (heap', curr) = heap in
   let (loc, block) = find_block heap loc in
   match index with
-  | Val Integer index' -> 
+  | Val Integer index' ->
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap' loc block in
       [((heap', curr), path)]
   | SymbInt _ ->
-      let block' = Array.mapi (fun j old_expr -> 
-        let e = BinOp(Equals,index,Val (Integer j)) in 
+      let block' = Array.mapi (fun j old_expr ->
+        let e = BinOp(Equals,index,Val (Integer j)) in
         if Translator.is_sat ([e] @ path) then Expression.ITE(e, v, old_expr)
         else old_expr) block in
       let _ = Hashtbl.replace heap' loc block' in
@@ -81,20 +81,20 @@ module M : Heap.M with type vt = Expression.t = struct
     | Val (Integer i) -> (* quando o 'index' tem tipo "value", por exemplo: 5,2,... *)
       (match arr with
         | Val (Loc l) ->
-          (match Hashtbl.find_opt tbl l with 
+          (match Hashtbl.find_opt tbl l with
             | Some arr -> [(h, arr.(i), pc)]
             | _ -> failwith ("InternalError: HeapArrayITE, accessed array is not in the heap"))
         | _ -> failwith("InternalError:  HeapArrayITE.update, arr must be a location"))
     | _ -> (* quando o 'index' tem tipo "expression", por exemplo: BinOp(+,x_hat,2), Symb y_hat,... *)
       (match arr with
         | Val (Loc l) ->
-          (match Hashtbl.find_opt tbl l with 
+          (match Hashtbl.find_opt tbl l with
             | Some arr ->
               let aux = Array.of_list (List.filteri (fun index' _ ->   (* can be optimized *)
-                        let e = BinOp(Equals,index,Val (Integer index')) in 
-                        if Translator.is_sat ([e] @ pc) then true else false) 
+                        let e = BinOp(Equals,index,Val (Integer index')) in
+                        if Translator.is_sat ([e] @ pc) then true else false)
                         (Array.to_list (Array.mapi (fun j e -> (BinOp(Equals,index,Val (Integer j)), e)) arr)))  in
-              let f = fun (bop,e) l -> 
+              let f = fun (bop,e) l ->
                 (match e with
                 | ITE (a, b, _) -> ITE (BinOp(And, bop, a), b, l)
                 | _ -> ITE (bop, e, l)) in
@@ -102,21 +102,21 @@ module M : Heap.M with type vt = Expression.t = struct
               [(h,expr,pc)]
             | _ -> failwith ("InternalError: HeapArrayITE, accessed array is not in the heap"))
         | _ -> failwith("InternalError:  HeapArrayITE.update, arr must be a location"))
-  
+
 
   let free (h : t) (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
-    let tbl, _ = h in 
-    match arr with 
-    | Val (Loc l) -> 
-      (match Hashtbl.find_opt tbl l with 
+    let tbl, _ = h in
+    match arr with
+    | Val (Loc l) ->
+      (match Hashtbl.find_opt tbl l with
       | Some _ ->
-         Hashtbl.remove tbl l; 
+         Hashtbl.remove tbl l;
          [ h, pc ]
       | _ -> failwith ("InternalError: HeapArrayITE.free, illegal free"))
     | _ -> failwith ("InternalError: HeapArrayITE.free, arr must be location")
 
     let clone _ = assert false
-      
+
 
 
 end

@@ -1,7 +1,7 @@
 open Expression
 open Value
 
-module M : Heap.M with type vt = Expression.t = struct
+module M : Heap_intf.M with type vt = Expression.t = struct
   type bt = Expression.t array
   type t = { map : (int, bt) Hashtbl.t; i : int }
   type vt = Expression.t

@@ -1,9 +1,9 @@
-module M
-    (Eval : Eval.M)
-    (Search : Search.M)
-    (Heap : Heap.M with type vt = Eval.t)
-    (Choice : Choice.Choice with type v = Eval.t and type h = Heap.t) :
-  Interpreter.M with type t = Eval.t and type h = Heap.t = struct
+module Make
+    (Eval : Eval_intf.M)
+    (Search : Search_intf.M)
+    (Heap : Heap_intf.M with type vt = Eval.t)
+    (Choice : Choice_intf.Choice with type v = Eval.t and type h = Heap.t) :
+  Interpreter_intf.M with type t = Eval.t and type h = Heap.t = struct
   open Program
   open Outcome
 

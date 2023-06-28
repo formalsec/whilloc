@@ -3,7 +3,7 @@ open Utils
 
 
 module Choice = ListChoice.Make (EvalSymbolic.M)(HeapArrayFork.M)
-module SAF  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)(Choice)
+module SAF  = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)(Choice)
 
 
 
