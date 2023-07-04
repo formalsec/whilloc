@@ -1,5 +1,5 @@
-module M : Heap.M with type vt = Value.t * Expression.t = struct
-  
+module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
+
   type   t = (int, (Value.t * Expression.t) array) Hashtbl.t
   type  vt = Value.t * Expression.t (* indexes and sizes are always values *)
 
@@ -8,15 +8,15 @@ module M : Heap.M with type vt = Value.t * Expression.t = struct
   let to_string (h : t) : string =
     ignore h;
     failwith "Not Implemented"
-    
+
   let malloc h (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     ignore sz;
     ignore pc;
     ignore h;
     []
-  
+
   let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
-    ignore arr;  
+    ignore arr;
     ignore v;
     ignore index;
     ignore h;
@@ -36,22 +36,25 @@ module M : Heap.M with type vt = Value.t * Expression.t = struct
     ignore h;
     []
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
     ignore pc;
     ignore heap;
     ignore v;
     ignore i;
     failwith "not implemented"
+
+    let clone _ = assert false
+
 end
 
 (*
 type t = (int, int arry) Hashtbl.t
 
-x := new (5); 
----- 
+x := new (5);
+----
 heap = { 1 -> { 0 -> 0, 1 -> 0, 2 -> 0, 3 -> 0, 4 -> 0} }
 store = { x -> Loc 1 }
-x[1] := 3; 
+x[1] := 3;
 ----
 heap = { 1 -> { 0 -> 0, 1 -> 3, 2 -> 0, 3 -> 0, 4 -> 0} }
 store = { x -> Loc 1 }

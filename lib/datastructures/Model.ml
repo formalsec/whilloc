@@ -1,5 +1,7 @@
 type t = (string * Value.t) list option
 
+let empty = Some []
+
 let rec value_of (model : t) (var : string) : Value.t =
   match model with
   | None              -> failwith    ("InternalError: Model.value_of, tried to get the value of variable " ^ var ^ " with a None model")

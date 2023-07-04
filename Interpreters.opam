@@ -30,3 +30,6 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/username/reponame.git"
+pin-depends: [
+  [ "encoding.dev" "git+https://github.com/wasp-platform/encoding" ]
+]

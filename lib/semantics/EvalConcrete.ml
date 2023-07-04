@@ -1,4 +1,4 @@
-module M : Eval.M with type t = Value.t = struct
+module M : Eval_intf.M with type t = Value.t = struct
 
   open EvalExpression
 
@@ -23,7 +23,7 @@ module M : Eval.M with type t = Value.t = struct
     | Integer _ -> failwith ("InternalError: EvalConcrete.is_true, guard expressions must be of type boolean")
     | Loc     l -> failwith ("InternalError: EvalConcrete.is_true, location value " ^ (string_of_int l) ^ " cannot be evaluated to true or false in concrete evaluation contexts")
     | Error     -> failwith ("ERROR ERROR")
-    
+
   let test_assert (exprs : t list) : bool * Model.t =
     is_true exprs,None
 

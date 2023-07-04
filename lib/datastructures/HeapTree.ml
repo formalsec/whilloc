@@ -1,4 +1,4 @@
-module M : Heap.M with type vt = Expression.t = struct
+module M : Heap_intf.M with type vt = Expression.t = struct
 
   type  vt = Expression.t
 
@@ -13,13 +13,13 @@ module M : Heap.M with type vt = Expression.t = struct
   let init () : t = Hashtbl.create Parameters.size, 0
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =
-    let rec iter_tree (tree : tree_t) : string = 
+    let rec iter_tree (tree : tree_t) : string =
       match tree with
-      | Leaf ((l, r), v)  -> "{ \"leaf\": { \"range\": \"[" ^ Expression.string_of_expression l ^ 
+      | Leaf ((l, r), v)  -> "{ \"leaf\": { \"range\": \"[" ^ Expression.string_of_expression l ^
                              ", " ^ Expression.string_of_expression r ^ "[\", \"value\": " ^ "\"" ^
                              Expression.string_of_expression v ^ "\"" ^ " } }"
-      | Node ((l, r), ch) -> "{ \"node\": { \"range\": \"[" ^ Expression.string_of_expression l ^ 
-                             ", " ^ Expression.string_of_expression r ^ "[\", \"children\": " ^  
+      | Node ((l, r), ch) -> "{ \"node\": { \"range\": \"[" ^ Expression.string_of_expression l ^
+                             ", " ^ Expression.string_of_expression r ^ "[\", \"children\": " ^
                              "[ " ^ String.concat (", ") (List.map iter_tree ch) ^ " ]" ^ " } }"
     in
     let f = open_out ("output/" ^ (string_of_int idx) ^ "_tree.json") in
@@ -30,7 +30,7 @@ module M : Heap.M with type vt = Expression.t = struct
     let h', _ = h in
     Hashtbl.iter tree_to_json h';
     "Json files created in output directory."
-    
+
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let h', curr = h in
     let tree = Leaf ((Expression.Val (Integer 0), sz), Expression.Val (Integer 0)) in
@@ -103,9 +103,9 @@ module M : Heap.M with type vt = Expression.t = struct
       update_tree tree index v pc
     in
     match new_trees with
-    | Some new_trees  -> 
-        List.map (fun (new_tree, pc') -> 
-          let new_h = Hashtbl.copy h' in 
+    | Some new_trees  ->
+        List.map (fun (new_tree, pc') ->
+          let new_h = Hashtbl.copy h' in
           Hashtbl.replace new_h i new_tree;
           (new_h, next), pc') new_trees
     | None -> failwith "Out of bounds access"
@@ -113,7 +113,7 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let must_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool =
     let lower, upper = r in
-    
+
     let e1 = Expression.BinOp (Lt, index, lower) in
     let e2 = Expression.BinOp (Gte, index, upper) in
     let e3 = Expression.BinOp (Or, e1, e2) in
@@ -122,19 +122,19 @@ module M : Heap.M with type vt = Expression.t = struct
 
   let may_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool =
     let lower, upper = r in
-    
+
     let e1 = Expression.BinOp (Gte, index, lower) in
     let e2 = Expression.BinOp (Lt, index, upper) in
-  
+
     Translator.is_sat ([e1; e2] @ pc)
-  
-  let rec search_tree (index : vt) (pc : vt PathCondition.t) (tree : tree_t) : (vt * vt) list = 
-      (match tree with 
+
+  let rec search_tree (index : vt) (pc : vt PathCondition.t) (tree : tree_t) : (vt * vt) list =
+      (match tree with
       | Leaf (r, v) -> let lower, upper = r in
                     let in_range = may_within_range r index pc in
                     if in_range then
                       [v, Expression.BinOp (And, Expression.BinOp (Lt, index, upper), Expression.BinOp (Gte, index, lower))]
-                    else  
+                    else
                       []
       | Node (r, tree_list) -> let in_range = may_within_range r index pc in
                             if in_range then
@@ -142,15 +142,15 @@ module M : Heap.M with type vt = Expression.t = struct
                             else
                               []
       )
-                                  
+
 
   let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     let tbl, _ = h in
-    
-    match arr with  
-    | Val Loc l -> 
-      (match Hashtbl.find_opt tbl l with 
-      | Some tree -> let v =          
+
+    match arr with
+    | Val Loc l ->
+      (match Hashtbl.find_opt tbl l with
+      | Some tree -> let v =
                             List.fold_left
                               (fun ac (v, c) ->
                               Expression.ITE (c, v, ac))
@@ -174,17 +174,19 @@ module M : Heap.M with type vt = Expression.t = struct
 
 
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool = 
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool =
     (* Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Expression.string_of_expression arr) (Expression.string_of_expression i) (PathCondition.to_string Expression.string_of_expression pc); *)
     let h', _ = heap in
-    match arr with  
-    |  Val Loc l-> 
-      (match Hashtbl.find_opt h' l with 
-      | Some tree -> 
-        (match tree with 
+    match arr with
+    |  Val Loc l->
+      (match Hashtbl.find_opt h' l with
+      | Some tree ->
+        (match tree with
           | Leaf (r, _)
           | Node (r, _) -> must_within_range r i pc)
       | _ -> failwith ("InternalError: HeapTree.in_bounds, accessed tree is not in the heap"))
     | _ -> failwith ("InternalError: HeapTree.in_bounds, arr must be location")
-    
+
+    let clone _ = assert false
+
 end

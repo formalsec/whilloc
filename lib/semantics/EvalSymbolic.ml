@@ -1,4 +1,4 @@
-module M : Eval.M with type t = Expression.t = struct
+module M : Eval_intf.M with type t = Expression.t = struct
 
   open EvalExpression
   open Expression
@@ -63,7 +63,7 @@ module M : Eval.M with type t = Expression.t = struct
 
   let make_symbol (name : string) (tp : string) =
     let symb_name   = Parameters.symbol_prefix ^ name in
-    let symb_value  = (if String.equal "bool" tp 
+    let symb_value  = (if String.equal "bool" tp
       then Expression.make_symb_bool symb_name
     else Expression.make_symb_int symb_name) in
     Some symb_value
