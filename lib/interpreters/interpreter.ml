@@ -14,14 +14,8 @@ module Make
   (* Evaluates an expressions *)
   let eval = Eval.eval
 
-  (* Evaluates a boolean expression *)
-  let is_true = Eval.is_true
-
   (* Creates a fresh symbol *)
   let make_symbol = Eval.make_symbol
-
-  (* Adds an expression to a path condition *)
-  let add_condition = PathCondition.add_condition
 
   (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
@@ -54,12 +48,15 @@ module Make
 
     match s with
     | Skip | Clear -> return cont
+
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
+
     | Assign (x, e) ->
         let/ state = Choice.get in
         let e' = eval state.store e in
         Store.set state.store x e';
         return cont
+
     | Symbol_bool (x, s) -> (
         let symb_opt = make_symbol s "bool" in
         match symb_opt with
@@ -71,6 +68,7 @@ module Make
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             return cont)
+
     | Symbol_int (x, s) -> (
         let symb_opt = make_symbol s "int" in
         match symb_opt with
@@ -82,9 +80,10 @@ module Make
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             return cont)
-    | Symbol_int_c (x, s, c) -> (
+
+    | Symbol_int_c (x, s, e) -> 
         let symb_opt = make_symbol s "int" in
-        match symb_opt with
+        (match symb_opt with
         | None ->
             failwith
               "ApplicationError: tried to create a symbolic value in a \
@@ -92,9 +91,10 @@ module Make
         | Some symb_val ->
             let/ state = Choice.get in
             Store.set state.store x symb_val;
-            let e = eval state.store c in
-            let pc' = add_condition state.pc e in
-            if is_true pc' then return cont else Choice.return AssumeF)
+            let v = eval state.store e in
+            let/ b = Choice.select v in
+            if b then return cont else Choice.return AssumeF)
+
     | Print es ->
         let/ state = Choice.get in
         let vs = List.map (eval state.store) es in
@@ -102,6 +102,7 @@ module Make
         List.iter Eval.print vs;
         print_endline "";
         return cont
+
     | FunCall (x, f, es) ->
         let/ state = Choice.get in
         let vs = List.map (eval state.store) es in
@@ -117,6 +118,7 @@ module Make
         let cs' = Callstack.push state.cs frame in
         let/ _ = Choice.set { state with cs = cs'; store = sto' } in
         return [ f'.body ]
+
     | Return e -> (
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -131,31 +133,36 @@ module Make
         | Callstack.Toplevel ->
             let/ _ = Choice.set { state with cs = cs' } in
             Choice.return @@ Outcome.Return (Eval.to_string v))
+
     | IfElse (e, s1, s2) ->
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return (s1 :: cont) else return (s2 :: cont)
+
     | While (e, body) as while_stmt ->
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return (body :: while_stmt :: cont) else return cont
+
     | Assume e ->
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return cont else Choice.return Outcome.AssumeF
+
     | Assert e ->
         let/ state = Choice.get in
         let v = eval state.store e in
-        let/ b = Choice.select v in
+        let/ b = Choice.assertion v in
         if b then return cont
         else
           let/ state' = Choice.get in
           let _, model = Eval.test_assert state'.pc in
           Choice.return
           @@ Outcome.Error model
+
     | New (x, e) ->
         let f_new (s : state) =
           let size = eval s.store e in
@@ -176,6 +183,7 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x l;
         return cont
+
     | Update (a, index, e) ->
         let f_update (s : state) =
           match Store.get_opt s.store a with
@@ -201,6 +209,7 @@ module Make
         in
         let/ _ = Choice.lift f_update in
         return cont
+
     | LookUp (x, a, index) ->
         let f_lookup (s : state) =
           match Store.get_opt s.store a with
@@ -226,6 +235,7 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x v;
         return cont
+
     | Delete _ ->
         assert false
         (*

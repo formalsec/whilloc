@@ -9,6 +9,8 @@ module type Choice = sig
   val get : state t
   val set : state -> unit t
   val select : v -> bool t
+  val assertion : v -> bool t 
   val lift : (state -> ('a * state) list) -> 'a t
   val run : state -> 'a t -> ('a * state) list
+
 end

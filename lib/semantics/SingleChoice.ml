@@ -41,6 +41,14 @@ module Make
       | false, true -> (false, { s with pc = pc_not_v}) 
       | true, true -> assert false 
 
+  let assertion (v : v) : bool t = 
+    fun (s : state) ->
+      let pc = s.pc in 
+      let not_v = Eval.negate v in 
+      let pc_not_v = PathCondition.add_condition pc not_v in
+      if (Eval.may_be_true pc_not_v) 
+        then (false, { s with pc = pc_not_v}) 
+        else (true, s) 
 
   let lift (f : state -> ('a * state) list) : 'a t = 
     fun s -> 

@@ -49,6 +49,9 @@ module M : Eval_intf.M with type t = Expression.t = struct
   let is_true (exprs : t list) : bool =
     Translator.is_sat exprs
 
+  let may_be_true (exprs : t list) : bool = 
+    Translator.is_sat exprs
+
   let test_assert (exprs : t list) : bool * Model.t =
     Translator.find_model exprs ()
 

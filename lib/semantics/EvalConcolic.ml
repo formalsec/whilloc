@@ -20,6 +20,10 @@ module M : Eval_intf.M with type t = Value.t * Expression.t = struct
   let is_true (exprs : t list) : bool =
     let v,_ = List.split exprs in
     EvalConcrete.is_true v
+  
+  let may_be_true (exprs : t list) : bool = 
+    let _, exprs' = List.split exprs in 
+    Translator.is_sat exprs'
 
   let test_assert (exprs : t list) : bool * Model.t =
     let _,e = List.split exprs in

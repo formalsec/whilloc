@@ -24,6 +24,8 @@ module M : Eval_intf.M with type t = Value.t = struct
     | Loc     l -> failwith ("InternalError: EvalConcrete.is_true, location value " ^ (string_of_int l) ^ " cannot be evaluated to true or false in concrete evaluation contexts")
     | Error     -> failwith ("ERROR ERROR")
 
+  let may_be_true = is_true
+
   let test_assert (exprs : t list) : bool * Model.t =
     is_true exprs,None
 

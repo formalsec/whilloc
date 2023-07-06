@@ -7,7 +7,7 @@ module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
 
   let to_string (h : t) : string =
     ignore h;
-    failwith "Not Implemented"
+    "not implemented"
 
   let malloc h (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
     ignore sz;
