@@ -72,10 +72,13 @@ let main () =
       String.concat "\n" ret_str
     
     | "cc"  -> 
-      let rets = SAF.interpret program in
+      let rets = Concolic.interpret program in
       (match rets with 
-      | [] -> "empty?"
-      | ( out, _) :: _ ->  Printf.sprintf "Outcome: %s" (Outcome.to_string out))
+      | [ ( out, state) ] ->  
+        Printf.sprintf "Outcome: %s.\nState:%s\n" 
+          (Outcome.to_string out)
+          (SState.to_string EvalConcolic.M.to_string HeapConcolic.M.to_string  state)
+      | _ -> assert false)
 
     | _ -> assert false
     in
