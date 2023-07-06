@@ -2,10 +2,11 @@ open Lib
 open Utils
 
 
-module Choice = ListChoice.Make (EvalSymbolic.M)(HeapArrayFork.M)
-module SAF  = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)(Choice)
-
-
+module SymbChoice = ListChoice.Make (EvalSymbolic.M)(HeapArrayFork.M)
+module ConcChoice = SingleChoice.Make (EvalConcolic.M) (HeapConcolic.M)
+module SAF  = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M)(SymbChoice)
+module Concolic = Interpreter.Make (EvalConcolic.M) (DFS.M) (HeapConcolic.M)(ConcChoice)
+ 
 
 (*
 module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M)
@@ -57,6 +58,7 @@ let main () =
 
   let program   = !file |> read_file |> parse_program |> create_program in
   let meta_data = Printf.sprintf ("Input file: %s\nExecution mode: %s\nOutput file: %s\n\n") !file !mode !out in
+  
 
   let str_of_returns =
     match !mode with
@@ -68,6 +70,13 @@ let main () =
             Printf.sprintf "Outcome: %s" (Outcome.to_string out);
           ) rets in
       String.concat "\n" ret_str
+    
+    | "cc"  -> 
+      let rets = SAF.interpret program in
+      (match rets with 
+      | [] -> "empty?"
+      | ( out, _) :: _ ->  Printf.sprintf "Outcome: %s" (Outcome.to_string out))
+
     | _ -> assert false
     in
     write_file !out (meta_data ^ str_of_returns);
