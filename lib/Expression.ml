@@ -1,11 +1,14 @@
 type uop = Neg | Not | Abs | StringOfInt
 
-type bop = Plus | Minus | Times | Div | Modulo | Pow | Gt | Lt | Gte | Lte | Equals | NEquals | Or | And | Xor | ShiftL | ShiftR
+type bop = Plus | Minus | Times | Div | Modulo | Pow | Or | And | Xor | ShiftL | ShiftR | Gt | Lt | Gte | Lte | Equals | NEquals
+
+(*type rop = Gt | Lt | Ge | LE | Eq | Ne*)
 
 type t = Val     of Value.t
        | Var     of string
        | UnOp    of uop * t
        | BinOp   of bop * t * t
+(*       | RelOp   of rop * t * t*)
        | SymbBool of string
        | SymbInt of string
        | ITE of t * t * t

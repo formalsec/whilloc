@@ -50,7 +50,8 @@ module M : Eval_intf.M with type t = Expression.t = struct
     Translator.is_sat exprs
 
   let test_assert (exprs : t list) : bool * Model.t =
-    Translator.find_model exprs ()
+    let model = Translator.find_model exprs in
+    (Option.is_some model, model)
 
   let negate (e : t) : t =
     Expression.negate e

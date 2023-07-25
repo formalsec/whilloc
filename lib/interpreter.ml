@@ -3,7 +3,7 @@ module Make
     (Search : Search_intf.M)
     (Heap : Heap_intf.M with type vt = Eval.t)
     (Choice : Choice_intf.Choice with type v = Eval.t and type h = Heap.t) :
-  Interpreter_intf.M with type t = Eval.t and type h = Heap.t = struct
+  Interpreter_intf.S with type t = Eval.t and type h = Heap.t = struct
   open Program
   open Outcome
 

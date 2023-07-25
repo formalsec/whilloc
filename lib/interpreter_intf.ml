@@ -1,4 +1,4 @@
-module type M = sig
+module type S = sig
   type t
   type h
   type state = (t, h) SState.t

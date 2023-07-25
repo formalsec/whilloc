@@ -1,12 +1,10 @@
-(include_subdirs unqualified)
-
 (library
  (name lib)
  (libraries encoding))
 
 (ocamllex
- (modules Lexer))
+ (modules lexer))
 
 (menhir
- (modules Parser)
+ (modules parser)
  (flags --explain --dump))
