@@ -1,8 +1,0 @@
-{ 
-  "tool"      : "whilloc",
-  "tool_args" : ["-m", "saf"],
-  "workspace" : "output",
-  "test_dirs" : ["test/large_arrays_pass", "test/large_arrays_fail"],
-  "time_limit" : 60,
-  "memory_limit" : 15000000
-}
