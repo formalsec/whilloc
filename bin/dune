@@ -1,23 +1,5 @@
 (executable
- (public_name whilloc)
+ (public_name wl)
  (name main)
  (modules main)
- (libraries lib))
-
-(executable
- (public_name Play)
- (name play)
- (modules play)
- (libraries lib))
-
-(executable
- (public_name Concolic)
- (name concolic)
- (modules concolic)
- (libraries lib))
-
-(executable
- (public_name Hybrid)
- (name hybrid)
- (modules hybrid)
- (libraries lib))
+ (libraries whilloc))

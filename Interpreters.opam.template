@@ -1,3 +1,0 @@
-pin-depends: [
-  [ "encoding.dev" "git+https://github.com/wasp-platform/encoding" ]
-]

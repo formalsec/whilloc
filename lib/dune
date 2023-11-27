@@ -1,5 +1,5 @@
 (library
- (name lib)
+ (name whilloc)
  (libraries encoding))
 
 (ocamllex

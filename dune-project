@@ -2,26 +2,30 @@
 
 (using menhir 2.1)
 
-(name Interpreters)
+(name whilloc)
 
 (generate_opam_files true)
 
 (source
- (github username/reponame))
+ (github formalsec/whilloc))
 
-(authors "Author Name")
+(authors
+  "Francisco Miguel Sena"
+  "José Fragoso Santos")
 
-(maintainers "Maintainer Name")
+(maintainers
+  "José Fragoso Santos"
+  "Filipe Marques")
 
 (license LICENSE)
 
-(documentation https://url/to/documentation)
+(documentation https://formalsec.github.io/whilloc)
 
 (package
- (name Interpreters)
+ (name whilloc)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune z3)
+ (depends ocaml dune z3 bos)
  (tags
   (topics "to describe" your project)))
 
