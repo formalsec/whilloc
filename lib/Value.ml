@@ -1,14 +1,10 @@
-type t = Integer of int
-       | Boolean of bool
-       | Loc     of int
-       | Error
+type t = Integer of int | Boolean of bool | Loc of int | Error
 
-let string_of_value (v : t) : string =
+let pp fmt (v : t) =
   match v with
-  | Integer n -> "Int "  ^ (string_of_int n)
-  | Boolean b -> "Bool " ^ (string_of_bool b)
-  | Loc     l -> "Loc "  ^ (string_of_int l)
-  | Error     -> "Error"
+  | Integer n -> Format.fprintf fmt "Int %d" n
+  | Boolean b -> Format.fprintf fmt "Bool %b" b
+  | Loc l -> Format.fprintf fmt "Loc %d" l
+  | Error -> Format.pp_print_string fmt "Error"
 
-let print_value (v : t) : unit =
-  (string_of_value v ^ " ") |> print_string
+let to_string = Format.asprintf "%a" pp

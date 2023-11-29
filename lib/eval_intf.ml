@@ -1,7 +1,7 @@
 module type M = sig
   type t
 
-  val eval : t Store.t -> Expression.t -> t
+  val eval : t Store.t -> Term.t -> t
   val is_true : t list -> bool
   val test_assert : t list -> bool * Model.t
   val negate : t -> t

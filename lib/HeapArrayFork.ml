@@ -1,25 +1,25 @@
-open Expression
+open Term
 open Value
 
-module M : Heap_intf.M with type vt = Expression.t = struct
-  type bt = Expression.t array
+module M : Heap_intf.M with type vt = Term.t = struct
+  type bt = Term.t array
   type t = { map : (int, bt) Hashtbl.t; i : int }
-  type vt = Expression.t
+  type vt = Term.t
 
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
     String.concat ", "
-      (List.map (fun el -> Expression.string_of_expression el) blockList)
+      (List.map (fun el -> Term.to_string el) blockList)
 
   let to_string (heap : t) : string =
     Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) heap.map ""
 
   let is_within (sz : int) (index : vt) (pc : vt PathCondition.t) : bool =
-    let e1 = Expression.BinOp (Lt, index, Val (Value.Integer 0)) in
-    let e2 = Expression.BinOp (Gte, index, Val (Value.Integer sz)) in
-    let e3 = Expression.BinOp (Or, e1, e2) in
+    let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in
+    let e2 = Term.Binop (Gte, index, Val (Value.Integer sz)) in
+    let e3 = Term.Binop (Or, e1, e2) in
 
     not (Translator.is_sat ([ e3 ] @ pc))
 
@@ -63,19 +63,19 @@ module M : Heap_intf.M with type vt = Expression.t = struct
     | Val (Integer index') ->
         let ret = Array.get block index' in
         [ (heap, ret, path) ]
-    | SymbInt sym ->
+    | I_symb sym ->
         let blockList = Array.to_list block in
         let temp =
           List.mapi
             (fun index' expr ->
-              let cond = BinOp (Equals, SymbInt sym, Val (Integer index')) in
+              let cond = Binop (Equals, I_symb sym, Val (Integer index')) in
               (copy heap, expr, PathCondition.add_condition path cond))
             blockList
         in
         List.filteri
           (fun index' _ ->
             (* can be optimized *)
-            let e = BinOp (Equals, index, Val (Integer index')) in
+            let e = Binop (Equals, index, Val (Integer index')) in
             if Translator.is_sat ([ e ] @ path) then true else false)
           temp
     | _ -> failwith "Invalid index"
@@ -88,7 +88,7 @@ module M : Heap_intf.M with type vt = Expression.t = struct
         let _ = Array.set block index' v in
         let _ = Hashtbl.replace heap.map loc block in
         [ (heap, path) ]
-    | SymbInt sym ->
+    | I_symb sym ->
         let blockList = Array.to_list block in
         let temp =
           List.mapi
@@ -97,7 +97,7 @@ module M : Heap_intf.M with type vt = Expression.t = struct
               let newHeap = Hashtbl.copy heap.map in
               let _ = Array.set newBlock index' v in
               let _ = Hashtbl.replace newHeap loc newBlock in
-              let cond = BinOp (Equals, SymbInt sym, Val (Integer index')) in
+              let cond = Binop (Equals, I_symb sym, Val (Integer index')) in
               ( { heap with map = newHeap },
                 PathCondition.add_condition path cond ))
             blockList
@@ -105,7 +105,7 @@ module M : Heap_intf.M with type vt = Expression.t = struct
         List.filteri
           (fun index' _ ->
             (* can be optimized *)
-            let e = BinOp (Equals, index, Val (Integer index')) in
+            let e = Binop (Equals, index, Val (Integer index')) in
             if Translator.is_sat ([ e ] @ path) then true else false)
           temp
     | _ -> failwith "Invalid index"

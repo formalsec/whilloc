@@ -65,19 +65,19 @@ value:
 (* e ::= v | x | -e | e+e | f(e) | (e) *)
 expression:
   | v = value;
-    { Expression.Val v }
+    { Term.Val v }
   | v = VAR;
-    { Expression.Var v }
+    { Term.Var v }
   | MINUS; e = expression;
-    { Expression.UnOp (Expression.Neg, e) } %prec unopt_prec
+    { Term.Unop (Term.Neg, e) } %prec unopt_prec
   | NOT; e = expression;
-    { Expression.UnOp (Expression.Not, e) } %prec unopt_prec
+    { Term.Unop (Term.Not, e) } %prec unopt_prec
   | ABS; e = expression;
-    { Expression.UnOp (Expression.Abs, e) } %prec unopt_prec
+    { Term.Unop (Term.Abs, e) } %prec unopt_prec
   | STOI; e = expression;
-    { Expression.UnOp (Expression.StringOfInt, e) } %prec unopt_prec
+    { Term.Unop (Term.StringOfInt, e) } %prec unopt_prec
   | e1 = expression; bop = binop_target; e2 = expression;
-    { Expression.BinOp (bop, e1, e2) }
+    { Term.Binop (bop, e1, e2) }
   | LPAREN; e=expression ; RPAREN
     { e }
 
@@ -126,83 +126,20 @@ statement_sequence:
 
 
 %inline binop_target:
-  | PLUS    { Expression.Plus }
-  | MINUS   { Expression.Minus }
-  | TIMES   { Expression.Times }
-  | DIVIDE  { Expression.Div }
-  | MODULO  { Expression.Modulo }
-  | POW     { Expression.Pow }
-  | GT      { Expression.Gt }
-  | LT      { Expression.Lt }
-  | GTE     { Expression.Gte }
-  | LTE     { Expression.Lte }
-  | EQUAL   { Expression.Equals }
-  | NEQUAL  { Expression.NEquals }
-  | OR      { Expression.Or }
-  | AND     { Expression.And }
-  | XOR     { Expression.Xor }
-  | SHL     { Expression.ShiftL }
-  | SHR     { Expression.ShiftR }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(*------------------------------------*)
-(*---------------graveyard------------*)
-(*------------------------------------*)
-
-(*%token MAX MIN*) (*%token INT_TYPE BOOL_TYPE STR_TYPE SYMBOL_TYPE*)
-
-  (*| MAX; LPAREN; e1 = expression; e2 = expression; RPAREN;
-    { Program.BinOpt (Program.Max, e1, e2) }
-  | MIN; LPAREN; e1 = expression; e2 = expression; RPAREN;
-    { Program.BinOpt (Program.Min, e1, e2) }*)
-
-
-  (*| MODULO  { Program.Modulo }
-  | EQUAL   { Program.Equal }
-  | GT      { Program.Gt }
-  | LT      { Program.Lt }
-  | EGT     { Program.Egt }
-  | ELT     { Program.Elt }
-  | POW     { Program.Pow }*)
-(* if (e) { s } | if (e) {s} else { s } *)
-(*  stmt_target: exps_stmts = ifelse_target; { exps_stmts }*)
-(*ifelse_target:
-  | IF; LPAREN; e = expr_target; RPAREN; LBRACE; s1 = stmt_block; RBRACE; ELSE;LBRACE; s2 = stmt_block; RBRACE;
-    { Program.If(e, s1, Some s2) }
-  | IF; LPAREN; e = expr_target; RPAREN; LBRACE; s = stmt_block; RBRACE;
-    { Program.If(e, s, None) }*)
-(*type_target:
-  | INT_TYPE;
-  { Type.IntType }
-  | BOOL_TYPE;
-    { Type.BoolType }
-  | STR_TYPE;
-    { Type.StrType }
-  | SYMBOL_TYPE;*)
-
-  (*| MINUS; e = expr_target;
-    { Program.UnOpt (Program.Neg, e) } %prec unopt_prec
-  | NOT; e = expr_target;
-    { Program.UnOpt (Program.Not, e) } %prec unopt_prec
-  | ABS; e = expr_target;
-    { Program.UnOpt (Program.StringOfInt, e) } %prec unopt_prec*)
-
-(*value:
-  | b = BOOLEAN;
-    { Val.Bool b }
-  | s = STRING;
-    { Val.Str s }
-  | s = SYMBOL;
-    { Val.Symbol s }*)
+  | PLUS    { Term.Plus }
+  | MINUS   { Term.Minus }
+  | TIMES   { Term.Times }
+  | DIVIDE  { Term.Div }
+  | MODULO  { Term.Modulo }
+  | POW     { Term.Pow }
+  | GT      { Term.Gt }
+  | LT      { Term.Lt }
+  | GTE     { Term.Gte }
+  | LTE     { Term.Lte }
+  | EQUAL   { Term.Equals }
+  | NEQUAL  { Term.NEquals }
+  | OR      { Term.Or }
+  | AND     { Term.And }
+  | XOR     { Term.Xor }
+  | SHL     { Term.ShiftL }
+  | SHR     { Term.ShiftR }

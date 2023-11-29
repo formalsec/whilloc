@@ -1,7 +1,6 @@
-module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
-
-  type   t = (int, (Value.t * Expression.t) array) Hashtbl.t
-  type  vt = Value.t * Expression.t (* indexes and sizes are always values *)
+module M = struct
+  type t = (int, (Value.t * Term.t) array) Hashtbl.t
+  type vt = Value.t * Term.t (* indexes and sizes are always values *)
 
   let init () : t = Hashtbl.create Parameters.size
 
@@ -9,13 +8,15 @@ module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
     ignore h;
     failwith "Not Implemented"
 
-  let malloc h (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
+  let malloc h (sz : vt) (pc : vt PathCondition.t) :
+      (t * vt * vt PathCondition.t) list =
     ignore sz;
     ignore pc;
     ignore h;
     []
 
-  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
+  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t) :
+      (t * vt PathCondition.t) list =
     ignore arr;
     ignore v;
     ignore index;
@@ -23,14 +24,16 @@ module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
     ignore pc;
     []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) :
+      (t * vt * vt PathCondition.t) list =
     ignore index;
     ignore arr;
     ignore pc;
     ignore h;
     []
 
-  let free h (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
+  let free h (arr : vt) (pc : vt PathCondition.t) :
+      (t * vt PathCondition.t) list =
     ignore arr;
     ignore pc;
     ignore h;
@@ -43,9 +46,10 @@ module M : Heap_intf.M with type vt = Value.t * Expression.t = struct
     ignore i;
     failwith "not implemented"
 
-    let clone _ = assert false
-
+  let clone _ = assert false
 end
+
+module M' : Heap_intf.M with type vt = Value.t * Term.t = M
 
 (*
 type t = (int, int arry) Hashtbl.t

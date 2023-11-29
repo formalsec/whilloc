@@ -1,5 +1,5 @@
 open Value
-open Expression
+open Term
 
 let ( let* ) o f = Option.bind o f
 
@@ -19,14 +19,14 @@ let translate_value (v : Value.t) : Z3.Expr.expr =
   | Loc x -> Z3.Arithmetic.Integer.mk_numeral_i ctx x
   | Error -> assert false
 
-let translate_uop (op : uop) (v : Z3.Expr.expr) : Z3.Expr.expr =
+let translate_uop (op : unop) (v : Z3.Expr.expr) : Z3.Expr.expr =
   match op with
   | Neg -> Z3.Arithmetic.mk_unary_minus ctx v
   | Not -> Z3.Boolean.mk_not ctx v
   | Abs -> assert false
   | StringOfInt -> assert false
 
-let translate_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
+let translate_binop (op : binop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
     Z3.Expr.expr =
   match op with
   | Plus -> Z3.Arithmetic.mk_add ctx [ v1; v2 ]
@@ -44,32 +44,32 @@ let translate_binop (op : bop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
   | And -> Z3.Boolean.mk_and ctx [ v1; v2 ]
   | Xor -> Z3.Boolean.mk_xor ctx v1 v2
   | _ ->
-      failwith
-        ("TODO: Encoding.encode_binop, missing implementation of "
-       ^ string_of_bop op)
+      Format.kasprintf failwith
+        "TODO: Encoding.encode_binop, missing implementation of %a"
+        Term.pp_binop op
 
-let rec translate (e : Expression.t) : Z3.Expr.expr =
+let rec translate (e : Term.t) : Z3.Expr.expr =
   match e with
   | Val v -> translate_value v
   | Var v ->
       failwith
         ("InternalError: Encoding.encode_expr, tried to encode variable " ^ v)
-  | UnOp (op, e) ->
+  | Unop (op, e) ->
       let e' = translate e in
       translate_uop op e'
-  | BinOp (op, e1, e2) ->
+  | Binop (op, e1, e2) ->
       let e1' = translate e1 in
       let e2' = translate e2 in
       translate_binop op e1' e2'
-  | SymbBool s -> Z3.Boolean.mk_const_s ctx s
-  | SymbInt s -> Z3.Arithmetic.Integer.mk_const_s ctx s
-  | ITE (e1, e2, e3) ->
+  | B_symb s -> Z3.Boolean.mk_const_s ctx s
+  | I_symb s -> Z3.Arithmetic.Integer.mk_const_s ctx s
+  | Ite (e1, e2, e3) ->
       let e1' = translate e1 in
       let e2' = translate e2 in
       let e3' = translate e3 in
       Z3.Boolean.mk_ite ctx e1' e2' e3'
 
-let is_sat (exprs : Expression.t list) : bool =
+let is_sat (exprs : Term.t list) : bool =
   let exprs' = List.map translate exprs in
   match Z3.Solver.check solver exprs' with
   | Z3.Solver.SATISFIABLE -> true
@@ -95,7 +95,7 @@ let get_interp (model : Z3.Model.model) (const : Z3.FuncDecl.func_decl) :
   in
   Some (Z3.Symbol.to_string @@ Z3.FuncDecl.get_name const, v)
 
-let find_model ?(print_model = false) (es : Expression.t list) :
+let find_model ?(print_model = false) (es : Term.t list) :
     (string * Value.t) list option =
   assert (is_sat es);
   let* model = Z3.Solver.get_model solver in
