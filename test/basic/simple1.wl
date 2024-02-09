@@ -7,5 +7,5 @@ function aenima() {
     y = x + 200
   }; 
   assert (y != 42);
-  return 0
+  return y
 }

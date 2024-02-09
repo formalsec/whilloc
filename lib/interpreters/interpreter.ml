@@ -138,6 +138,8 @@ module Make
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
+        let/ state' = Choice.get in 
+        Printf.printf "PC: %s\n" (PathCondition.to_string Eval.to_string state'.pc); 
         if b then return (s1 :: cont) else return (s2 :: cont)
 
     | While (e, body) as while_stmt ->
