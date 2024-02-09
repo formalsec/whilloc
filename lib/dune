@@ -1,6 +1,6 @@
 (library
  (name whilloc)
- (libraries encoding))
+ (libraries z3))
 
 (ocamllex
  (modules lexer))
