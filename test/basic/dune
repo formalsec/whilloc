@@ -1,0 +1,4 @@
+(cram
+ (deps
+  %{bin:wl}
+  simple1.wl))
