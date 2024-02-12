@@ -1,5 +1,5 @@
 function aenima() {
-    x = symbol("x");
+    x = symbol_bool("x");
     if (x) {
         res = true
     }

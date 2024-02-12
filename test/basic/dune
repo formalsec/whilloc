@@ -1,4 +1,7 @@
 (cram
  (deps
   %{bin:wl}
-  simple1.wl))
+  simple1.wl
+  fib.wl
+  factorial.wl
+  wasm.wl))

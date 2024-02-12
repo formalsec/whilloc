@@ -1,5 +1,5 @@
 function create_symbol () {
-    x = symbol("ok_computer");
+    x = symbol_int("ok_computer");
     aux = 1;
     x = x + aux;
     return x

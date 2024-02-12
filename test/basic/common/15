@@ -1,5 +1,5 @@
 function aenima() {
-    x = symbol("x");
+    x = symbol_int("x");
     assume(x>=1);
     assume(x<=3);
     y=1;

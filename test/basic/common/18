@@ -1,5 +1,5 @@
 function aenima() {
-    x = symbol("x");
+    x = symbol_int("x");
     x = x+1;
     if (x>0) {
         y = true
