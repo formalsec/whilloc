@@ -1,8 +1,8 @@
 function aenima() {
     a = 4;
     b = 2;
-    x = symbol("x");
-    y = symbol("y");
+    x = symbol_int("x");
+    y = symbol_int("y");
     if (x > 0) {
         b = a + 2;
         if (x < y) {

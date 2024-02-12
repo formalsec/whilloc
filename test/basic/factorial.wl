@@ -9,7 +9,7 @@ function factorial(n) {
 };
 
 function aenima() {
-    x = symbol("x");
+    x = symbol_int("x");
     assume(x>=1);
     assume(x<=5);
     f = factorial(x);

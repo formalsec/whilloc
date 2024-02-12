@@ -1,0 +1,6 @@
+(cram
+ (deps
+  %{bin:wl}
+  1
+  2
+  3))

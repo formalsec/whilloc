@@ -1,5 +1,5 @@
 function aenima() {
-    x = symbol("ok_computer");
+    x = symbol_int("ok_computer");
     if (x>10) {
         y=true
     }
