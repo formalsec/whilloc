@@ -82,19 +82,42 @@ module Make
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             return cont)
-    | Symbol_int_c (x, s, c) -> (
-        let symb_opt = make_symbol s "int" in
-        match symb_opt with
-        | None ->
-            failwith
-              "ApplicationError: tried to create a symbolic value in a \
-               concrete execution context"
-        | Some symb_val ->
+    | Symbol_int_c (x, s, c) -> 
+      let symb_opt = make_symbol s "int" in
+      (match symb_opt with
+      | None ->
+        failwith
+          "ApplicationError: tried to create a symbolic value in a \
+            concrete execution context"
+      | Some symb_val ->
+        let f_symb_int (s : state) =
+          Store.set s.store x symb_val;
+          let v = eval s.store c in
+          let pc' = add_condition s.pc v in
+          if is_true pc' 
+            then [ ((), SState.{ s with pc = pc' })]
+            else [] in 
+        let/ _ = Choice.lift f_symb_int in 
+        return cont)
+
+      (*
+      (
+            fun 
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             let e = eval state.store c in
             let pc' = add_condition state.pc e in
             if is_true pc' then return cont else Choice.return AssumeF)
+        *)
+    
+    (*
+      let/ state = Choice.get in
+        let v = eval state.store e in
+        let/ b = Choice.select v in
+        if b then return cont else Choice.return Outcome.AssumeF   
+    *)
+
+
     | Print es ->
         let/ state = Choice.get in
         let vs = List.map (eval state.store) es in
@@ -141,11 +164,13 @@ module Make
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return (body :: while_stmt :: cont) else return cont
+    
     | Assume e ->
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return cont else Choice.return Outcome.AssumeF
+    
     | Assert e ->
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -176,6 +201,7 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x l;
         return cont
+
     | Update (a, index, e) ->
         let f_update (s : state) =
           match Store.get_opt s.store a with
@@ -201,11 +227,14 @@ module Make
         in
         let/ _ = Choice.lift f_update in
         return cont
+
     | LookUp (x, a, index) ->
         let f_lookup (s : state) =
           match Store.get_opt s.store a with
           | Some loc ->
               let index_v = eval s.store index in
+              Printf.printf "index_v: %s\n" (Eval.to_string index_v);
+              Printf.printf "pc: %s\n" (PathCondition.to_string Eval.to_string s.pc);
               let b = Heap.in_bounds s.heap loc index_v s.pc in
               if b then
                 let lst = Heap.lookup s.heap loc index_v s.pc in
