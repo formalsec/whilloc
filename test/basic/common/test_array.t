@@ -11,5 +11,5 @@ Tests common array:
   >Program Print
   (Val Int 5)
   
-  Fatal error: exception File "lib/interpreter.ml", line 230, characters 8-14: Assertion failed
+  Fatal error: exception File "lib/interpreter.ml", line 257, characters 8-14: Assertion failed
   [2]

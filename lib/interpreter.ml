@@ -233,8 +233,6 @@ module Make
           match Store.get_opt s.store a with
           | Some loc ->
               let index_v = eval s.store index in
-              Printf.printf "index_v: %s\n" (Eval.to_string index_v);
-              Printf.printf "pc: %s\n" (PathCondition.to_string Eval.to_string s.pc);
               let b = Heap.in_bounds s.heap loc index_v s.pc in
               if b then
                 let lst = Heap.lookup s.heap loc index_v s.pc in
