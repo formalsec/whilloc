@@ -1,5 +1,5 @@
 Tests Large Arrays Pass -> s_array c_write s_read 50000_3:
-  $ wl -i 50000_0 -m saf
+  $ wl -i 50000_3 -m saf
   
   =====================
   	Ænima
