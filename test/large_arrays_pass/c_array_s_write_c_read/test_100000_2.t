@@ -5,7 +5,7 @@ Tests Large Arrays Pass -> c_array s_write c_read 100000_2:
   	Ænima
   =====================
   
-  Input file: 100000_0
+  Input file: 100000_2
   Execution mode: saf
   
   Fatal error: exception Failure("Index out of bounds")

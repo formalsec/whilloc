@@ -5,7 +5,7 @@ Tests Large Arrays Fail -> s_array s_write s_read 100000_2:
   	Ænima
   =====================
   
-  Input file: 100000_0
+  Input file: 100000_2
   Execution mode: saf
   
   Fatal error: exception Failure("Size needs to be a concrete integer")
