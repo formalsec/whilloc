@@ -1,4 +1,4 @@
-Tests statements:
+Tests statements with SAF:
   $ wl -i symbol_int_c.wl -m saf
   
   =====================
@@ -2516,6 +2516,33 @@ Tests statements:
   
   Input file: delete.wl
   Execution mode: saf
+  
+  >Program Print
+  (Val Loc 0)
+  
+  Loc: (Val Loc 0)
+  Fatal error: exception Failure("Some Loc")
+  [2]
+
+Tests statements with SAITE:
+  $ wl -i symbol_int_c.wl -m saite
+  
+  =====================
+  	Ænima
+  =====================
+  
+  Input file: symbol_int_c.wl
+  Execution mode: saite
+  
+  Outcome: Returned (Val Loc 0)
+  $ wl -i delete.wl -m saite
+  
+  =====================
+  	Ænima
+  =====================
+  
+  Input file: delete.wl
+  Execution mode: saite
   
   >Program Print
   (Val Loc 0)
