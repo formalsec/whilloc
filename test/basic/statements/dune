@@ -1,0 +1,6 @@
+(cram
+ (deps
+  %{bin:wl}
+  symbol_int_c.wl
+  delete.wl))
+  
