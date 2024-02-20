@@ -51,7 +51,7 @@ module Make
   let rec step (prog : program) (s : Program.stmt) (cont : Program.stmt list) :
       Outcome.t Choice.t =
     let return stmts = Choice.return (Outcome.Cont stmts) in
-
+    (* Printf.printf "stmt: %s" (Program.string_of_stmt s); *)
     match s with
     | Skip | Clear -> return cont
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
@@ -169,8 +169,8 @@ module Make
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
+        (* Printf.printf "b = %b\n" (b); *)
         if b then return cont else Choice.return Outcome.AssumeF
-    
     | Assert e ->
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -253,8 +253,24 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x v;
         return cont
-    | Delete _ ->
-        assert false
+    | Delete a ->
+        let f_delete (s : state) = 
+          match (Store.get_opt s.store a) with 
+          | Some loc -> (* TODO
+            let lst = Heap.free s.heap loc s.pc in
+            let dup = (List.length lst) > 1 in
+
+            List.map (fun (hp, pc') ->
+            let store', cs' =
+              if dup then Store.dup s.store, Callstack.dup s.cs else s.store, s.cs in
+              (Skip, cont, store', cs', pc', hp), Cont
+          ) lst *)
+
+            Printf.printf "Loc: %s\n" (Eval.to_string loc); failwith "Some Loc"
+          | None -> failwith "InternalError: array is not defined"
+        in 
+        let/ _ = Choice.lift f_delete in
+        return cont
         (*
    | Delete a ->
       (match Store.get_opt store a with
