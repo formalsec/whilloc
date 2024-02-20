@@ -1,5 +1,5 @@
 Tests Large Arrays Pass -> c_array c_write s_read:
-  $ wl -i 10000_0 -m saf
+  $ wl -i 10000_0 -m saite
   
   =====================
   	Ænima
@@ -10,7 +10,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 10000_1 -m saf
+  $ wl -i 10000_1 -m saite
   
   =====================
   	Ænima
@@ -21,7 +21,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 10000_2 -m saf
+  $ wl -i 10000_2 -m saite
   
   =====================
   	Ænima
@@ -32,7 +32,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 10000_3 -m saf
+  $ wl -i 10000_3 -m saite
   
   =====================
   	Ænima
@@ -43,7 +43,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 50000_0 -m saf
+  $ wl -i 50000_0 -m saite
   
   =====================
   	Ænima
@@ -54,7 +54,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 50000_1 -m saf
+  $ wl -i 50000_1 -m saite
   
   =====================
   	Ænima
@@ -65,7 +65,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 50000_2 -m saf
+  $ wl -i 50000_2 -m saite
   
   =====================
   	Ænima
@@ -76,7 +76,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 50000_3 -m saf
+  $ wl -i 50000_3 -m saite
   
   =====================
   	Ænima
@@ -87,7 +87,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 100000_0 -m saf
+  $ wl -i 100000_0 -m saite
   
   =====================
   	Ænima
@@ -98,7 +98,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 100000_1 -m saf
+  $ wl -i 100000_1 -m saite
   
   =====================
   	Ænima
@@ -109,7 +109,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 100000_2 -m saf
+  $ wl -i 100000_2 -m saite
   
   =====================
   	Ænima
@@ -120,7 +120,7 @@ Tests Large Arrays Pass -> c_array c_write s_read:
   
   Fatal error: exception Failure("Index out of bounds")
   [2]
-  $ wl -i 100000_3 -m saf
+  $ wl -i 100000_3 -m saite
   
   =====================
   	Ænima

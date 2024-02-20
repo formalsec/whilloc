@@ -1,5 +1,5 @@
 Tests Large Arrays Pass -> c_array c_write c_read:
-  $ wl -i 10000 -m saf
+  $ wl -i 10000 -m saite
   
   =====================
   	Ænima
@@ -9,7 +9,7 @@ Tests Large Arrays Pass -> c_array c_write c_read:
   Execution mode: saf
   
   Outcome: Returned (Val Loc 0)
-  $ wl -i 50000 -m saf
+  $ wl -i 50000 -m saite
   
   =====================
   	Ænima
@@ -19,7 +19,7 @@ Tests Large Arrays Pass -> c_array c_write c_read:
   Execution mode: saf
   
   Outcome: Returned (Val Loc 0)
-  $ wl -i 100000 -m saf
+  $ wl -i 100000 -m saite
   
   =====================
   	Ænima

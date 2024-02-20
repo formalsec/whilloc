@@ -1,5 +1,5 @@
 Tests Large Arrays Pass -> s_array c_write c_read:
-  $ wl -i 10000 -m saf
+  $ wl -i 10000 -m saite
   
   =====================
   	Ænima
@@ -10,7 +10,7 @@ Tests Large Arrays Pass -> s_array c_write c_read:
   
   Fatal error: exception Failure("Size needs to be a concrete integer")
   [2]
-  $ wl -i 50000 -m saf
+  $ wl -i 50000 -m saite
   
   =====================
   	Ænima
@@ -21,7 +21,7 @@ Tests Large Arrays Pass -> s_array c_write c_read:
   
   Fatal error: exception Failure("Size needs to be a concrete integer")
   [2]
-  $ wl -i 100000 -m saf
+  $ wl -i 100000 -m saite
   
   =====================
   	Ænima
