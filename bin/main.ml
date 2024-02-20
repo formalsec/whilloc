@@ -1,9 +1,14 @@
 open Whilloc
 open Utils
-module Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
+
+module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
+module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
+
 
 module SAF =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (Choice)
+  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (SAF_Choice)
+module SAITE =
+  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) (SAITE_Choice)
 
 (* module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M) *)
 (* module SAITE  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) *)
@@ -54,6 +59,12 @@ let main () =
           (fun (out, _) ->
             Format.printf "Outcome: %s@." (Outcome.to_string out))
           rets
+    | "saite" ->
+        let rets = SAITE.interpret program in
+        List.iter
+          (fun (out, _) ->
+          Format.printf "Outcome: %s@." (Outcome.to_string out))
+        rets
     | _ -> assert false
 (* let str_of_returns = *)
 (* match !mode with *)

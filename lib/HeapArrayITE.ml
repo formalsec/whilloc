@@ -37,6 +37,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
     | _ ->
         failwith "InternalError: HeapArrayIte.in_bounds, arr must be location"
 
+  let copy (heap : t) : t = let heap', i = heap in (Hashtbl.copy heap', i)
+
   let find_block (heap : t) (loc : vt) : int * bt =
     let heap', _ = heap in
     match loc with
@@ -143,5 +145,5 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | _ -> failwith "InternalError: HeapArrayIte.free, illegal free")
     | _ -> failwith "InternalError: HeapArrayIte.free, arr must be location"
 
-  let clone _ = assert false
+  let clone h = copy h
 end
