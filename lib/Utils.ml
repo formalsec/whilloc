@@ -3,6 +3,8 @@ let mode = ref ""
 let out = ref ""
 let verbose = ref false
 
+let time = ref 0.0
+
 let create_program (funcs : Program.func list) : Program.program =
   let prog    = Hashtbl.create Parameters.size in
   let replace =
@@ -46,3 +48,19 @@ let arguments () =
     usage_msg
 
 let random_int () = Random.int Parameters.max_int
+
+let time_call (desc : string) (f : unit -> 'a) : 'a = 
+  let start = Sys.time () in
+  let result = f () in 
+  let delta = Sys.time () -. start in 
+  Printf.printf "Execution time of %s: %f\n" (desc) (delta);
+  result
+
+let total_time_call (desc : string) (acc : float ref) (f : unit -> 'a) : 'a = 
+  let start = Sys.time () in
+  let result = f () in
+  let delta = Sys.time () -. start in 
+  if !verbose (* && delta > 0.99 *) then
+    Printf.printf "Execution time of %s: %f\n" (desc) (delta);
+  acc := !acc +. delta;
+  result 
