@@ -30,22 +30,22 @@ let get_function (id : string) (prog : program) : func =
 
 let rec string_of_stmt (s : stmt) : string =
   match s with
-  | Skip -> "Skip\n"
+  | Skip -> "Skip"
   | Clear -> "Clear\n"
-  | Assign (x, e) -> Format.asprintf "Assignment: %s = %a\n" x Term.pp e
+  | Assign (x, e) -> Format.asprintf "Assignment: %s = %a" x Term.pp e
   | Symbol_bool (s, v) ->
-      Format.asprintf "Boolean Symbol declaration: name=%s, value=§__%s\n" s v
+      Format.asprintf "Boolean Symbol declaration: name=%s, value=§__%s" s v
   | Symbol_int (s, v) ->
-      "Integer Symbol declaration: name=" ^ s ^ ", value=§__" ^ v ^ "\n"
+      "Integer Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
   | Symbol_int_c (s, v, e) ->
       Format.asprintf
         "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s v Term.pp
-        e ^ "\n"
+        e
   | Sequence s ->
-      "Sequence:\n  " ^ String.concat "  " (List.map string_of_stmt s)
-  | Return e -> Format.asprintf "Return: %a" Term.pp e ^ "\n"
-  | Assert e -> Format.asprintf "Assert: %a" Term.pp e ^ "\n"
-  | Assume e -> Format.asprintf "Assume: %a" Term.pp e ^ "\n"
+      "Sequence:\n  " ^ String.concat "\n  " (List.map string_of_stmt s)
+  | Return e -> Format.asprintf "Return: %a" Term.pp e
+  | Assert e -> Format.asprintf "Assert: %a" Term.pp e
+  | Assume e -> Format.asprintf "Assume: %a" Term.pp e
   | Print exprs ->
       "Print:  "
       ^ String.concat ", " (List.map (fun e -> Term.to_string e) exprs)
@@ -57,14 +57,14 @@ let rec string_of_stmt (s : stmt) : string =
       ^ String.concat ", " (List.map (fun e -> Term.to_string e) args)
   | While (expr, s) ->
       "While (" ^ Term.to_string expr ^ ")\n   " ^ string_of_stmt s
-  | New (arr, sz) -> "New array: " ^ arr ^ " has size " ^ Term.to_string sz ^ "\n"
+  | New (arr, sz) -> "New array: " ^ arr ^ " has size " ^ Term.to_string sz
   | Update (arr, e1, e2) ->
       "Update: " ^ arr ^ " at loc " ^ Term.to_string e1 ^ " is assigned "
-      ^ Term.to_string e2 ^ "\n"
+      ^ Term.to_string e2
   | LookUp (x, arr, e) ->
       "LookUp: " ^ x ^ " is assigned the value at loc " ^ Term.to_string e
-      ^ " from arr " ^ arr ^ "\n"
-  | Delete arr -> "Delete: " ^ arr ^ "\n"
+      ^ " from arr " ^ arr
+  | Delete arr -> "Delete: " ^ arr
 
 let string_of_function (f : func) : string =
   "Function id: " ^ f.id ^ "\n" ^ "Argumetns  : (" ^ String.concat ", " f.args
