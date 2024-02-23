@@ -66,8 +66,8 @@ let run_with_timeout model file =
         set ();
         try
           run model file
-        with Timeout -> Printf.printf "File %s timeout" (file))
-  with Timeout -> Printf.printf "General timeout"
+        with Timeout -> Printf.printf "File %s timeout\n" (file))
+  with Timeout -> Printf.printf "General timeout\n"
 
 let () = 
   let model = Sys.argv.(1) in
@@ -79,12 +79,10 @@ let () =
       ~traverse:`Any
       ((fun model file sum -> 
         if Fpath.has_ext ".wl" file then 
-        (Printf.printf "Processing: %s\n" (Fpath.to_string file);
-        (run_with_timeout model (Fpath.to_string file));
+        (run_with_timeout model (Fpath.to_string file);
         sum + 1)
       else
-        (Printf.printf "Skipped: %s\n" (Fpath.to_string file);
-        sum)) 
+        sum)
       model)
       sum
       [dir]
@@ -92,5 +90,5 @@ let () =
   match result with
   | Ok sum ->
       Printf.printf "Total number of files tested: %d\n" sum
-  | Error _ ->
-      Printf.printf "Error during fold: \n"
+  | Error err ->
+      Printf.printf "Error during fold: %s\n" (Format.asprintf "%a" Rresult.R.pp_msg err)
