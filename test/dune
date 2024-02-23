@@ -1,4 +1,5 @@
 (executable
- (public_name script)
+ (public_name test_wl)
+ (name script)
  (modules script)
  (libraries whilloc bos unix))
