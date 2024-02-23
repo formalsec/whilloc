@@ -17,7 +17,7 @@ module ST =
 module SOPL =
   Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
 
-let _max_timeout = 10.0
+let _max_timeout = 5.0
 let unset () = Sys.set_signal Sys.sigalrm Sys.Signal_ignore
 
 let set =
@@ -66,29 +66,31 @@ let run_with_timeout model file =
         set ();
         try
           run model file
-        with Timeout -> Printf.printf "File %s timeout\n" (file))
+        with 
+				| Timeout -> Printf.printf "Timeout occurred while processing file: %s (Max Timeout: %f seconds)\n" file _max_timeout
+        (* maybe is not the best way to treat exceptions *)
+        | ex -> Printf.printf "Fatal error: exception %s\n" (Printexc.to_string ex))
   with Timeout -> Printf.printf "General timeout\n"
 
-let () = 
-  let model = Sys.argv.(1) in
-	let dir = Fpath.v Sys.argv.(2) in
-  let sum = 0 in
+let get_files dir = 
+  let files = [] in
   let result =
     OS.Path.fold
       ~elements:`Files
       ~traverse:`Any
-      ((fun model file sum -> 
+      (fun file files -> 
         if Fpath.has_ext ".wl" file then 
-        (run_with_timeout model (Fpath.to_string file);
-        sum + 1)
-      else
-        sum)
-      model)
-      sum
+				file :: files
+			else
+				files)
+      files
       [dir]
   in
-  match result with
-  | Ok sum ->
-      Printf.printf "Total number of files tested: %d\n" sum
-  | Error err ->
-      Printf.printf "Error during fold: %s\n" (Format.asprintf "%a" Rresult.R.pp_msg err)
+	Rresult.R.get_ok result
+
+let () = 
+	let model = Sys.argv.(1) in
+	let dir = Fpath.v Sys.argv.(2) in
+	let files = get_files dir in
+	List.iter (run_with_timeout model) (List.map Fpath.to_string files);
+	Printf.printf "Total number of files tested: %d\n" (List.length files)
