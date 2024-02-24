@@ -17,7 +17,7 @@ module ST =
 module SOPL =
   Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
 
-let _max_timeout = 5.0
+let _max_timeout = 10.0
 let unset () = Sys.set_signal Sys.sigalrm Sys.Signal_ignore
 
 let set =

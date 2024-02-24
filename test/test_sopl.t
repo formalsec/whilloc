@@ -1,5 +1,5 @@
 Tests Model WriteLists:
-  $ dune exec test_wl sopl basic
+  $ test_wl sopl basic
   
   =====================
   	Ænima
@@ -467,7 +467,7 @@ Tests Model WriteLists:
   
   Fatal error: exception File "lib/HeapOpList.ml", line 80, characters 16-22: Assertion failed
   Total number of files tested: 33
-  $ dune exec test_wl sopl large_arrays_fail
+  $ test_wl sopl large_arrays_fail
   
   =====================
   	Ænima
@@ -1063,7 +1063,7 @@ Tests Model WriteLists:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ dune exec test_wl sopl large_arrays_pass
+  $ test_wl sopl large_arrays_pass
   
   =====================
   	Ænima

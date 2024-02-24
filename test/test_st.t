@@ -1,5 +1,5 @@
 Tests Model Tree:
-  $ dune exec test_wl st basic
+  $ test_wl st basic
   
   =====================
   	Ænima
@@ -467,7 +467,7 @@ Tests Model Tree:
   
   Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
   Total number of files tested: 33
-  $ dune exec test_wl st large_arrays_fail
+  $ test_wl st large_arrays_fail
   
   =====================
   	Ænima
@@ -1063,7 +1063,7 @@ Tests Model Tree:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ dune exec test_wl st large_arrays_pass
+  $ test_wl st large_arrays_pass
   
   =====================
   	Ænima
