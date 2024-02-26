@@ -13,6 +13,9 @@ let list_map f l =
 let ctx = Z3.mk_context []
 let solver = Z3.Solver.mk_simple_solver ctx
 let () = Z3.set_global_param "smt.random_seed" "10"
+let () = Z3.set_global_param "sat.random_seed" "10"
+let () = Z3.set_global_param "fp.spacer.random_seed" "10"
+let () = Z3.set_global_param "sls.random_seed" "10"
 
 let translate_value (v : Value.t) : Z3.Expr.expr =
   match v with
