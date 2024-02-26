@@ -12,7 +12,7 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 3
+      $_i : Int 3
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   
@@ -24,29 +24,29 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   Outcome: Assertion violated, counter example:
-  				$_i : Int 0
-  				$_v : Int 0
+      $_i : Int 0
+      $_v : Int 0
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 1
-  				$_v : Int 1
+      $_i : Int 1
+      $_v : Int 1
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 2
-  				$_v : Int 2
+      $_i : Int 2
+      $_v : Int 2
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 3
-  				$_v : Int 3
+      $_i : Int 3
+      $_v : Int 3
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -373,7 +373,8 @@ Tests Model ArrayFork:
   Input file: basic/common/3.wl
   Execution mode: saf
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -409,7 +410,8 @@ Tests Model ArrayFork:
   Input file: basic/common/6.wl
   Execution mode: saf
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -501,10 +503,10 @@ Tests Model ArrayFork:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 22
+      $_i : Int 22
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int -158
+      $_i : Int -158
   
   =====================
   	Ænima
@@ -3086,78 +3088,71 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_j : Int 0
-  				$_i : Int 5
-  				$_v : Int 2
-  				$_k : Int 5
-  Outcome: Returned (Val Loc 0)
+      $_i : Int 5
+      $_j : Int 0
+      $_k : Int 5
+      $_v : Int 2
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_v : Int 2
-  				$_k : Int 5
-  				$_i : Int 5
-  				$_j : Int 1
-  Outcome: Returned (Val Loc 0)
+      $_i : Int 5
+      $_j : Int 1
+      $_k : Int 5
+      $_v : Int 2
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 5
-  				$_k : Int 5
-  				$_j : Int 2
-  				$_v : Int 3
-  Outcome: Returned (Val Loc 0)
+      $_i : Int 5
+      $_j : Int 2
+      $_k : Int 5
+      $_v : Int 3
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_j : Int 0
-  				$_v : Int 2
-  				$_i : Int 6
-  				$_k : Int 6
+      $_i : Int 6
+      $_j : Int 0
+      $_k : Int 6
+      $_v : Int 2
+  Outcome: Returned (Val Loc 0)
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assertion violated, counter example:
+      $_i : Int 6
+      $_j : Int 1
+      $_k : Int 6
+      $_v : Int 2
+  Outcome: Returned (Val Loc 0)
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assertion violated, counter example:
+      $_i : Int 6
+      $_j : Int 2
+      $_k : Int 6
+      $_v : Int 3
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_j : Int 1
-  				$_k : Int 6
-  				$_i : Int 6
-  				$_v : Int 2
-  Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assertion violated, counter example:
-  				$_j : Int 2
-  				$_i : Int 6
-  				$_v : Int 3
-  				$_k : Int 6
-  Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
+      $_i : Int 7
+      $_j : Int 0
+      $_k : Int 7
+      $_v : Int 2
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_j : Int 0
-  				$_v : Int 2
-  				$_k : Int 7
-  				$_i : Int 7
-  Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assertion violated, counter example:
-  				$_v : Int 2
-  				$_i : Int 7
-  				$_k : Int 7
-  				$_j : Int 1
-  Outcome: Returned (Val Loc 0)
+      $_i : Int 7
+      $_j : Int 1
+      $_k : Int 7
+      $_v : Int 2
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_j : Int 2
-  				$_i : Int 7
-  				$_v : Int 3
-  				$_k : Int 7
+      $_i : Int 7
+      $_j : Int 2
+      $_k : Int 7
+      $_v : Int 3
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -3242,8 +3237,8 @@ Tests Model ArrayFork:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_y : Int 4
-  				$_x : Int 1
+      $_x : Int 1
+      $_y : Int 4
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33

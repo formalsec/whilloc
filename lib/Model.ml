@@ -14,13 +14,17 @@ let rec value_of (model : t) (var : string) : Value.t =
        ^ " in this model")
   | Some ((x, v) :: t) -> if x == var then v else value_of (Some t) var
 
-let to_string (model : t) : string =
+let pp (fmt : Format.formatter) (model : t) : unit =
+  let open Format in
   match model with
-  | None -> "No model"
-  | Some [] -> "Empty model"
+  | None -> pp_print_string fmt "No model"
+  | Some [] -> pp_print_string fmt "Empty model"
   | Some m ->
-      "\n\t\t\t\t"
-      ^ String.concat "\n\t\t\t\t"
-          (List.map (fun (x, v) -> Format.asprintf "%s : %a" x Value.pp v) m)
+      let m = List.sort (fun (x1, _) (x2, _) -> String.compare x1 x2) m in
+      pp_print_list
+        ~pp_sep:(fun fmt () -> fprintf fmt "@\n")
+        (fun fmt (x, v) -> fprintf fmt "%s : %a" x Value.pp v)
+        fmt m
 
-let print (model : t) : unit = to_string model |> print_endline
+let to_string (model : t) : string = Format.asprintf "%a" pp model
+let print (model : t) : unit = Format.printf "%a@." pp model
