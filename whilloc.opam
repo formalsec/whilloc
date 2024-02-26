@@ -4,7 +4,7 @@ synopsis: "A short synopsis"
 description: "A longer description"
 maintainer: ["José Fragoso Santos" "Filipe Marques"]
 authors: ["Francisco Miguel Sena" "José Fragoso Santos"]
-license: "LICENSE"
+license: "AGPL-3.0-or-later"
 tags: ["topics" "to describe" "your" "project"]
 homepage: "https://github.com/formalsec/whilloc"
 doc: "https://formalsec.github.io/whilloc"

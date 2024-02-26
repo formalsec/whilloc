@@ -17,7 +17,7 @@
   "José Fragoso Santos"
   "Filipe Marques")
 
-(license LICENSE)
+(license "AGPL-3.0-or-later")
 
 (documentation https://formalsec.github.io/whilloc)
 
