@@ -5,76 +5,79 @@ open Expression
 
 module Enc = Encoding
 
-let get_model' () : (string*Value.t) list = 
-	assert false
-	(* match (Z3.Solver.get_model ! (ref (Translator.solver.solver))) with
-	
-		| None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
-		| Some model -> (*print_endline ("\nModel:\n"^Z3.Model.to_string model);*)
-			
-			List.map
-			(fun const ->
-				let name 	  = Z3.Symbol.to_string (Z3.FuncDecl.get_name const) 		in
-				let _ 	  	= Z3.Sort.to_string   (Z3.FuncDecl.get_range const)  	in
-				let interp  = Z3.Model.get_const_interp model const |> Option.get in
-				let interp' = Z3.Expr.to_string interp in
+let get_model' () : (string * Value.t) list = assert false
+(* match (Z3.Solver.get_model ! (ref (Translator.solver.solver))) with
 
-				let symb		= Z3.Expr.mk_const Enc.Z3_mappings.ctx (Enc.Z3_mappings.StrZ3Op.encode_str name) z3_sort in 
+   | None       -> invalid_arg "InternalError: Encoding.get_model, there is no model given the last Check"
+   | Some model -> (*print_endline ("\nModel:\n"^Z3.Model.to_string model);*)
 
-				let get_type_z3 = (*get the type in the form "(Int", "(Bool",..., i.e. "(TYPE"; and then remove the left paranthesis *)
-					fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
+   	List.map
+   	(fun const ->
+   		let name 	  = Z3.Symbol.to_string (Z3.FuncDecl.get_name const) 		in
+   		let _ 	  	= Z3.Sort.to_string   (Z3.FuncDecl.get_range const)  	in
+   		let interp  = Z3.Model.get_const_interp model const |> Option.get in
+   		let interp' = Z3.Expr.to_string interp in
 
-				match get_type_z3 interp' with
+   		let symb		= Z3.Expr.mk_const Enc.Z3_mappings.ctx (Enc.Z3_mappings.StrZ3Op.encode_str name) z3_sort in
 
-				| "Int"  ->
-						let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in 
-						let v = Z3.Model.eval model x true |> Option.get in
-						let s = Z3.Arithmetic.Integer.numeral_to_string v in
-						(name, Integer (int_of_string s))
+   		let get_type_z3 = (*get the type in the form "(Int", "(Bool",..., i.e. "(TYPE"; and then remove the left paranthesis *)
+   			fun t:string -> let str = (String.split_on_char ' ' t |> List.hd) in String.sub str 1 ((String.length str) - 1) in
 
-				| "Bool" ->
-						let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in 
-						let v = Z3.Model.eval model x true |> Option.get in
-						let s = Z3.Expr.to_string v in
-						(name, Boolean (bool_of_string s))
+   		match get_type_z3 interp' with
 
-				| t 		 -> failwith ("InternalError: Encoding.string_binds, there is no corresponding type with " ^ t);
-				)
+   		| "Int"  ->
+   				let x = Z3.Expr.mk_app ctx lit_operations.int_accessor [ symb ] in
+   				let v = Z3.Model.eval model x true |> Option.get in
+   				let s = Z3.Arithmetic.Integer.numeral_to_string v in
+   				(name, Integer (int_of_string s))
 
-			(Z3.Model.get_const_decls model) *)
-let main = 
-	print_endline "";
-	let i1 = (Integer (-1)) in
-	let _  = (Integer 2) in
-	let i3 = (Integer 2) in
+   		| "Bool" ->
+   				let x = Z3.Expr.mk_app ctx lit_operations.bool_accessor [ symb ] in
+   				let v = Z3.Model.eval model x true |> Option.get in
+   				let s = Z3.Expr.to_string v in
+   				(name, Boolean (bool_of_string s))
 
-	let symb_x = (SymbInt "symb_val_x") in
-	let symb_y = (SymbInt "symb_val_y") in
-	let symb_z = (SymbInt "symb_val_z") in
-	let symb_w = (SymbInt "symb_val_w") in
+   		| t 		 -> failwith ("InternalError: Encoding.string_binds, there is no corresponding type with " ^ t);
+   		)
 
-	let e2 = BinOp (Lt , symb_y, symb_z) in
-	let e3 = BinOp (Lt, symb_x, symb_y) in
-	let e4 = BinOp (Lt, symb_x, Val i3) in
-	let e5 = BinOp (Gte, symb_x, Val i1) in
-	let e6 = BinOp (Lte, symb_z, Val i3) in
-	let e7 = UnOp (Not, symb_w) in
+   	(Z3.Model.get_const_decls model) *)
 
-	let r = Translator.is_sat [e2; e3; e4; e5; e6; e7] in
+let main =
+  print_endline "";
+  let i1 = Integer (-1) in
+  let _ = Integer 2 in
+  let i3 = Integer 2 in
 
-	let m = get_model' () in
+  let symb_x = SymbInt "symb_val_x" in
+  let symb_y = SymbInt "symb_val_y" in
+  let symb_z = SymbInt "symb_val_z" in
+  let symb_w = SymbInt "symb_val_w" in
 
-	List.iter (fun (x,y) -> print_endline ( "Variable " ^ x ^ " has value " ^ (Value.string_of_value y))) m;
+  let e2 = BinOp (Lt, symb_y, symb_z) in
+  let e3 = BinOp (Lt, symb_x, symb_y) in
+  let e4 = BinOp (Lt, symb_x, Val i3) in
+  let e5 = BinOp (Gte, symb_x, Val i1) in
+  let e6 = BinOp (Lte, symb_z, Val i3) in
+  let e7 = UnOp (Not, symb_w) in
 
-	print_endline (string_of_bool r);
+  let r = Translator.is_sat [ e2; e3; e4; e5; e6; e7 ] in
 
-	print_endline "Play.ml: Done"
+  let m = get_model' () in
+
+  List.iter
+    (fun (x, y) ->
+      print_endline ("Variable " ^ x ^ " has value " ^ Value.string_of_value y))
+    m;
+
+  print_endline (string_of_bool r);
+
+  print_endline "Play.ml: Done"
 
 (*let main =
-	let npc = [Expression.Val (Value.Boolean(true)); Expression.Val (Value.Boolean(true)); Expression.Val (Value.Boolean(true))] in
-	let npc = List.fold_right (fun x y -> Expression.BinOp(Expression.Or, Expression.negate x, y) ) npc (Expression.Val (Value.Boolean (false))) in
-	let () = print_endline " " in
-	Expression.print_expression npc*)
+  let npc = [Expression.Val (Value.Boolean(true)); Expression.Val (Value.Boolean(true)); Expression.Val (Value.Boolean(true))] in
+  let npc = List.fold_right (fun x y -> Expression.BinOp(Expression.Or, Expression.negate x, y) ) npc (Expression.Val (Value.Boolean (false))) in
+  let () = print_endline " " in
+  Expression.print_expression npc*)
 
 let _ = main
 

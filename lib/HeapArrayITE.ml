@@ -9,8 +9,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
-    String.concat ", "
-      (List.map (fun el -> Term.to_string el) blockList)
+    String.concat ", " (List.map (fun el -> Term.to_string el) blockList)
 
   let to_string (heap : t) : string =
     let heap', _ = heap in
@@ -21,7 +20,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let e2 = Term.Binop (Gte, index, Val (Value.Integer sz)) in
     let e3 = Term.Binop (Or, e1, e2) in
 
-    not (Translator.is_sat ([ e3 ] @ pc))
+    not (Translator.is_sat (e3 :: pc))
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PathCondition.t) : bool
       =
@@ -36,6 +35,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
                the heap")
     | _ ->
         failwith "InternalError: HeapArrayIte.in_bounds, arr must be location"
+
+  let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
 
   let find_block (heap : t) (loc : vt) : int * bt =
     let heap', _ = heap in
@@ -71,8 +72,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           Array.mapi
             (fun j old_expr ->
               let e = Binop (Equals, index, Val (Integer j)) in
-              if Translator.is_sat ([ e ] @ path) then
-                Term.Ite (e, v, old_expr)
+              if Translator.is_sat (e :: path) then Term.Ite (e, v, old_expr)
               else old_expr)
             block
         in
@@ -103,13 +103,15 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | Val (Loc l) -> (
             match Hashtbl.find_opt tbl l with
             | Some arr ->
+                (* Printf.printf "Index: %s\n" (Term.to_string index);
+                   Printf.printf "Array: %s\n" (String.concat ", " (Array.to_list (Array.map Term.to_string arr))); *)
                 let aux =
                   Array.of_list
                     (List.filteri
                        (fun index' _ ->
                          (* can be optimized *)
                          let e = Binop (Equals, index, Val (Integer index')) in
-                         if Translator.is_sat ([ e ] @ pc) then true else false)
+                         Translator.is_sat (e :: pc))
                        (Array.to_list
                           (Array.mapi
                              (fun j e ->
@@ -143,5 +145,5 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | _ -> failwith "InternalError: HeapArrayIte.free, illegal free")
     | _ -> failwith "InternalError: HeapArrayIte.free, arr must be location"
 
-  let clone _ = assert false
+  let clone h = copy h
 end

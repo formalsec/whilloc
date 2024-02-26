@@ -1,6 +1,0 @@
-(cram
- (deps
-  %{bin:wl}
-  simple1.wl
-  factorial.wl
-  wasm.wl))

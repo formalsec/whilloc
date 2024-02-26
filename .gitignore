@@ -1,3 +1,8 @@
+# OCaml Generated Files
 _build
 
+# MacOS Files
 .DS_Store
+
+# VSCode Files
+.vscode

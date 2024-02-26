@@ -17,4 +17,3 @@ let to_string (to_string : 'v -> string) (pc : 'v list) : string =
 
 let print (str : 'v -> string) (pc : 'v t) : unit =
   to_string str pc |> print_endline
-

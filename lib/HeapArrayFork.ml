@@ -10,8 +10,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
-    String.concat ", "
-      (List.map (fun el -> Term.to_string el) blockList)
+    String.concat ", " (List.map (fun el -> Term.to_string el) blockList)
 
   let to_string (heap : t) : string =
     Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) heap.map ""
@@ -76,7 +75,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           (fun index' _ ->
             (* can be optimized *)
             let e = Binop (Equals, index, Val (Integer index')) in
-            if Translator.is_sat ([ e ] @ path) then true else false)
+            Translator.is_sat ([ e ] @ path))
           temp
     | _ -> failwith "Invalid index"
 
@@ -106,7 +105,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           (fun index' _ ->
             (* can be optimized *)
             let e = Binop (Equals, index, Val (Integer index')) in
-            if Translator.is_sat ([ e ] @ path) then true else false)
+            Translator.is_sat (e :: path))
           temp
     | _ -> failwith "Invalid index"
 

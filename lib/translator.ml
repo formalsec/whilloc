@@ -2,6 +2,7 @@ open Value
 open Term
 
 let ( let* ) o f = Option.bind o f
+let solver_time = ref 0.0
 
 let list_map f l =
   let exception E in
@@ -71,6 +72,7 @@ let rec translate (e : Term.t) : Z3.Expr.expr =
 
 let is_sat (exprs : Term.t list) : bool =
   let exprs' = List.map translate exprs in
+  (* match Utils.total_time_call "Solver" (solver_time) (fun () -> Z3.Solver.check solver exprs') with *)
   match Z3.Solver.check solver exprs' with
   | Z3.Solver.SATISFIABLE -> true
   | Z3.Solver.UNSATISFIABLE -> false

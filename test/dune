@@ -1,0 +1,12 @@
+(executable
+ (public_name test_wl)
+ (name script)
+ (modules script)
+ (libraries whilloc bos unix))
+
+(cram
+ (deps
+  %{bin:test_wl}
+  (source_tree basic)
+  (source_tree large_arrays_fail)
+  (source_tree large_arrays_pass)))

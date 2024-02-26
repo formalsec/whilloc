@@ -42,7 +42,7 @@ let rec string_of_stmt (s : stmt) : string =
         "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s v Term.pp
         e
   | Sequence s ->
-      "Sequence:\n  " ^ String.concat "  " (List.map string_of_stmt s)
+      "Sequence:\n  " ^ String.concat "\n  " (List.map string_of_stmt s)
   | Return e -> Format.asprintf "Return: %a" Term.pp e
   | Assert e -> Format.asprintf "Assert: %a" Term.pp e
   | Assume e -> Format.asprintf "Assume: %a" Term.pp e

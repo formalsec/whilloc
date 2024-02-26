@@ -51,7 +51,11 @@ module Make
   let rec step (prog : program) (s : Program.stmt) (cont : Program.stmt list) :
       Outcome.t Choice.t =
     let return stmts = Choice.return (Outcome.Cont stmts) in
-
+    if !Utils.verbose then
+      (* Printf.printf "\n";
+         let/ state = Choice.get in
+         Printf.printf "Heap: %s\n##########\n" (Heap.to_string state.heap); *)
+      Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
     match s with
     | Skip | Clear -> return cont
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
@@ -90,11 +94,14 @@ module Make
               "ApplicationError: tried to create a symbolic value in a \
                concrete execution context"
         | Some symb_val ->
-            let/ state = Choice.get in
-            Store.set state.store x symb_val;
-            let e = eval state.store c in
-            let pc' = add_condition state.pc e in
-            if is_true pc' then return cont else Choice.return AssumeF)
+            let f_symb_int (s : state) =
+              Store.set s.store x symb_val;
+              let v = eval s.store c in
+              let pc' = add_condition s.pc v in
+              if is_true pc' then [ ((), SState.{ s with pc = pc' }) ] else []
+            in
+            let/ () = Choice.lift f_symb_int in
+            return cont)
     | Print es ->
         let/ state = Choice.get in
         let vs = List.map (eval state.store) es in
@@ -145,6 +152,7 @@ module Make
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
+        (* Printf.printf "b = %b\n" (b); *)
         if b then return cont else Choice.return Outcome.AssumeF
     | Assert e ->
         let/ state = Choice.get in
@@ -154,8 +162,7 @@ module Make
         else
           let/ state' = Choice.get in
           let _, model = Eval.test_assert state'.pc in
-          Choice.return
-          @@ Outcome.Error model
+          Choice.return @@ Outcome.Error model
     | New (x, e) ->
         let f_new (s : state) =
           let size = eval s.store e in
@@ -226,22 +233,25 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x v;
         return cont
-    | Delete _ ->
-        assert false
-        (*
-   | Delete a ->
-      (match Store.get_opt store a with
-      | Some loc ->
-        let lst = Heap.free heap loc pc in
-        let dup = (List.length lst) > 1 in
+    | Delete a ->
+        let f_delete (s : state) =
+          match Store.get_opt s.store a with
+          | Some loc ->
+              let lst = Heap.free s.heap loc s.pc in
+              let dup = List.length lst > 1 in
 
-        List.map (fun (hp, pc') ->
-          let store', cs' =
-            if dup then Store.dup store, Callstack.dup cs else store, cs in
-          (Skip, cont, store', cs', pc', hp), Cont
-        ) lst
-      | None -> failwith "InternalError: array is not defined")
-  *)
+              List.map
+                (fun (hp, pc') ->
+                  let store', cs' =
+                    if dup then (Store.dup s.store, Callstack.dup s.cs)
+                    else (s.store, s.cs)
+                  in
+                  ((), SState.{ heap = hp; pc = pc'; store = store'; cs = cs' }))
+                lst
+          | None -> failwith "InternalError: array is not defined"
+        in
+        let/ () = Choice.lift f_delete in
+        return cont
     | _ -> assert false
 
   (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler of states *)
