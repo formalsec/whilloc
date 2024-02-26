@@ -10,7 +10,7 @@ Tests Model Tree:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 3
+      $_i : Int 3
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   
@@ -23,8 +23,8 @@ Tests Model Tree:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 0
-  				$_v : Int 0
+      $_i : Int 0
+      $_v : Int 0
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -311,7 +311,8 @@ Tests Model Tree:
   Input file: basic/common/3.wl
   Execution mode: st
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -347,7 +348,8 @@ Tests Model Tree:
   Input file: basic/common/6.wl
   Execution mode: st
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -439,10 +441,10 @@ Tests Model Tree:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 22
+      $_i : Int 22
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int -158
+      $_i : Int -158
   
   =====================
   	Ænima
@@ -497,10 +499,12 @@ Tests Model Tree:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_k : Int 6
-  				$_v : Int 8
-  				$_j : Int 2
-  				$_i : Int 6
+      $_i : Int 6
+      $_j : Int 2
+      $_k : Int 6
+      $_v : Int 7
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -543,8 +547,8 @@ Tests Model Tree:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_y : Int 4
-  				$_x : Int 1
+      $_x : Int 1
+      $_y : Int 4
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33

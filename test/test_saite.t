@@ -10,7 +10,7 @@ Tests Model ArrayITE:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 3
+      $_i : Int 3
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   
@@ -23,8 +23,8 @@ Tests Model ArrayITE:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 0
-  				$_v : Int 0
+      $_i : Int 0
+      $_v : Int 0
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -309,7 +309,8 @@ Tests Model ArrayITE:
   Input file: basic/common/3.wl
   Execution mode: saite
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -345,7 +346,8 @@ Tests Model ArrayITE:
   Input file: basic/common/6.wl
   Execution mode: saite
   
-  Outcome: Assertion violated, counter example:Empty model
+  Outcome: Assertion violated, counter example:
+      Empty model
   
   =====================
   	Ænima
@@ -437,10 +439,10 @@ Tests Model ArrayITE:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 22
+      $_i : Int 22
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int -158
+      $_i : Int -158
   
   =====================
   	Ænima
@@ -495,10 +497,12 @@ Tests Model ArrayITE:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-  				$_i : Int 5
-  				$_j : Int 0
-  				$_v : Int 2
-  				$_k : Int 5
+      $_i : Int 7
+      $_j : Int 0
+      $_k : Int 7
+      $_v : Int 2
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -541,8 +545,8 @@ Tests Model ArrayITE:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-  				$_y : Int 4
-  				$_x : Int 1
+      $_x : Int 1
+      $_y : Int 4
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33

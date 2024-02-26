@@ -5,15 +5,18 @@ type t =
   | Error of Model.t
   | EndGas
 
-let to_string (o : t) : string =
-  match o with
-  | Cont _ -> "Continue"
-  | Error e -> "Assertion violated, counter example:" ^ Model.to_string e
-  | AssumeF -> "Assumption evaluated to false"
-  | Return e -> "Returned " ^ e
-  | EndGas -> "EndGas"
+let pp fmt = function
+  | Cont _ -> Format.pp_print_string fmt "Continue"
+  | Error e ->
+      Format.fprintf fmt
+        "Assertion violated, counter example:@\n@[<v 4>    %a@]" Model.pp e
+  | AssumeF -> Format.pp_print_string fmt "Assumption evaluated to false"
+  | Return e -> Format.fprintf fmt "Returned %s" e
+  | EndGas -> Format.pp_print_string fmt "EndGas"
+
+let to_string (o : t) : string = Format.asprintf "%a" pp o
 
 let should_halt (o : t) : bool =
   match o with Error _ | AssumeF | EndGas -> true | _ -> false
 
-let print (o : t) : unit = to_string o |> print_endline
+let print (o : t) : unit = Format.printf "%a@." pp o

@@ -1,5 +1,4 @@
-function aenima() {    
-
+function aenima() {
     i = symbol_int("i");
     j = symbol_int("j");
     k = symbol_int("k");
@@ -13,6 +12,8 @@ function aenima() {
     assume(k<8);
 
     v = symbol_int("v");
+    assume(v != 0);
+    assume(v != 42);
 
     x = new(8);
 
