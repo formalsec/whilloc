@@ -12,6 +12,7 @@ let list_map f l =
 
 let ctx = Z3.mk_context []
 let solver = Z3.Solver.mk_simple_solver ctx
+let () = Z3.set_global_param "smt.random_seed" "10"
 
 let translate_value (v : Value.t) : Z3.Expr.expr =
   match v with
@@ -101,5 +102,5 @@ let find_model ?(print_model = false) (es : Term.t list) :
     (string * Value.t) list option =
   assert (is_sat es);
   let* model = Z3.Solver.get_model solver in
-  if print_model then Format.printf "%s@." (Z3.Model.to_string model);
+  if print_model then (Format.printf "%s@." (Z3.Model.to_string model));
   list_map (get_interp model) (Z3.Model.get_const_decls model)
