@@ -10,8 +10,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
-    String.concat ", "
-      (List.map (fun el -> Term.to_string el) blockList)
+    String.concat ", " (List.map (fun el -> Term.to_string el) blockList)
 
   let to_string (heap : t) : string =
     Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) heap.map ""

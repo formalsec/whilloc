@@ -1,9 +1,8 @@
 open Value
 
 module M : Heap_intf.M with type vt = Value.t = struct
-
-  type   t = ((int, Value.t array) Hashtbl.t * int)
-  type  vt = Value.t (* indexes and sizes are always values *)
+  type t = (int, Value.t array) Hashtbl.t * int
+  type vt = Value.t (* indexes and sizes are always values *)
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
@@ -11,51 +10,62 @@ module M : Heap_intf.M with type vt = Value.t = struct
     ignore h;
     failwith "Not Implemented"
 
-  let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) :
+      (t * vt * vt PathCondition.t) list =
     let tbl, next = h in
     match sz with
     | Integer i ->
         Hashtbl.replace tbl next (Array.make i (Integer 0));
-        [(tbl, next+1), Loc next, pc ]
-    | _ -> failwith ("InternalError: HeapConcrete.malloc, size must be an integer")
+        [ ((tbl, next + 1), Loc next, pc) ]
+    | _ ->
+        failwith "InternalError: HeapConcrete.malloc, size must be an integer"
 
-  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)  : (t * vt PathCondition.t) list =
+  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)
+      : (t * vt PathCondition.t) list =
     let tbl, _ = h in
-    match arr, index with
-    | Loc l, Integer i ->
-      (match Hashtbl.find_opt tbl l with
-      | Some arr ->
-          arr.(i) <- v;
-          [ h, pc ]
-      | _ -> failwith ("InternalError: accessed array is not in the heap"))
-    | _ -> failwith ("InternalError: HeapConcrete.update, arr must be location and index must be an integer")
+    match (arr, index) with
+    | Loc l, Integer i -> (
+        match Hashtbl.find_opt tbl l with
+        | Some arr ->
+            arr.(i) <- v;
+            [ (h, pc) ]
+        | _ -> failwith "InternalError: accessed array is not in the heap")
+    | _ ->
+        failwith
+          "InternalError: HeapConcrete.update, arr must be location and index \
+           must be an integer"
 
-  let lookup (h : t) (arr : vt) (index : vt) (pc : vt PathCondition.t) : (t * vt * vt PathCondition.t) list =
+  let lookup (h : t) (arr : vt) (index : vt) (pc : vt PathCondition.t) :
+      (t * vt * vt PathCondition.t) list =
     ignore index;
     ignore arr;
     ignore pc;
     ignore h;
     let tbl, _ = h in
-    match arr, index with
-    | Loc l, Integer i ->
-      (match Hashtbl.find_opt tbl l with
-      | Some arr ->
-          if (Array.length arr <= i)
-            then failwith ("InternalError: accessing out-of-bounds index")
+    match (arr, index) with
+    | Loc l, Integer i -> (
+        match Hashtbl.find_opt tbl l with
+        | Some arr ->
+            if Array.length arr <= i then
+              failwith "InternalError: accessing out-of-bounds index"
             else [ (h, arr.(i), pc) ]
-      | _ -> failwith ("InternalError: accessed array is not in the heap"))
-    | _ -> failwith ("InternalError: HeapConcrete.update, arr must be location and index must be an integer")
+        | _ -> failwith "InternalError: accessed array is not in the heap")
+    | _ ->
+        failwith
+          "InternalError: HeapConcrete.update, arr must be location and index \
+           must be an integer"
 
-  let free (h : t) (arr : vt) (pc : vt PathCondition.t) : (t * vt PathCondition.t) list =
+  let free (h : t) (arr : vt) (pc : vt PathCondition.t) :
+      (t * vt PathCondition.t) list =
     let tbl, _ = h in
     match arr with
-    | Loc l ->
-      (match Hashtbl.find_opt tbl l with
-      | Some _ ->
-         Hashtbl.remove tbl l;
-         [ h, pc ]
-      | _ -> failwith ("InternalError: illegal free"))
-    | _ -> failwith ("InternalError: HeapConcrete.update, arr must be location")
+    | Loc l -> (
+        match Hashtbl.find_opt tbl l with
+        | Some _ ->
+            Hashtbl.remove tbl l;
+            [ (h, pc) ]
+        | _ -> failwith "InternalError: illegal free")
+    | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
   let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
     ignore heap;
@@ -65,8 +75,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
     ignore i;
     failwith "not implemented"
 
-    let clone _ = assert false
-
+  let clone _ = assert false
 end
 
 (*

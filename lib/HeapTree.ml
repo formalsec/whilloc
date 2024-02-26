@@ -10,19 +10,12 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let rec iter_tree (tree : tree_t) : string =
       match tree with
       | Leaf ((l, r), v) ->
-          "{ \"leaf\": { \"range\": \"["
-          ^ Term.to_string l
-          ^ ", "
-          ^ Term.to_string r
-          ^ "[\", \"value\": " ^ "\""
-          ^ Term.to_string v
+          "{ \"leaf\": { \"range\": \"[" ^ Term.to_string l ^ ", "
+          ^ Term.to_string r ^ "[\", \"value\": " ^ "\"" ^ Term.to_string v
           ^ "\"" ^ " } }"
       | Node ((l, r), ch) ->
-          "{ \"node\": { \"range\": \"["
-          ^ Term.to_string l
-          ^ ", "
-          ^ Term.to_string r
-          ^ "[\", \"children\": " ^ "[ "
+          "{ \"node\": { \"range\": \"[" ^ Term.to_string l ^ ", "
+          ^ Term.to_string r ^ "[\", \"children\": " ^ "[ "
           ^ String.concat ", " (List.map iter_tree ch)
           ^ " ]" ^ " } }"
     in
@@ -38,9 +31,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) :
       (t * vt * vt PathCondition.t) list =
     let h', curr = h in
-    let tree =
-      Leaf ((Term.Val (Integer 0), sz), Term.Val (Integer 0))
-    in
+    let tree = Leaf ((Term.Val (Integer 0), sz), Term.Val (Integer 0)) in
     Hashtbl.replace h' curr tree;
     [ ((h', curr + 1), Term.Val (Loc curr), pc) ]
 
@@ -56,9 +47,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           let cond = Term.Binop (And, ge_left, l_right) in
           let pc' = cond :: pc in
           if Translator.is_sat pc' then
-            let index_plus_1 =
-              Term.Binop (Plus, index, Val (Integer 1))
-            in
+            let index_plus_1 = Term.Binop (Plus, index, Val (Integer 1)) in
             let leaves =
               [
                 Leaf ((left, index), old_v);
@@ -138,7 +127,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let e2 = Term.Binop (Gte, index, upper) in
     let e3 = Term.Binop (Or, e1, e2) in
 
-    not (Translator.is_sat ( e3 :: pc))
+    not (Translator.is_sat (e3 :: pc))
 
   let may_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool
       =
@@ -194,7 +183,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
       (t * vt PathCondition.t) list =
     let h', _ = h in
     (* let ign = to_string h in
-    ignore ign; *)
+       ignore ign; *)
     (match arr with
     | Val (Loc i) -> Hashtbl.remove h' i
     | _ -> failwith "Invalid allocation index");
@@ -215,8 +204,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
               "InternalError: HeapTree.in_bounds, accessed tree is not in the \
                heap")
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
-  
+
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
-  
   let clone h = copy h
 end

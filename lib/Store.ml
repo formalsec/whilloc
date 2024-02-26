@@ -1,7 +1,6 @@
 type 'v t = (string, 'v) Hashtbl.t
 
-let create_empty_store (size : int) : 'v t =
-  Hashtbl.create size
+let create_empty_store (size : int) : 'v t = Hashtbl.create size
 
 let create_store (varvals : (string * 'v) list) : 'v t =
   let st = Hashtbl.create (List.length varvals) in
@@ -13,33 +12,34 @@ let set (store : 'v t) (var : string) (v : 'v) : unit =
 
 let get (store : 'v t) (var : string) : 'v =
   let value = Hashtbl.find_opt store var in
-  (match value with
-  | None    -> failwith ("NameError: Store.get, name '" ^ var ^ "' is not defined") 
-  | Some v  -> v)
+  match value with
+  | None -> failwith ("NameError: Store.get, name '" ^ var ^ "' is not defined")
+  | Some v -> v
 
 let get_opt (store : 'v t) (var : string) : 'v option =
   Hashtbl.find_opt store var
 
-let remove (store : 'v t) (var : string) : unit =
-  Hashtbl.remove store var
-
-let dup (store : 'v t) : 'v t =
-  Hashtbl.copy store
+let remove (store : 'v t) (var : string) : unit = Hashtbl.remove store var
+let dup (store : 'v t) : 'v t = Hashtbl.copy store
 
 let find_all (store : 'v t) (var : string) : 'v list =
   Hashtbl.find_all store var
 
-let exists (store : 'v t) (var : string) : bool =
-  Hashtbl.mem store var
+let exists (store : 'v t) (var : string) : bool = Hashtbl.mem store var
 
 let iterate (f : string -> 'v -> unit) (store : 'v t) : unit =
   Hashtbl.iter f store
 
-let fold (f : 'a -> 'b -> 'c -> 'c) ( htbl : ('a, 'b) Hashtbl.t) (init : 'c) : 'c =
+let fold (f : 'a -> 'b -> 'c -> 'c) (htbl : ('a, 'b) Hashtbl.t) (init : 'c) : 'c
+    =
   Hashtbl.fold f htbl init
 
-let to_string (str : 'v -> string ) (store : 'v t) : string =
-  "\n" ^ String.concat "\n" (Hashtbl.fold (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ (str y)) :: z ) store [])
+let to_string (str : 'v -> string) (store : 'v t) : string =
+  "\n"
+  ^ String.concat "\n"
+      (Hashtbl.fold
+         (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ str y) :: z)
+         store [])
 
-let print (str : 'v -> string ) (store : 'v t) : unit =
+let print (str : 'v -> string) (store : 'v t) : unit =
   to_string str store |> print_endline

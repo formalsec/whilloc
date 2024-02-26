@@ -9,8 +9,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let block_str (block : bt) : string =
     let blockList = Array.to_list block in
-    String.concat ", "
-      (List.map (fun el -> Term.to_string el) blockList)
+    String.concat ", " (List.map (fun el -> Term.to_string el) blockList)
 
   let to_string (heap : t) : string =
     let heap', _ = heap in
@@ -73,8 +72,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           Array.mapi
             (fun j old_expr ->
               let e = Binop (Equals, index, Val (Integer j)) in
-              if Translator.is_sat ( e :: path) then
-                Term.Ite (e, v, old_expr)
+              if Translator.is_sat (e :: path) then Term.Ite (e, v, old_expr)
               else old_expr)
             block
         in
@@ -106,7 +104,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
             match Hashtbl.find_opt tbl l with
             | Some arr ->
                 (* Printf.printf "Index: %s\n" (Term.to_string index);
-                Printf.printf "Array: %s\n" (String.concat ", " (Array.to_list (Array.map Term.to_string arr))); *)
+                   Printf.printf "Array: %s\n" (String.concat ", " (Array.to_list (Array.map Term.to_string arr))); *)
                 let aux =
                   Array.of_list
                     (List.filteri

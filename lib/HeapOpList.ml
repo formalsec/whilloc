@@ -77,6 +77,6 @@ module M : Heap_intf.M with type vt = Term.t = struct
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]
 
-    let copy (heap : t) : t = {map = Hashtbl.copy heap.map; next = heap.next}
-    let clone h = copy h
+  let copy (heap : t) : t = { map = Hashtbl.copy heap.map; next = heap.next }
+  let clone h = copy h
 end
