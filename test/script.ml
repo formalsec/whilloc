@@ -92,5 +92,5 @@ let () =
 	let model = Sys.argv.(1) in
 	let dir = Fpath.v Sys.argv.(2) in
 	let files = get_files dir in
-	List.iter (run_with_timeout model) (List.map Fpath.to_string files);
+	List.iter (run_with_timeout model) (List.map Fpath.to_string (List.sort Fpath.compare files));
 	Printf.printf "Total number of files tested: %d\n" (List.length files)
