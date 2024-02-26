@@ -96,10 +96,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-                                  $_i : Int 5
-                                  $_j : Int 0
-                                  $_v : Int 4
-                                  $_k : Int 5
+  				$_i : Int 6
+  				$_v : Int 7
+  				$_j : Int 2
+  				$_k : Int 6
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
