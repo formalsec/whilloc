@@ -106,7 +106,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           (fun index' _ ->
             (* can be optimized *)
             let e = Binop (Equals, index, Val (Integer index')) in
-            if Translator.is_sat ([ e ] @ path) then true else false)
+            Translator.is_sat (e :: path))
           temp
     | _ -> failwith "Invalid index"
 

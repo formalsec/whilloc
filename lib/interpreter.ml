@@ -58,12 +58,15 @@ module Make
       Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
     match s with
     | Skip | Clear -> return cont
+
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
+
     | Assign (x, e) ->
         let/ state = Choice.get in
         let e' = eval state.store e in
         Store.set state.store x e';
         return cont
+
     | Symbol_bool (x, s) -> (
         let symb_opt = make_symbol s "bool" in
         match symb_opt with
@@ -75,6 +78,7 @@ module Make
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             return cont)
+
     | Symbol_int (x, s) -> (
         let symb_opt = make_symbol s "int" in
         match symb_opt with
@@ -86,6 +90,7 @@ module Make
             let/ state = Choice.get in
             Store.set state.store x symb_val;
             return cont)
+            
     | Symbol_int_c (x, s, c) -> 
       let symb_opt = make_symbol s "int" in
       (match symb_opt with
@@ -101,26 +106,8 @@ module Make
           if is_true pc' 
             then [ ((), SState.{ s with pc = pc' })]
             else [] in 
-        let/ _ = Choice.lift f_symb_int in 
+        let/ () = Choice.lift f_symb_int in 
         return cont)
-
-      (*
-      (
-            fun 
-            let/ state = Choice.get in
-            Store.set state.store x symb_val;
-            let e = eval state.store c in
-            let pc' = add_condition state.pc e in
-            if is_true pc' then return cont else Choice.return AssumeF)
-        *)
-    
-    (*
-      let/ state = Choice.get in
-        let v = eval state.store e in
-        let/ b = Choice.select v in
-        if b then return cont else Choice.return Outcome.AssumeF   
-    *)
-
 
     | Print es ->
         let/ state = Choice.get in
@@ -129,6 +116,7 @@ module Make
         List.iter Eval.print vs;
         print_endline "";
         return cont
+
     | FunCall (x, f, es) ->
         let/ state = Choice.get in
         let vs = List.map (eval state.store) es in
@@ -144,6 +132,7 @@ module Make
         let cs' = Callstack.push state.cs frame in
         let/ _ = Choice.set { state with cs = cs'; store = sto' } in
         return [ f'.body ]
+
     | Return e -> (
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -158,11 +147,13 @@ module Make
         | Callstack.Toplevel ->
             let/ _ = Choice.set { state with cs = cs' } in
             Choice.return @@ Outcome.Return (Eval.to_string v))
+
     | IfElse (e, s1, s2) ->
         let/ state = Choice.get in
         let v = eval state.store e in
         let/ b = Choice.select v in
         if b then return (s1 :: cont) else return (s2 :: cont)
+
     | While (e, body) as while_stmt ->
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -175,6 +166,7 @@ module Make
         let/ b = Choice.select v in
         (* Printf.printf "b = %b\n" (b); *)
         if b then return cont else Choice.return Outcome.AssumeF
+
     | Assert e ->
         let/ state = Choice.get in
         let v = eval state.store e in
@@ -185,6 +177,7 @@ module Make
           let _, model = Eval.test_assert state'.pc in
                     Choice.return
           @@ Outcome.Error model
+
     | New (x, e) ->
         let f_new (s : state) =
           let size = eval s.store e in
@@ -257,6 +250,7 @@ module Make
         let/ state = Choice.get in
         Store.set state.store x v;
         return cont
+
     | Delete a ->
         let f_delete (s : state) = 
           match (Store.get_opt s.store a) with 
@@ -274,22 +268,8 @@ module Make
                 lst
           | None -> failwith "InternalError: array is not defined"
         in 
-        let/ _ = Choice.lift f_delete in
+        let/ () = Choice.lift f_delete in
         return cont
-        (*
-   | Delete a ->
-      (match Store.get_opt store a with
-      | Some loc ->
-        let lst = Heap.free heap loc pc in
-        let dup = (List.length lst) > 1 in
-
-        List.map (fun (hp, pc') ->
-          let store', cs' =
-            if dup then Store.dup store, Callstack.dup cs else store, cs in
-          (Skip, cont, store', cs', pc', hp), Cont
-        ) lst
-      | None -> failwith "InternalError: array is not defined")
-  *)
     | _ -> assert false
 
   (* The 'search' function contains all the logic of the search of the state space, it kinda is like a scheduler of states *)

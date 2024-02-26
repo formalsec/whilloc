@@ -138,7 +138,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let e2 = Term.Binop (Gte, index, upper) in
     let e3 = Term.Binop (Or, e1, e2) in
 
-    not (Translator.is_sat ([ e3 ] @ pc))
+    not (Translator.is_sat ( e3 :: pc))
 
   let may_within_range (r : range) (index : vt) (pc : vt PathCondition.t) : bool
       =
@@ -216,7 +216,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
                heap")
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
   
-  let copy (heap : t) : t = let heap', i = heap in (Hashtbl.copy heap', i)
+  let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
   
   let clone h = copy h
 end
