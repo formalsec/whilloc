@@ -73,9 +73,10 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let free h (arr : vt) (pc : vt PathCondition.t) :
       (t * vt PathCondition.t) list =
-    let lbl = match arr with Val (Integer i) -> i | _ -> assert false in
+    let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]
 
-  let clone _ = assert false
+    let copy (heap : t) : t = {map = Hashtbl.copy heap.map; next = heap.next}
+    let clone h = copy h
 end

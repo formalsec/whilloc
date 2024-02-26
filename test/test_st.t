@@ -8,7 +8,11 @@ Tests Model Tree:
   Input file: basic/arrayfork/1.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assertion violated, counter example:
+  				$_i : Int 3
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -17,7 +21,14 @@ Tests Model Tree:
   Input file: basic/arrayfork/2.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assertion violated, counter example:
+  				$_i : Int 0
+  				$_v : Int 0
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -26,7 +37,11 @@ Tests Model Tree:
   Input file: basic/arrayfork/3.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -35,7 +50,13 @@ Tests Model Tree:
   Input file: basic/tree/4.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -44,7 +65,7 @@ Tests Model Tree:
   Input file: basic/tree/1.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Fatal error: exception Failure("Index out of bounds")
   
   =====================
   	Ænima
@@ -53,7 +74,9 @@ Tests Model Tree:
   Input file: basic/tree/5.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -62,7 +85,7 @@ Tests Model Tree:
   Input file: basic/tree/2.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Fatal error: exception Failure("Index out of bounds")
   
   =====================
   	Ænima
@@ -71,7 +94,18 @@ Tests Model Tree:
   Input file: basic/tree/3.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assertion violated, counter example:
+  				$_j : Int 0
+  				$_i : Int 5
+  				$_v : Int 2
+  				$_k : Int 5
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -80,7 +114,13 @@ Tests Model Tree:
   Input file: basic/arrayite/1.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Loc 0)
+  Outcome: Returned (Val Loc 0)
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -195,7 +235,14 @@ Tests Model Tree:
   Input file: basic/common/18.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  >Program Print
+  (Val Bool true)
+  
+  >Program Print
+  (Val Bool false)
+  
+  Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
+  Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
   
   =====================
   	Ænima
@@ -216,7 +263,8 @@ Tests Model Tree:
   Input file: basic/common/17.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Bool true)
+  Outcome: Returned (Val Bool false)
   
   =====================
   	Ænima
@@ -228,7 +276,7 @@ Tests Model Tree:
   >Program Print
   ((AND (< (Val Int 3) (+ (Val Int 3) (Val Int 1))) (>= (Val Int 3) (Val Int 3))) (Val Int 5) (Val Int 0))
   
-  Fatal error: exception Sys_error("output/0_tree.json: No such file or directory")
+  Outcome: Returned (Val Loc 0)
   
   =====================
   	Ænima
@@ -237,7 +285,8 @@ Tests Model Tree:
   Input file: basic/common/13.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Bool true)
+  Outcome: Returned (Val Bool false)
   
   =====================
   	Ænima
@@ -324,7 +373,14 @@ Tests Model Tree:
   Input file: basic/common/15.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  >Program Print
+  (SymbInt $_x)
+  
+  Outcome: Returned (Val Int 5)
+  Outcome: Returned (Val Int 4)
+  Outcome: Returned (Val Int 3)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -333,7 +389,8 @@ Tests Model Tree:
   Input file: basic/common/14.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Int 10)
+  Outcome: Returned (Val Int 12)
   
   =====================
   	Ænima
@@ -429,7 +486,15 @@ Tests Model Tree:
   Input file: basic/statements/delete.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  >Program Print
+  (Val Loc 0)
+  
+  >Program Print
+  (Val Loc 0)
+  
+  Outcome: Returned (Val Loc 0)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -447,7 +512,12 @@ Tests Model Tree:
   Input file: basic/wasm.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Int 0)
+  Outcome: Assertion violated, counter example:
+  				$_y : Int 4
+  				$_x : Int 1
+  Outcome: Returned (Val Int 0)
+  Outcome: Returned (Val Int 0)
   
   =====================
   	Ænima
@@ -456,7 +526,13 @@ Tests Model Tree:
   Input file: basic/factorial.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Int 120)
+  Outcome: Returned (Val Int 24)
+  Outcome: Returned (Val Int 6)
+  Outcome: Returned (Val Int 2)
+  Outcome: Returned (Val Int 1)
+  Outcome: Assumption evaluated to false
+  Outcome: Assumption evaluated to false
   
   =====================
   	Ænima
@@ -465,7 +541,12 @@ Tests Model Tree:
   Input file: basic/simple1.wl
   Execution mode: st
   
-  Fatal error: exception File "lib/HeapTree.ml", line 219, characters 16-22: Assertion failed
+  Outcome: Returned (Val Int 0)
+  Outcome: Assertion violated, counter example:
+  				$_i : Int 22
+  Outcome: Returned (Val Int 0)
+  Outcome: Assertion violated, counter example:
+  				$_i : Int -158
   Total number of files tested: 33
   $ test_wl st large_arrays_fail
   

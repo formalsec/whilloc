@@ -52,6 +52,9 @@ module Make
       Outcome.t Choice.t =
     let return stmts = Choice.return (Outcome.Cont stmts) in
     if !Utils.verbose then 
+      (* Printf.printf "\n";
+      let/ state = Choice.get in
+      Printf.printf "Heap: %s\n##########\n" (Heap.to_string state.heap); *)
       Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
     match s with
     | Skip | Clear -> return cont
@@ -180,7 +183,7 @@ module Make
         else
           let/ state' = Choice.get in
           let _, model = Eval.test_assert state'.pc in
-          Choice.return
+                    Choice.return
           @@ Outcome.Error model
     | New (x, e) ->
         let f_new (s : state) =
@@ -260,7 +263,7 @@ module Make
           | Some loc -> 
             let lst = Heap.free s.heap loc s.pc in
             let dup = (List.length lst) > 1 in
-
+            
             List.map 
               (fun (hp, pc') ->
                 let store', cs' =

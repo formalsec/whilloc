@@ -193,8 +193,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let free h (arr : vt) (pc : vt PathCondition.t) :
       (t * vt PathCondition.t) list =
     let h', _ = h in
-    let ign = to_string h in
-    ignore ign;
+    (* let ign = to_string h in
+    ignore ign; *)
     (match arr with
     | Val (Loc i) -> Hashtbl.remove h' i
     | _ -> failwith "Invalid allocation index");
@@ -215,6 +215,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
               "InternalError: HeapTree.in_bounds, accessed tree is not in the \
                heap")
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
-
-  let clone _ = assert false
+  
+  let copy (heap : t) : t = let heap', i = heap in (Hashtbl.copy heap', i)
+  
+  let clone h = copy h
 end
