@@ -98,7 +98,7 @@ let rec pp fmt (e : t) =
   | B_symb s -> fprintf fmt "(SymbBool %s)" s
   | I_symb s -> fprintf fmt "(SymbInt %s)" s
   | Var x -> fprintf fmt "(Var %s)" x
-  | Val v -> fprintf fmt "(Val %a)" Value.pp v
+  | Val v -> fprintf fmt "(Val %a)" (Value.pp ~no_values:false) v
   | Unop (op, v) -> fprintf fmt "(%a %a)" pp_unop op pp v
   | Binop (op, v1, v2) -> fprintf fmt "(%a %a %a)" pp_binop op pp v1 pp v2
   | Ite (e1, e2, e3) -> fprintf fmt "(%a %a %a)" pp e1 pp e2 pp e3

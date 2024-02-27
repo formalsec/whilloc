@@ -41,22 +41,26 @@ let run model file =
   | "saf" ->
       let rets = SAF.interpret program in
       List.iter
-        (fun (out, _) -> Format.printf "Outcome: %a@." Outcome.pp out)
+        (fun (out, _) ->
+          Format.printf "Outcome: %a@." (Outcome.pp ~no_values:true) out)
         rets
   | "saite" ->
       let rets = SAITE.interpret program in
       List.iter
-        (fun (out, _) -> Format.printf "Outcome: %a@." Outcome.pp out)
+        (fun (out, _) ->
+          Format.printf "Outcome: %a@." (Outcome.pp ~no_values:true) out)
         rets
   | "st" ->
       let rets = ST.interpret program in
       List.iter
-        (fun (out, _) -> Format.printf "Outcome: %a@." Outcome.pp out)
+        (fun (out, _) ->
+          Format.printf "Outcome: %a@." (Outcome.pp ~no_values:true) out)
         rets
   | "sopl" ->
       let rets = SOPL.interpret program in
       List.iter
-        (fun (out, _) -> Format.printf "Outcome: %a@." Outcome.pp out)
+        (fun (out, _) ->
+          Format.printf "Outcome: %a@." (Outcome.pp ~no_values:true) out)
         rets
   | _ -> assert false
 
