@@ -10,7 +10,7 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-      $_i : Int 3
+      $_i : Int _
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   
@@ -23,8 +23,8 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-      $_i : Int 0
-      $_v : Int 0
+      $_i : Int _
+      $_v : Int _
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -439,10 +439,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-      $_i : Int 22
+      $_i : Int _
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-      $_i : Int -158
+      $_i : Int _
   
   =====================
   	Ænima
@@ -497,10 +497,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Loc 0)
   Outcome: Assertion violated, counter example:
-      $_i : Int 5
-      $_j : Int 2
-      $_k : Int 5
-      $_v : Int 6
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
@@ -545,8 +545,8 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
-      $_x : Int 1
-      $_y : Int 4
+      $_x : Int _
+      $_y : Int _
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33
