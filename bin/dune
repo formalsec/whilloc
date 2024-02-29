@@ -5,6 +5,7 @@
  (name main)
  (modules 
   main
+  options
   cmd_execute
   doc_execute)
- (libraries whilloc cmdliner))
+ (libraries whilloc cmdliner bos))

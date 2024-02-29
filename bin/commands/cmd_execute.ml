@@ -1,5 +1,6 @@
 open Whilloc
 open Utils
+
 module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
 module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
 module ST_Choice = ListChoice.Make (EvalSymbolic.M) (HeapTree.M)
@@ -18,61 +19,50 @@ module SOPL =
 
   
 type options = {
-  input_file : string;
-  model : string;
-  output_file : string;
+  input : Fpath.t;
+  mode : string;
+  output : Fpath.t option;
   verbose : bool;
 }
 
-let run : unit =
+let run input mode =
     let start = Sys.time () in
-    print_string "\n=====================\n\tÆnima\n=====================\n\n";
-    arguments ();
-    if !file = "" && !mode = "" then print_string "\nNo option selected. Use -h\n"
-    else if !file = "" then
-      print_string
-        "No input file. Use -i\n\n\
-         =====================\n\
-         \tFINISHED\n\
-         =====================\n"
-    else if !mode = "" then
-      print_string
-        "No mode selected. Use -m\n\n\
-         =====================\n\
-         \tFINISHED\n\
-         =====================\n"
-    else
-      let program = !file |> read_file |> parse_program |> create_program in
-      Printf.printf "Input file: %s\nExecution mode: %s\n\n" !file !mode;
-      (match !mode with
-      | "saf" ->
-          let rets = SAF.interpret program in
-          List.iter
-            (fun (out, _) ->
-              Format.printf "Outcome: %s@." (Outcome.to_string out))
-            rets
-      | "saite" ->
-          let rets = SAITE.interpret program in
-          List.iter
-            (fun (out, _) ->
-              Format.printf "Outcome: %s@." (Outcome.to_string out))
-            rets
-      | "st" ->
-          let rets = ST.interpret program in
-          List.iter
-            (fun (out, _) ->
-              Format.printf "Outcome: %s@." (Outcome.to_string out))
-            rets
-      | "sopl" ->
-          let rets = SOPL.interpret program in
-          List.iter
-            (fun (out, _) ->
-              Format.printf "Outcome: %s@." (Outcome.to_string out))
-            rets
-      | _ -> assert false)
-      (* ;Printf.printf "Total Execution time of Solver: %f\n" (!Translator.solver_time) *);
-      if !Utils.verbose then
-        Printf.printf "Total Execution time: %f\n" (Sys.time () -. start)
-  
+    print_header ();
+    let program = input |> read_file |> parse_program |> create_program in
+    Printf.printf "Input file: %s\nExecution mode: %s\n\n" input mode;
+    (match mode with
+    | "saf" ->
+        let rets = SAF.interpret program in
+        List.iter
+          (fun (out, _) ->
+            Format.printf "Outcome: %s@." (Outcome.to_string out))
+          rets
+    | "saite" ->
+        let rets = SAITE.interpret program in
+        List.iter
+          (fun (out, _) ->
+            Format.printf "Outcome: %s@." (Outcome.to_string out))
+          rets
+    | "st" ->
+        let rets = ST.interpret program in
+        List.iter
+          (fun (out, _) ->
+            Format.printf "Outcome: %s@." (Outcome.to_string out))
+          rets
+    | "sopl" ->
+        let rets = SOPL.interpret program in
+        List.iter
+          (fun (out, _) ->
+            Format.printf "Outcome: %s@." (Outcome.to_string out))
+          rets
+    | _ -> assert false)
+    (* ;Printf.printf "Total Execution time of Solver: %f\n" (!Translator.solver_time) *);
+    if !Utils.verbose then
+      Printf.printf "Total Execution time: %f\n" (Sys.time () -. start);
+    print_footer ()
 
-let main () = run; 0
+
+let main (opts : options) : int  = 
+  Utils.verbose := opts.verbose;
+  run (Fpath.to_string opts.input) opts.mode;
+  0
