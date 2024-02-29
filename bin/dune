@@ -1,5 +1,10 @@
+(include_subdirs unqualified)
+
 (executable
  (public_name wl)
  (name main)
- (modules main)
- (libraries whilloc))
+ (modules 
+  main
+  cmd_execute
+  doc_execute)
+ (libraries whilloc cmdliner))
