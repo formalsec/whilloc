@@ -9,7 +9,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
   let block_str (block : Value.t array) : string =
     let blockList = Array.to_list block in
     String.concat ", " (List.map Value.to_string blockList)
-  
+
   let to_string ((h, _) : t) : string =
     Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) h ""
 
@@ -67,21 +67,22 @@ module M : Heap_intf.M with type vt = Value.t = struct
         | _ -> failwith "InternalError: illegal free")
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PathCondition.t) : bool =
+  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PathCondition.t) : bool
+      =
     ignore pc;
-    match addr with 
-      | Loc l ->
-        (let tbl, _ = heap in
+    match addr with
+    | Loc l -> (
+        let tbl, _ = heap in
         match Hashtbl.find_opt tbl l with
-          | Some arr -> Integer 0 < i && i < Integer (Array.length arr)
-          | _ ->  
-            failwith 
-              "InternalError: HeapConcrete.in_bounds, accessed array is not \
-              in the heap")
-      | _ -> failwith "InternalError: HeapConcrete.in_bounds, arr must be location"
+        | Some arr -> Integer 0 < i && i < Integer (Array.length arr)
+        | _ ->
+            failwith
+              "InternalError: HeapConcrete.in_bounds, accessed array is not in \
+               the heap")
+    | _ ->
+        failwith "InternalError: HeapConcrete.in_bounds, arr must be location"
 
-let clone _ = assert false
-
+  let clone _ = assert false
 end
 
 (*

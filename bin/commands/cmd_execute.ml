@@ -1,13 +1,12 @@
 open Whilloc
 open Utils
-
 module C_Choice = ListChoice.Make (EvalConcrete.M) (HeapConcrete.M)
 module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
 module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
 module ST_Choice = ListChoice.Make (EvalSymbolic.M) (HeapTree.M)
 module SOPL_Choice = ListChoice.Make (EvalSymbolic.M) (HeapOpList.M)
-
 module C = Interpreter.Make (EvalConcrete.M) (DFS.M) (HeapConcrete.M) (C_Choice)
+
 module SAF =
   Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (SAF_Choice)
 
@@ -32,12 +31,12 @@ let run ?(no_values = false) input mode =
   let program = input |> read_file |> parse_program |> create_program in
   Printf.printf "Input file: %s\nExecution mode: %s\n\n" input mode;
   (match mode with
-  | "c" -> 
-    let rets = C.interpret program in
-    List.iter
-      (fun (out, _) ->
-        Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-      rets
+  | "c" ->
+      let rets = C.interpret program in
+      List.iter
+        (fun (out, _) ->
+          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
+        rets
   | "saf" ->
       let rets = SAF.interpret program in
       List.iter
