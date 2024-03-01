@@ -1,5 +1,5 @@
 Tests Model ArrayFork:
-  $ test_wl saf basic
+  $ wl test basic saf
   
   =====================
   	Ænima

@@ -43,3 +43,13 @@ let mode =
 let verbose = 
   let doc = "Show the statements being executed." in
   Arg.(value & flag & info ["v"; "verbose"] ~doc)
+
+let timeout = 
+  let docv = "DURATION" in
+  let doc = 
+    "Floating point number representing the maximum duration in \
+    seconds for each program to run. When exceeded, the program \
+     will be killed. The default value is 0 which will disable \
+     the assciated timeout."
+  in
+  Arg.(value & opt (some float) None & info ["timeout"] ~doc ~docv)

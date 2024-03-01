@@ -6,6 +6,9 @@
  (modules 
   main
   options
+  dir
   cmd_execute
-  doc_execute)
+  cmd_test
+  doc_execute
+  doc_test)
  (libraries whilloc cmdliner bos))

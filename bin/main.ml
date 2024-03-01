@@ -29,8 +29,14 @@ let execute_cmd =
   let info = Cmd.info "execute" ~doc ~sdocs ~man ~man_xrefs in
   Cmd.v info term
 
-let cmd_list = 
-  [ execute_cmd
+let test_cmd =
+  let open Doc_test in
+  let info = Cmd.info "test" ~doc ~sdocs ~man ~man_xrefs in
+  Cmd.v info term
+  
+let cmd_list = [
+  execute_cmd;
+  test_cmd
   ]
 
 
