@@ -18,7 +18,6 @@ module ST = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapTree.M) (ST_Choice)
 module SOPL =
   Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
 
-
 type options = {
   inputs : Fpath.t;
   mode : string;
@@ -26,8 +25,7 @@ type options = {
   verbose : bool;
 }
 
-let _max_timeout = ref 0.0  
-
+let _max_timeout = ref 0.0
 let unset () = Sys.set_signal Sys.sigalrm Sys.Signal_ignore
 
 let set =
@@ -60,7 +58,7 @@ let run (opts : options) : unit =
     (List.map Fpath.to_string (List.sort Fpath.compare files));
   Printf.printf "Total number of files tested: %d\n" (List.length files)
 
-let main (opts : options) : int  = 
+let main (opts : options) : int =
   _max_timeout := Option.value ~default:0.0 opts.timeout;
   Utils.verbose := opts.verbose;
   run opts;

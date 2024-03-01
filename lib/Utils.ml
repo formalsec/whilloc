@@ -49,6 +49,5 @@ let total_time_call (desc : string) (acc : float ref) (f : unit -> 'a) : 'a =
   acc := !acc +. delta;
   result
 
-let print_header () = print_string "\n=====================\n\tÆnima\n=====================\n\n"
-
-let print_footer () = print_string "\n=====================\n\tFINISHED\n=====================\n\n"
+let print_header () =
+  print_string "\n=====================\n\tÆnima\n=====================\n\n"
