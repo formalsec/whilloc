@@ -2,22 +2,6 @@ open Whilloc
 
 exception Timeout
 
-module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
-module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
-module ST_Choice = ListChoice.Make (EvalSymbolic.M) (HeapTree.M)
-module SOPL_Choice = ListChoice.Make (EvalSymbolic.M) (HeapOpList.M)
-
-module SAF =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (SAF_Choice)
-
-module SAITE =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) (SAITE_Choice)
-
-module ST = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapTree.M) (ST_Choice)
-
-module SOPL =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
-
 type options = {
   inputs : Fpath.t;
   mode : string;

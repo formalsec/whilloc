@@ -6,7 +6,7 @@
 
 (cram
  (deps
-  %{bin:test_wl}
+  %{bin:wl}
   (source_tree basic)
   (source_tree large_arrays_fail)
   (source_tree large_arrays_pass)))

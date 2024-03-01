@@ -6,9 +6,12 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let to_string (h : t) : string =
-    ignore h;
-    failwith "Not Implemented"
+  let block_str (block : Value.t array) : string =
+    let blockList = Array.to_list block in
+    String.concat ", " (List.map Value.to_string blockList)
+  
+  let to_string ((h, _) : t) : string =
+    Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) h ""
 
   let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) :
       (t * vt * vt PathCondition.t) list =
@@ -37,10 +40,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let lookup (h : t) (arr : vt) (index : vt) (pc : vt PathCondition.t) :
       (t * vt * vt PathCondition.t) list =
-    ignore index;
-    ignore arr;
     ignore pc;
-    ignore h;
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -67,15 +67,21 @@ module M : Heap_intf.M with type vt = Value.t = struct
         | _ -> failwith "InternalError: illegal free")
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
-    ignore heap;
+  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PathCondition.t) : bool =
     ignore pc;
+    match addr with 
+      | Loc l ->
+        (let tbl, _ = heap in
+        match Hashtbl.find_opt tbl l with
+          | Some arr -> Integer 0 < i && i < Integer (Array.length arr)
+          | _ ->  
+            failwith 
+              "InternalError: HeapConcrete.in_bounds, accessed array is not \
+              in the heap")
+      | _ -> failwith "InternalError: HeapConcrete.in_bounds, arr must be location"
 
-    ignore v;
-    ignore i;
-    failwith "not implemented"
+let clone _ = assert false
 
-  let clone _ = assert false
 end
 
 (*
