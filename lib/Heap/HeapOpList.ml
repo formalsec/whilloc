@@ -1,7 +1,7 @@
 module M : Heap_intf.M with type vt = Term.t = struct
   type addr = int
   type size = Term.t
-  type op = Term.t * Term.t * Term.t PathCondition.t
+  type op = Term.t * Term.t * Term.t PC.t
   type t = { map : (addr, size * op list) Hashtbl.t; mutable next : int }
   type vt = Term.t
 
@@ -18,14 +18,14 @@ module M : Heap_intf.M with type vt = Term.t = struct
         ^ "]" ^ ")")
       h.map ""
 
-  let is_within (sz : vt) (index : vt) (pc : vt PathCondition.t) : bool =
+  let is_within (sz : vt) (index : vt) (pc : vt PC.t) : bool =
     let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in
     let e2 = Term.Binop (Gte, index, sz) in
     let e3 = Term.Binop (Or, e1, e2) in
 
     not (Translator.is_sat ([ e3 ] @ pc))
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PC.t) : bool =
     match v with
     | Val (Loc l) -> (
         match Hashtbl.find_opt heap.map l with
@@ -41,15 +41,15 @@ module M : Heap_intf.M with type vt = Term.t = struct
                the heap")
     | _ -> failwith "InternalError: HeapOpList.in_bounds, v must be location"
 
-  let malloc (h : t) (sz : vt) (pc : vt PathCondition.t) :
-      (t * vt * vt PathCondition.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt PC.t) :
+      (t * vt * vt PC.t) list =
     let next = h.next in
     Hashtbl.add h.map next (sz, []);
     h.next <- h.next + 1;
     [ (h, Val (Loc next), pc) ]
 
-  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t)
-      : (t * vt PathCondition.t) list =
+  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t)
+      : (t * vt PC.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find_opt h.map lbl in
     let f ((sz, oplist) : size * op list) : unit =
@@ -58,8 +58,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
     Option.fold ~none:() ~some:f arr';
     [ (h, pc) ]
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) :
-      (t * vt * vt PathCondition.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) :
+      (t * vt * vt PC.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find h.map lbl in
     let _, ops = arr' in
@@ -71,8 +71,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
     in
     [ (h, v, pc) ]
 
-  let free h (arr : vt) (pc : vt PathCondition.t) :
-      (t * vt PathCondition.t) list =
+  let free h (arr : vt) (pc : vt PC.t) :
+      (t * vt PC.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]

@@ -3,7 +3,7 @@ type ('v, 'h) t =
   * Program.stmt list
   * 'v Store.t
   * 'v Callstack.t
-  * 'v PathCondition.t
+  * 'v PC.t
   * 'h
 
 let get_statement (state : ('v, 'h) t) : Program.stmt =
@@ -22,7 +22,7 @@ let get_callstack (state : ('v, 'h) t) : 'v Callstack.t =
   let _, _, _, cs, _, _ = state in
   cs
 
-let get_pathcondition (state : ('v, 'h) t) : 'v PathCondition.t =
+let get_pathcondition (state : ('v, 'h) t) : 'v PC.t =
   let _, _, _, _, pc, _ = state in
   pc
 
@@ -40,7 +40,7 @@ let to_string (str : 'v -> string) (heap_str : 'h -> string)
   ^ "\n" ^ " -Store         : " ^ Store.to_string str store ^ "\n"
   ^ " -Callstaack    : " ^ Callstack.to_string str cs ^ "\n"
   ^ " -Path cond.    : "
-  ^ PathCondition.to_string str pc
+  ^ PC.to_string str pc
   ^ "\n" ^ " -Heap          : " ^ heap_str heap
 
 let print (str : 'v -> string) (heap_str : 'h -> string) (state : ('v, 'h) t) :

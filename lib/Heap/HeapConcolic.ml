@@ -8,15 +8,15 @@ module M = struct
     ignore h;
     failwith "Not Implemented"
 
-  let malloc h (sz : vt) (pc : vt PathCondition.t) :
-      (t * vt * vt PathCondition.t) list =
+  let malloc h (sz : vt) (pc : vt PC.t) :
+      (t * vt * vt PC.t) list =
     ignore sz;
     ignore pc;
     ignore h;
     []
 
-  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PathCondition.t) :
-      (t * vt PathCondition.t) list =
+  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
+      (t * vt PC.t) list =
     ignore arr;
     ignore v;
     ignore index;
@@ -24,22 +24,22 @@ module M = struct
     ignore pc;
     []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PathCondition.t) :
-      (t * vt * vt PathCondition.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) :
+      (t * vt * vt PC.t) list =
     ignore index;
     ignore arr;
     ignore pc;
     ignore h;
     []
 
-  let free h (arr : vt) (pc : vt PathCondition.t) :
-      (t * vt PathCondition.t) list =
+  let free h (arr : vt) (pc : vt PC.t) :
+      (t * vt PC.t) list =
     ignore arr;
     ignore pc;
     ignore h;
     []
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PathCondition.t) : bool =
+  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PC.t) : bool =
     ignore pc;
     ignore heap;
     ignore v;

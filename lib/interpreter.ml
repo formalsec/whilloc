@@ -21,7 +21,7 @@ module Make
   let make_symbol = Eval.make_symbol
 
   (* Adds an expression to a path condition *)
-  let add_condition = PathCondition.add_condition
+  let add_condition = PC.add_condition
 
   (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
@@ -35,7 +35,7 @@ module Make
         {
           heap = Heap.init ();
           store = Store.create_empty_store Parameters.size;
-          pc = PathCondition.create_pathcondition;
+          pc = PC.create_pathcondition;
           cs = Callstack.create_callstack;
         }
     in
