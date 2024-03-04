@@ -9,7 +9,9 @@ module AppInfo = struct
 
   let description =
     [
-      "TODO: description";
+      "Whilloc is a parametric interpreter that supports concrete, symbolic, \
+       and concolic execution of programs written in a simple \"while\"-like \
+       programming language with memory allocation support.";
       "Use wl <command> --help for more information on a specific command.";
     ]
 
@@ -43,14 +45,14 @@ let cmd_list = [ execute_cmd; test_cmd ]
 
 let main_cmd =
   let open AppInfo in
-  let default_fun () = `Help (`Pager, None) in
+  let default_fun _ = `Help (`Pager, None) in
   let default = Term.(ret (const default_fun $ const ())) in
   let info = Cmd.info "wl" ~version ~doc ~sdocs ~man ~man_xrefs in
   Cmd.group info ~default cmd_list
 
 let () =
   Printexc.record_backtrace true;
-  try exit (Cmdliner.Cmd.eval' main_cmd)
+  try exit (Cmd.eval main_cmd)
   with exn ->
     flush_all ();
     Format.eprintf "%s: uncaught exception %s@." Sys.argv.(0)

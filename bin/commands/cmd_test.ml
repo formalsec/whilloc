@@ -42,8 +42,7 @@ let run (opts : options) : unit =
     (List.map Fpath.to_string (List.sort Fpath.compare files));
   Printf.printf "Total number of files tested: %d\n" (List.length files)
 
-let main (opts : options) : int =
+let main (opts : options) =
   _max_timeout := Option.value ~default:0.0 opts.timeout;
   Utils.verbose := opts.verbose;
-  run opts;
-  0
+  run opts

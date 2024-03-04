@@ -14,7 +14,7 @@ let description =
      execute' is that this command will run all programs in the given \
      directory. In addition, this command have the option to set a time limit \
      for each program's execution. When the time limit is exceeded, the \
-     execution is killed";
+     execution is killed.";
   ]
 
 let man =

@@ -66,7 +66,6 @@ let run ?(no_values = false) input mode =
   if !Utils.verbose then
     Printf.printf "Total Execution time: %f\n" (Sys.time () -. start)
 
-let main (opts : options) : int =
+let main (opts : options) =
   Utils.verbose := opts.verbose;
-  run (Fpath.to_string opts.input) opts.mode;
-  0
+  run (Fpath.to_string opts.input) opts.mode
