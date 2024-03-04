@@ -1,9 +1,3 @@
-(executable
- (public_name test_wl)
- (name script)
- (modules script)
- (libraries whilloc bos unix))
-
 (cram
  (deps
   %{bin:wl}
