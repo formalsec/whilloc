@@ -1,5 +1,5 @@
 Tests Model Tree:
-  $ wl test basic st
+  $ wl test basic --mode st
   
   =====================
   	Ænima
@@ -552,7 +552,7 @@ Tests Model Tree:
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33
-  $ wl test large_arrays_fail st
+  $ wl test large_arrays_fail --mode st
   
   =====================
   	Ænima
@@ -1148,7 +1148,7 @@ Tests Model Tree:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ wl test large_arrays_pass st
+  $ wl test large_arrays_pass --mode st
   
   =====================
   	Ænima

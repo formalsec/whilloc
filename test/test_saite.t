@@ -1,5 +1,5 @@
 Tests Model ArrayITE:
-  $ wl test basic saite
+  $ wl test basic --mode saite
   
   =====================
   	Ænima
