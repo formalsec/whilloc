@@ -4,7 +4,7 @@ exception Timeout
 
 type options = {
   inputs : Fpath.t;
-  mode : string;
+  mode : Cmd_execute.mode;
   timeout : float option;
   verbose : bool;
 }

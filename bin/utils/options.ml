@@ -29,6 +29,14 @@ module File = struct
     Arg.(value & opt (some fpath) None & info [ "o"; "output" ] ~doc ~docv)
 end
 
+let mode_conv = 
+  Arg.enum
+    [ ("c", Cmd_execute.Concrete)
+    ; ("saf", Cmd_execute.Saf)
+    ; ("saite", Cmd_execute.Saite)
+    ; ("st", Cmd_execute.St)
+    ; ("sopl", Cmd_execute.Sopl)]
+
 let mode =
   let docv = "MODE" in
   let doc =
@@ -37,7 +45,7 @@ let mode =
      ITE Memory; (4) 'st' for Symbolic with Tree Memory; and (5) 'sopl' for \
      Symbolic with Operation List Memory."
   in
-  Arg.(required & pos 1 (some string) None & info [] ~doc ~docv)
+  Arg.(required & pos 1 (some mode_conv) None & info [] ~doc ~docv)
 
 let verbose =
   let doc = "Show the statements being executed." in
