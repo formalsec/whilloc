@@ -1,5 +1,5 @@
 Tests Model WriteLists:
-  $ test_wl sopl basic
+  $ wl test basic --mode sopl
   
   =====================
   	Ænima
@@ -550,7 +550,7 @@ Tests Model WriteLists:
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33
-  $ test_wl sopl large_arrays_fail
+  $ wl test large_arrays_fail --mode sopl
   
   =====================
   	Ænima
@@ -1146,7 +1146,7 @@ Tests Model WriteLists:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ test_wl sopl large_arrays_pass
+  $ wl test large_arrays_pass --mode sopl
   
   =====================
   	Ænima
@@ -1742,3 +1742,4 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Loc 0)
   Total number of files tested: 66
+

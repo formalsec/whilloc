@@ -1,5 +1,5 @@
 Tests Model ArrayITE:
-  $ test_wl saite basic
+  $ wl test basic --mode saite
   
   =====================
   	Ænima
@@ -550,3 +550,4 @@ Tests Model ArrayITE:
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
   Total number of files tested: 33
+

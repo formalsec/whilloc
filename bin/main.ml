@@ -1,113 +1,61 @@
-open Whilloc
-open Utils
-module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
-module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
-module ST_Choice = ListChoice.Make (EvalSymbolic.M) (HeapTree.M)
-module SOPL_Choice = ListChoice.Make (EvalSymbolic.M) (HeapOpList.M)
+open Cmdliner
 
-module SAF =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (SAF_Choice)
+module AppInfo = struct
+  let version = "1.0.0"
 
-module SAITE =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) (SAITE_Choice)
+  let doc =
+    "A simple \"while\"-like programming language that includes memory \
+     allocation support."
 
-module ST = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapTree.M) (ST_Choice)
+  let description =
+    [
+      "Whilloc is a parametric interpreter that supports concrete, symbolic, \
+       and concolic execution of programs written in a simple \"while\"-like \
+       programming language with memory allocation support.";
+      "Use wl <command> --help for more information on a specific command.";
+    ]
 
-module SOPL =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
+  let sdocs = Manpage.s_common_options
 
-(* module C  = MakeInterpreter.M (EvalConcrete.M) (DFS.M) (HeapConcrete.M) *)
-(* module SAITE  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) *)
-(* module ST  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapTree.M) *)
-(* module SOPL  = MakeInterpreter.M (EvalSymbolic.M) (DFS.M) (HeapOpList.M) *)
-(* module CC = MakeInterpreter.M (EvalConcolic.M) (DFS.M) (HeapConcolic.M) *)
+  let man =
+    [
+      `S Manpage.s_description;
+      `P (List.nth description 0);
+      `P (List.nth description 1);
+      `S Manpage.s_common_options;
+      `P "These options are common to all commands.";
+      `S Manpage.s_bugs;
+      `P "Check bug reports at https://github.com/formalsec/whilloc/issues";
+    ]
 
-(* let rec concolic_loop (program : Program.program) (global_pc : Expression.t PathCondition.t) (outs : (CC.t, CC.h) Return.t list) : (CC.t, CC.h) Return.t list = *)
-(*   let model = Translator.find_model global_pc () in *)
-(*   match model with *)
-(*   | true, Some model -> *)
-(*       let ()      = SymbMap.update model  in *)
-(*       let returns,conts = CC.interpret program !out () in *)
-(*       ignore conts; *)
-(*       let return  = List.hd returns in *)
-(*       let state,_ = return          in *)
-(*       let _,pc    = List.split (State.get_pathcondition state) in *)
-(*       let neg_pc  = PathCondition.negate pc                    in *)
-(*       concolic_loop program (neg_pc::global_pc) (return::outs) *)
-(*   | false, _ -> *)
-(*       let _ = SymbMap.clear () in *)
-(*       outs *)
-(*   | _ -> failwith "Unreachable" *)
+  let man_xrefs = []
+end
 
-let main () =
-  let start = Sys.time () in
-  print_string "\n=====================\n\tÆnima\n=====================\n\n";
-  arguments ();
-  if !file = "" && !mode = "" then print_string "\nNo option selected. Use -h\n"
-  else if !file = "" then
-    print_string
-      "No input file. Use -i\n\n\
-       =====================\n\
-       \tFINISHED\n\
-       =====================\n"
-  else if !mode = "" then
-    print_string
-      "No mode selected. Use -m\n\n\
-       =====================\n\
-       \tFINISHED\n\
-       =====================\n"
-  else
-    let program = !file |> read_file |> parse_program |> create_program in
-    Printf.printf "Input file: %s\nExecution mode: %s\n\n" !file !mode;
-    (match !mode with
-    | "saf" ->
-        let rets = SAF.interpret program in
-        List.iter
-          (fun (out, _) ->
-            Format.printf "Outcome: %s@." (Outcome.to_string out))
-          rets
-    | "saite" ->
-        let rets = SAITE.interpret program in
-        List.iter
-          (fun (out, _) ->
-            Format.printf "Outcome: %s@." (Outcome.to_string out))
-          rets
-    | "st" ->
-        let rets = ST.interpret program in
-        List.iter
-          (fun (out, _) ->
-            Format.printf "Outcome: %s@." (Outcome.to_string out))
-          rets
-    | "sopl" ->
-        let rets = SOPL.interpret program in
-        List.iter
-          (fun (out, _) ->
-            Format.printf "Outcome: %s@." (Outcome.to_string out))
-          rets
-    | _ -> assert false)
-    (* ;Printf.printf "Total Execution time of Solver: %f\n" (!Translator.solver_time) *);
-    if !Utils.verbose then
-      Printf.printf "Total Execution time: %f\n" (Sys.time () -. start)
+let execute_cmd =
+  let open Doc_execute in
+  let info = Cmd.info "execute" ~doc ~sdocs ~man ~man_xrefs in
+  Cmd.v info term
 
-(* let str_of_returns = *)
-(* match !mode with *)
-(*   | "c"     -> let returns,_ = C.interpret program !out () in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalConcrete.M.to_string (fun _ -> "")) returns) *)
-(*   | "saf"     -> let returns,_ = SAF.interpret program !out () in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayFork.M.to_string) returns) *)
-(*   | "saite" -> let returns,_ = SAITE.interpret program !out () in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapArrayITE.M.to_string) returns) *)
-(*   | "sopl"  -> let returns,_ = SOPL.interpret program !out () in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string HeapOpList.M.to_string) returns) *)
-(*   | "st"    -> let returns,_ = ST.interpret program !out () in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalSymbolic.M.to_string (fun _ -> "")) returns) *)
-(*   | "cc"    -> let returns   = concolic_loop program [ ] [ ] in *)
-(*              String.concat "\n" (List.map (Return.string_of_return EvalConcolic.M.to_string (fun _ -> "")) returns) *)
-(* | _   -> invalid_arg "Unknown provided mode. Available modes are:\n  c : for concrete interpretation\n *)
-   (*                                                                        saf : for symbolic interpretation with array fork memory\n *)
-   (*                                                                        saite : for symbolic interpretation with array ite memory\n *)
-   (*                                                                        sopl : for symbolic interpretation with op list memory\n *)
-   (*                                                                        st : for symbolic interpretation with tree memory\n *)
-   (*                                                                        cc : for concolic interpretation" *)
+let test_cmd =
+  let open Doc_test in
+  let info = Cmd.info "test" ~doc ~sdocs ~man ~man_xrefs in
+  Cmd.v info term
 
-let () = main ()
+let cmd_list = [ execute_cmd; test_cmd ]
+
+let main_cmd =
+  let open AppInfo in
+  let default_fun _ = `Help (`Pager, None) in
+  let default = Term.(ret (const default_fun $ const ())) in
+  let info = Cmd.info "wl" ~version ~doc ~sdocs ~man ~man_xrefs in
+  Cmd.group info ~default cmd_list
+
+let () =
+  Printexc.record_backtrace true;
+  try exit (Cmd.eval main_cmd)
+  with exn ->
+    flush_all ();
+    Format.eprintf "%s: uncaught exception %s@." Sys.argv.(0)
+      (Printexc.to_string exn);
+    Printexc.print_backtrace stderr;
+    exit 1

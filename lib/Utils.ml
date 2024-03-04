@@ -1,5 +1,3 @@
-let file = ref ""
-let mode = ref ""
 let out = ref ""
 let verbose = ref false
 let time = ref 0.0
@@ -33,24 +31,6 @@ let write_file (fname : string) (text : string) : unit =
   Printf.fprintf oc "%s\n" text;
   close_out oc
 
-let arguments () =
-  let usage_msg =
-    "Usage: -i <path> -mode <c/p> -o <path> [-v|-s] -h <path> [--parse]"
-  in
-  Arg.parse
-    [
-      ("-i", Arg.String (fun f -> file := f), "Input file");
-      ( "-m",
-        Arg.String (fun m -> mode := m),
-        "Mode to run: c - Concrete / saf - Symbolic with Array Fork Memory / \
-         saite - Symbolic with Array ITE Memory / sopl - Symbolic with \
-         Operation List Memory / st - Symbolic with Tree Memory" );
-      ("-o", Arg.String (fun o -> out := o), "Output file");
-      ("-v", Arg.Set verbose, "Verbose");
-    ]
-    (fun s -> Printf.printf "Ignored Argument: %s" s)
-    usage_msg
-
 let random_int () = Random.int Parameters.max_int
 
 let time_call (desc : string) (f : unit -> 'a) : 'a =
@@ -68,3 +48,6 @@ let total_time_call (desc : string) (acc : float ref) (f : unit -> 'a) : 'a =
     Printf.printf "Execution time of %s: %f\n" desc delta;
   acc := !acc +. delta;
   result
+
+let print_header () =
+  print_string "\n=====================\n\tÆnima\n=====================\n\n"
