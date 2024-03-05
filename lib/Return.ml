@@ -5,8 +5,7 @@ let string_of_return (str : 'v -> string) (heap_to_string : 'h -> string)
   let (_, _, st, _, pc, h), out = ret in
   "#RETURN:\n" ^ " -Outcome   : " ^ Outcome.to_string out ^ "\n"
   ^ " -Store     : " ^ Store.to_string str st ^ "\n" ^ " -Path cond.: "
-  ^ PC.to_string str pc
-  ^ "\n" ^ " -Heap      : " ^ heap_to_string h ^ "\n\n"
+  ^ PC.to_string str pc ^ "\n" ^ " -Heap      : " ^ heap_to_string h ^ "\n\n"
 
 let get_outcome (ret : ('v, 'h) t) : Outcome.t =
   let _, out = ret in

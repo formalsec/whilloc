@@ -41,15 +41,14 @@ module M : Heap_intf.M with type vt = Term.t = struct
                the heap")
     | _ -> failwith "InternalError: HeapOpList.in_bounds, v must be location"
 
-  let malloc (h : t) (sz : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
     let next = h.next in
     Hashtbl.add h.map next (sz, []);
     h.next <- h.next + 1;
     [ (h, Val (Loc next), pc) ]
 
-  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t)
-      : (t * vt PC.t) list =
+  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
+      (t * vt PC.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find_opt h.map lbl in
     let f ((sz, oplist) : size * op list) : unit =
@@ -58,8 +57,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
     Option.fold ~none:() ~some:f arr';
     [ (h, pc) ]
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list
+      =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find h.map lbl in
     let _, ops = arr' in
@@ -71,8 +70,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     in
     [ (h, v, pc) ]
 
-  let free h (arr : vt) (pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let free h (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     Hashtbl.remove h.map lbl;
     [ (h, pc) ]

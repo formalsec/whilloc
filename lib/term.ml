@@ -18,7 +18,7 @@ type binop =
   | Lte
   | Equals
   | NEquals
-  [@@deriving yojson]
+[@@deriving yojson]
 (* type rop = Gt | Lt | Ge | LE | Eq | Ne *)
 
 type t =
@@ -30,7 +30,8 @@ type t =
   | B_symb of string
   | I_symb of string
   | Ite of t * t * t
-  [@@deriving yojson]
+[@@deriving yojson]
+
 let make_true : t = Val (Value.Boolean true)
 let make_false : t = Val (Value.Boolean false)
 let make_symb_bool (name : string) : t = B_symb name

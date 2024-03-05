@@ -1,10 +1,5 @@
 type ('v, 'h) t =
-  Program.stmt
-  * Program.stmt list
-  * 'v Store.t
-  * 'v Callstack.t
-  * 'v PC.t
-  * 'h
+  Program.stmt * Program.stmt list * 'v Store.t * 'v Callstack.t * 'v PC.t * 'h
 
 let get_statement (state : ('v, 'h) t) : Program.stmt =
   let stmt, _, _, _, _, _ = state in
@@ -39,9 +34,8 @@ let to_string (str : 'v -> string) (heap_str : 'h -> string)
   ^ String.concat "; " (List.map Program.string_of_stmt cont)
   ^ "\n" ^ " -Store         : " ^ Store.to_string str store ^ "\n"
   ^ " -Callstaack    : " ^ Callstack.to_string str cs ^ "\n"
-  ^ " -Path cond.    : "
-  ^ PC.to_string str pc
-  ^ "\n" ^ " -Heap          : " ^ heap_str heap
+  ^ " -Path cond.    : " ^ PC.to_string str pc ^ "\n" ^ " -Heap          : "
+  ^ heap_str heap
 
 let print (str : 'v -> string) (heap_str : 'h -> string) (state : ('v, 'h) t) :
     unit =

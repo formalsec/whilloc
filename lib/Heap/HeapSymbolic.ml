@@ -8,8 +8,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     ignore h;
     failwith "Not Implemented"
 
-  let malloc _h (_sz : vt) (_pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc _h (_sz : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list =
     assert false
 
   let update _h (_arr : vt) (_index : vt) (_v : vt) (_pc : vt PC.t) :
@@ -20,12 +19,9 @@ module M : Heap_intf.M with type vt = Term.t = struct
       (t * vt * vt PC.t) list =
     assert false
 
-  let free _h (_arr : vt) (_pc : vt PC.t) :
-      (t * vt PC.t) list =
-    assert false
+  let free _h (_arr : vt) (_pc : vt PC.t) : (t * vt PC.t) list = assert false
 
-  let in_bounds (_heap : t) (_v : vt) (_i : vt) (_pc : vt PC.t) :
-      bool =
+  let in_bounds (_heap : t) (_v : vt) (_i : vt) (_pc : vt PC.t) : bool =
     assert false
 
   let clone _ = assert false

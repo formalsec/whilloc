@@ -4,7 +4,7 @@ type t =
   | AssumeF
   | Error of Model.t [@name "Assert Failure"]
   | EndGas [@name "Out of gas"]
-  [@@deriving yojson]
+[@@deriving yojson]
 
 let pp ?(no_values = false) fmt = function
   | Cont _ -> Format.pp_print_string fmt "Continue"

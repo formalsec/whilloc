@@ -22,8 +22,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
     not (Translator.is_sat ([ e3 ] @ pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool
-      =
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool =
     match arr with
     | Val (Loc l) -> (
         match Hashtbl.find_opt heap.map l with
@@ -46,8 +45,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | None -> failwith "Block does not exist")
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (heap : t) (size : vt) (path : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc (heap : t) (size : vt) (path : vt PC.t) : (t * vt * vt PC.t) list =
     match size with
     | Val (Integer size') ->
         let block = Array.make size' (Val (Integer 0)) in
@@ -79,8 +77,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt)
-      (path : vt PC.t) : (t * vt PC.t) list =
+  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt PC.t) :
+      (t * vt PC.t) list =
     let loc, block = find_block heap loc in
     match index with
     | Val (Integer index') ->
@@ -97,8 +95,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
               let _ = Array.set newBlock index' v in
               let _ = Hashtbl.replace newHeap loc newBlock in
               let cond = Binop (Equals, I_symb sym, Val (Integer index')) in
-              ( { heap with map = newHeap },
-                PC.add_condition path cond ))
+              ({ heap with map = newHeap }, PC.add_condition path cond))
             blockList
         in
         List.filteri
@@ -109,8 +106,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let free (heap : t) (loc : vt) (path : vt PC.t) :
-      (t * vt PC.t) list =
+  let free (heap : t) (loc : vt) (path : vt PC.t) : (t * vt PC.t) list =
     let loc', _ = find_block heap loc in
     let _ = Hashtbl.remove heap.map loc' in
     [ (heap, path) ]

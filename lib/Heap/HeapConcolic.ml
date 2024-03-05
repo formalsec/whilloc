@@ -8,8 +8,7 @@ module M = struct
     ignore h;
     failwith "Not Implemented"
 
-  let malloc h (sz : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc h (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
     ignore sz;
     ignore pc;
     ignore h;
@@ -24,16 +23,15 @@ module M = struct
     ignore pc;
     []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list
+      =
     ignore index;
     ignore arr;
     ignore pc;
     ignore h;
     []
 
-  let free h (arr : vt) (pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let free h (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
     ignore arr;
     ignore pc;
     ignore h;

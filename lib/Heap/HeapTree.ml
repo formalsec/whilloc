@@ -28,8 +28,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     Hashtbl.iter tree_to_json h';
     "Json files created in output directory."
 
-  let malloc (h : t) (sz : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
     let h', curr = h in
     let tree = Leaf ((Term.Val (Integer 0), sz), Term.Val (Integer 0)) in
     Hashtbl.replace h' curr tree;
@@ -38,8 +37,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let update h (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
       (t * vt PC.t) list =
     let h', next = h in
-    let rec update_tree (tree : tree_t) (index : vt) (v : vt)
-        (pc : vt PC.t) : (tree_t * vt PC.t) list option =
+    let rec update_tree (tree : tree_t) (index : vt) (v : vt) (pc : vt PC.t) :
+        (tree_t * vt PC.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
           let ge_left = Term.Binop (Gte, index, left) in
@@ -119,8 +118,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           new_trees
     | None -> failwith "Out of bounds access"
 
-  let must_within_range (r : range) (index : vt) (pc : vt PC.t) :
-      bool =
+  let must_within_range (r : range) (index : vt) (pc : vt PC.t) : bool =
     let lower, upper = r in
 
     let e1 = Term.Binop (Lt, index, lower) in
@@ -129,8 +127,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
     not (Translator.is_sat (e3 :: pc))
 
-  let may_within_range (r : range) (index : vt) (pc : vt PC.t) : bool
-      =
+  let may_within_range (r : range) (index : vt) (pc : vt PC.t) : bool =
     let lower, upper = r in
 
     let e1 = Term.Binop (Gte, index, lower) in
@@ -158,8 +155,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
         if in_range then List.concat (List.map (search_tree index pc) tree_list)
         else []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list
+      =
     let tbl, _ = h in
 
     match arr with
@@ -179,8 +176,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
         )
     | _ -> failwith "InternalError: HeapTree.lookup, arr must be location"
 
-  let free h (arr : vt) (pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let free h (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
     let h', _ = h in
     (* let ign = to_string h in
        ignore ign; *)
@@ -189,8 +185,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     | _ -> failwith "Invalid allocation index");
     [ (h, pc) ]
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool
-      =
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool =
     (* Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Term.to_string arr) (Term.string_of_expression i) (PC.to_string Term.string_of_expression pc); *)
     let h', _ = heap in
     match arr with

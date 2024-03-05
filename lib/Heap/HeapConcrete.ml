@@ -13,8 +13,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
   let to_string ((h, _) : t) : string =
     Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) h ""
 
-  let malloc (h : t) (sz : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
     let tbl, next = h in
     match sz with
     | Integer i ->
@@ -23,8 +22,8 @@ module M : Heap_intf.M with type vt = Value.t = struct
     | _ ->
         failwith "InternalError: HeapConcrete.malloc, size must be an integer"
 
-  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t)
-      : (t * vt PC.t) list =
+  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
+      (t * vt PC.t) list =
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -55,8 +54,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
           "InternalError: HeapConcrete.update, arr must be location and index \
            must be an integer"
 
-  let free (h : t) (arr : vt) (pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let free (h : t) (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
     let tbl, _ = h in
     match arr with
     | Loc l -> (
@@ -67,8 +65,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
         | _ -> failwith "InternalError: illegal free")
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PC.t) : bool
-      =
+  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PC.t) : bool =
     ignore pc;
     match addr with
     | Loc l -> (

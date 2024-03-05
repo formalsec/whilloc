@@ -11,9 +11,8 @@ let to_string (str : 'v -> string) (heap_str : 'h -> string)
   ^ Store.to_string str state.store
   ^ "\n" ^ " -Callstaack    : "
   ^ Callstack.to_string str state.cs
-  ^ "\n" ^ " -Path cond.    : "
-  ^ PC.to_string str state.pc
-  ^ "\n" ^ " -Heap          : " ^ heap_str state.heap
+  ^ "\n" ^ " -Path cond.    : " ^ PC.to_string str state.pc ^ "\n"
+  ^ " -Heap          : " ^ heap_str state.heap
 
 let print (str : 'v -> string) (heap_str : 'h -> string) (state : ('v, 'h) t) :
     unit =
