@@ -14,5 +14,5 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (pc : 'value list) : unit =
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pc : 'v list) : string =
   Fmt.asprintf "%a" (pp pp_val) pc
 
-(* let print (str : 'v -> string) (pc : 'v t) : unit =
-   to_string str pc |> print_endline *)
+let print (pp_val : Fmt.t -> 'v -> unit) (pc : 'v list) : unit =
+  to_string pp_val pc |> print_endline

@@ -35,7 +35,7 @@ let rec dup (cs : 'v t) : 'v t =
 let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (cs : 'store t) : unit =
   let open Fmt in
   let pp_frame fmt = function
-    | Toplevel -> pp_print_string fmt "Toplevel"
+    | Toplevel -> pp_str fmt "Toplevel"
     | Intermediate (store, cont, var) ->
         fprintf fmt "Intermediate: %a@.%a@.%s" (Store.pp pp_val) store
           (pp_lst "\n\t\t" Program.pp)

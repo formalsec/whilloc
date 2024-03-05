@@ -42,7 +42,7 @@ let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
 
 let print (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : unit =
-  print_endline (to_string pp_val pp_heap state)
+  to_string pp_val pp_heap state |> print_endline
 
 let dup (state : ('v, 'h) t) heap_dup : ('v, 'h) t =
   let s, cont, store, cs, pc, heap = state in

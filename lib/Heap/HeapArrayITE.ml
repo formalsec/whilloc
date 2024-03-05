@@ -104,8 +104,6 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | Val (Loc l) -> (
             match Hashtbl.find_opt tbl l with
             | Some arr ->
-                (* Printf.printf "Index: %s\n" (Term.to_string index);
-                   Printf.printf "Array: %s\n" (String.concat ", " (Array.to_list (Array.map Term.to_string arr))); *)
                 let aux =
                   Array.of_list
                     (List.filteri
