@@ -26,20 +26,23 @@ let push_statements (state : ('v, 'h) t) (to_add : Program.stmt list) :
   let stmt, stmts, st, cs, pc, heap = state in
   (stmt, to_add @ stmts, st, cs, pc, heap)
 
-let to_string (str : 'v -> string) (heap_str : 'h -> string)
-    (state : ('v, 'h) t) : string =
+let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (fmt : Fmt.t) (state : ('v, 'h) t) : unit =
+  let open Fmt in
   let s, cont, store, cs, pc, heap = state in
-  ">STATE:\n" ^ " -Cur Statement : " ^ Program.string_of_stmt s ^ "\n"
-  ^ " -Continuation  : "
-  ^ String.concat "; " (List.map Program.string_of_stmt cont)
-  ^ "\n" ^ " -Store         : " ^ Store.to_string str store ^ "\n"
-  ^ " -Callstaack    : " ^ Callstack.to_string str cs ^ "\n"
-  ^ " -Path cond.    : " ^ PC.to_string str pc ^ "\n" ^ " -Heap          : "
-  ^ heap_str heap
+  fprintf fmt
+    ">STATE:@. -Cur Statement : %a@.  -Continuation  : %a@.  -Store         : \
+     %a@.  -Callstaack    : %a@.  -Path cond.    : %a@.  -Heap          : %a@."
+    Program.pp s (pp_lst "; " Program.pp) cont (Store.pp pp_val) store
+    (Callstack.pp pp_val) cs (PC.pp pp_val) pc pp_heap heap
 
-let print (str : 'v -> string) (heap_str : 'h -> string) (state : ('v, 'h) t) :
-    unit =
-  print_endline (to_string str heap_str state)
+let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (state : ('v, 'h) t) : string =
+  Format.asprintf "%a" (pp pp_val pp_heap) state
+
+let print (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (state : ('v, 'h) t) : unit =
+  print_endline (to_string pp_val pp_heap state)
 
 let dup (state : ('v, 'h) t) heap_dup : ('v, 'h) t =
   let s, cont, store, cs, pc, heap = state in

@@ -5,18 +5,21 @@ type ('v, 'h) t = {
   heap : 'h;
 }
 
-let to_string (str : 'v -> string) (heap_str : 'h -> string)
-    (state : ('v, 'h) t) : string =
-  " -Store         : "
-  ^ Store.to_string str state.store
-  ^ "\n" ^ " -Callstaack    : "
-  ^ Callstack.to_string str state.cs
-  ^ "\n" ^ " -Path cond.    : " ^ PC.to_string str state.pc ^ "\n"
-  ^ " -Heap          : " ^ heap_str state.heap
+let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (fmt : Format.formatter) (state : ('v, 'h) t) : unit =
+  Format.fprintf fmt
+    " -Store         : %a@.-Callstaack    : %a@.-Path cond.    : \
+     %a@.-Heap          : %a@."
+    (Store.pp pp_val) state.store (Callstack.pp pp_val) state.cs (PC.pp pp_val)
+    state.pc pp_heap state.heap
 
-let print (str : 'v -> string) (heap_str : 'h -> string) (state : ('v, 'h) t) :
-    unit =
-  print_endline (to_string str heap_str state)
+let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (state : ('v, 'h) t) : string =
+  Format.asprintf "{ %a }" (pp pp_val pp_heap) state
+
+let print (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
+    (state : ('v, 'h) t) : unit =
+  print_endline (to_string pp_val pp_heap state)
 
 let dup (state : ('v, 'h) t) heap_dup : ('v, 'h) t =
   {

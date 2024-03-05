@@ -32,16 +32,19 @@ let rec dup (cs : 'v t) : 'v t =
       | Intermediate (store, cont, var) ->
           Intermediate (Store.dup store, cont, var) :: dup t)
 
-let to_string (str : 'v -> string) (cs : 'v t) : string =
-  let f x y =
-    match x with
-    | Toplevel -> "_Toplevel_\n" ^ y
+let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (cs : 'store t) : unit =
+  let open Fmt in
+  let pp_frame fmt = function
+    | Toplevel -> pp_print_string fmt "Toplevel"
     | Intermediate (store, cont, var) ->
-        "_Intermediate_:\n\t" ^ var ^ "\n\t\t"
-        ^ String.concat "\n\t\t" (List.map Program.string_of_stmt cont)
-        ^ "\n\t" ^ Store.to_string str store ^ "\n" ^ y
+        fprintf fmt "Intermediate: %a@.%a@.%s" (Store.pp pp_val) store
+          (pp_lst "\n\t\t" Program.pp)
+          cont var
   in
-  List.fold_right f cs ""
+  pp_lst "\n" pp_frame fmt cs
 
-let print (str : 'v -> string) (cs : 'v t) : unit =
-  to_string str cs |> print_endline
+let to_string (pp_val : Fmt.t -> 'v -> unit) (cs : 'v t) : string =
+  Format.asprintf "%a" (pp pp_val) cs
+
+let print (pp_val : Fmt.t -> 'v -> unit) (cs : 'v t) : unit =
+  to_string pp_val cs |> print_endline

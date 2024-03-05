@@ -6,6 +6,11 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
+  let pp (fmt : Fmt.t) (heap : t) : unit =
+    ignore fmt;
+    ignore heap;
+    assert false
+
   let block_str (block : Value.t array) : string =
     let blockList = Array.to_list block in
     String.concat ", " (List.map Value.to_string blockList)

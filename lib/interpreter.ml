@@ -51,11 +51,11 @@ module Make
   let rec step (prog : program) (s : Program.stmt) (cont : Program.stmt list) :
       Outcome.t Choice.t =
     let return stmts = Choice.return (Outcome.Cont stmts) in
-    if !Utils.verbose then
-      (* Printf.printf "\n";
-         let/ state = Choice.get in
-         Printf.printf "Heap: %s\n##########\n" (Heap.to_string state.heap); *)
-      Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
+    if !Utils.verbose then Printf.printf "\n";
+    let/ state = Choice.get in
+    Printf.printf "Heap: %s\n" (Heap.to_string state.heap);
+    (* Printf.printf "State: %s\n" (SState.to_string Eval.pp Heap.pp state); *)
+    Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
     match s with
     | Skip | Clear -> return cont
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
@@ -267,31 +267,6 @@ module Make
           match out with
           | Cont cont'' -> search (gas - 1) prog cont''
           | _ -> Choice.return out)
-
-  (*
-  let save_file path data =
-    if not (Sys.file_exists path) then ignore (Sys.command ("mkdir -p " ^ path));
-    let oc = open_out (path ^ "/report.json") in
-    output_string oc data;
-    close_out oc
-
-
-  let write_report (loop_time : float) (paths : int) (step_count : int) (out : string) : unit =
-    let solver_time =
-      !Encoding.Incremental.solver_time +. !Encoding.Batch.solver_time
-    in
-    let solver_count =
-      !Encoding.Incremental.solver_count + !Encoding.Batch.solver_count
-    in
-    let report_str =
-      "{" ^ "\"loop_time\" : \"" ^ string_of_float loop_time ^ "\", "
-      ^ "\"solver_time\" : \"" ^ string_of_float solver_time
-      ^ "\", " ^ "\"paths_explored\" : " ^ string_of_int paths ^ ", "
-      ^ "\"solver_counter\" : " ^ string_of_int solver_count ^ ", "
-      ^ "\"instruction_counter\" : " ^ string_of_int step_count ^ "}"
-    in
-    save_file out report_str
-  *)
 
   let interpret (prog : program) : (Outcome.t * state) list =
     let state, cont = initial_state prog in

@@ -3,6 +3,7 @@ module type M = sig
   type vt (* the type of the index and size of the arrays *)
 
   val init : unit -> t
+  val pp : Fmt.t -> t -> unit
   val to_string : t -> string
   val malloc : t -> vt -> vt PC.t -> (t * vt * vt PC.t) list
   val lookup : t -> vt -> vt -> vt PC.t -> (t * vt * vt PC.t) list

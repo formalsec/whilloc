@@ -7,6 +7,11 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = { map = Hashtbl.create Parameters.size; next = 0 }
 
+  let pp (fmt : Fmt.t) (heap : t) : unit =
+    ignore fmt;
+    ignore heap;
+    assert false
+
   let to_string (h : t) : string =
     Hashtbl.fold
       (fun k (sz, ops) accum ->

@@ -4,6 +4,11 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
+  let pp (fmt : Fmt.t) (heap : t) : unit =
+    ignore fmt;
+    ignore heap;
+    assert false
+
   let to_string (h : t) : string =
     ignore h;
     failwith "Not Implemented"

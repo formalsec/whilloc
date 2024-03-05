@@ -6,6 +6,11 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
+  let pp (fmt : Fmt.t) (heap : t) : unit =
+    ignore fmt;
+    ignore heap;
+    assert false
+
   let tree_to_json (idx : int) (tree : tree_t) : unit =
     let rec iter_tree (tree : tree_t) : string =
       match tree with

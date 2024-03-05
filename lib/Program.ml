@@ -29,43 +29,39 @@ let get_function (id : string) (prog : program) : func =
   with _ ->
     failwith ("NameError: Program.get_function, name " ^ id ^ " is not defined")
 
-let rec string_of_stmt (s : stmt) : string =
+let rec pp (fmt : Fmt.t) (s : stmt) : unit =
+  let open Fmt in
   match s with
-  | Skip -> "Skip"
-  | Clear -> "Clear\n"
-  | Assign (x, e) -> Format.asprintf "Assignment: %s = %a" x Term.pp e
+  | Skip -> fprintf fmt "Skip"
+  | Clear -> fprintf fmt "Clear@."
+  | Assign (x, e) -> fprintf fmt "Assignment: %s = %a" x Term.pp e
   | Symbol_bool (s, v) ->
-      Format.asprintf "Boolean Symbol declaration: name=%s, value=§__%s" s v
+      fprintf fmt "Boolean Symbol declaration: name=%s, value=§__%s" s v
   | Symbol_int (s, v) ->
-      "Integer Symbol declaration: name=" ^ s ^ ", value=§__" ^ v
+      fprintf fmt "Integer Symbol declaration: name=%s, value=§__%s" s v
   | Symbol_int_c (s, v, e) ->
-      Format.asprintf
-        "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s v Term.pp
-        e
-  | Sequence s ->
-      "Sequence:\n  " ^ String.concat "\n  " (List.map string_of_stmt s)
-  | Return e -> Format.asprintf "Return: %a" Term.pp e
-  | Assert e -> Format.asprintf "Assert: %a" Term.pp e
-  | Assume e -> Format.asprintf "Assume: %a" Term.pp e
-  | Print exprs ->
-      "Print:  "
-      ^ String.concat ", " (List.map (fun e -> Term.to_string e) exprs)
+      fprintf fmt "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s
+        v Term.pp e
+  | Sequence s -> fprintf fmt "Sequence:@.  %a" (pp_lst "\n  " pp) s
+  | Return e -> fprintf fmt "Return: %a" Term.pp e
+  | Assert e -> fprintf fmt "Assert: %a" Term.pp e
+  | Assume e -> fprintf fmt "Assume: %a" Term.pp e
+  | Print exprs -> fprintf fmt "Print:  %a" (pp_lst ", " Term.pp) exprs
   | IfElse (expr, s1, s2) ->
-      "If (" ^ Term.to_string expr ^ ")\n  " ^ string_of_stmt s1 ^ "\nElse\n  "
-      ^ string_of_stmt s2
+      fprintf fmt "If (%a)@.  %a@.Else@.  %a" Term.pp expr pp s1 pp s2
   | FunCall (x, f, args) ->
-      "Function Call: " ^ x ^ "=" ^ f ^ "("
-      ^ String.concat ", " (List.map (fun e -> Term.to_string e) args)
-  | While (expr, s) ->
-      "While (" ^ Term.to_string expr ^ ")\n   " ^ string_of_stmt s
-  | New (arr, sz) -> "New array: " ^ arr ^ " has size " ^ Term.to_string sz
+      fprintf fmt "Function Call: %s=%s(%a)" x f (pp_lst ", " Term.pp) args
+  | While (expr, s) -> fprintf fmt "While (%a)@\n   %a" Term.pp expr pp s
+  | New (arr, sz) -> fprintf fmt "New array: %s has size %a" arr Term.pp sz
   | Update (arr, e1, e2) ->
-      "Update: " ^ arr ^ " at loc " ^ Term.to_string e1 ^ " is assigned "
-      ^ Term.to_string e2
+      fprintf fmt "Update: %s at loc %a is assigned %a" arr Term.pp e1 Term.pp
+        e2
   | LookUp (x, arr, e) ->
-      "LookUp: " ^ x ^ " is assigned the value at loc " ^ Term.to_string e
-      ^ " from arr " ^ arr
-  | Delete arr -> "Delete: " ^ arr
+      fprintf fmt "LookUp: %s is assigned the value at loc %a from arr %s" x
+        Term.pp e arr
+  | Delete arr -> fprintf fmt "Delete: %s" arr
+
+let string_of_stmt (s : stmt) : string = Format.asprintf "%a" pp s
 
 let string_of_function (f : func) : string =
   "Function id: " ^ f.id ^ "\n" ^ "Argumetns  : (" ^ String.concat ", " f.args

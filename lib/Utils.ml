@@ -40,12 +40,10 @@ let time_call (desc : string) (f : unit -> 'a) : 'a =
   Printf.printf "Execution time of %s: %f\n" desc delta;
   result
 
-let total_time_call (desc : string) (acc : float ref) (f : unit -> 'a) : 'a =
+let total_time_call (acc : float ref) (f : unit -> 'a) : 'a =
   let start = Sys.time () in
   let result = f () in
   let delta = Sys.time () -. start in
-  if !verbose (* && delta > 0.99 *) then
-    Printf.printf "Execution time of %s: %f\n" desc delta;
   acc := !acc +. delta;
   result
 

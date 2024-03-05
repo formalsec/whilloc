@@ -8,12 +8,11 @@ let negate (pc : 'v list) : 'v =
     (fun x y -> Term.make_boperation Or (Term.negate x) y)
     pc Term.make_false
 
-let to_string (to_string : 'v -> string) (pc : 'v list) : string =
-  let rec aux pc : string list =
-    match pc with [] -> [] | h :: t -> to_string h :: aux t
-  in
-  String.concat " AND " (aux pc)
-(* ∧ *)
+let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (pc : 'value list) : unit =
+  Fmt.fprintf fmt "%a" (Fmt.pp_lst " AND " pp_val) pc
 
-let print (str : 'v -> string) (pc : 'v t) : unit =
-  to_string str pc |> print_endline
+let to_string (pp_val : Fmt.t -> 'v -> unit) (pc : 'v list) : string =
+  Fmt.asprintf "%a" (pp pp_val) pc
+
+(* let print (str : 'v -> string) (pc : 'v t) : unit =
+   to_string str pc |> print_endline *)
