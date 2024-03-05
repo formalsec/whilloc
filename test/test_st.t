@@ -1,5 +1,5 @@
 Tests Model Tree:
-  $ wl test basic st
+  $ wl test basic --mode st
   
   =====================
   	Whilloc
@@ -482,7 +482,7 @@ Tests Model Tree:
   
   Found 1 problems!
   Total number of files tested: 33
-  $ wl test large_arrays_fail st
+  $ wl test large_arrays_fail --mode st
   
   =====================
   	Whilloc
@@ -1078,7 +1078,7 @@ Tests Model Tree:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ wl test large_arrays_pass st
+  $ wl test large_arrays_pass --mode st
   
   =====================
   	Whilloc

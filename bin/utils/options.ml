@@ -47,7 +47,7 @@ let mode =
      ITE Memory; (4) 'st' for Symbolic with Tree Memory; and (5) 'sopl' for \
      Symbolic with Operation List Memory."
   in
-  Arg.(required & pos 1 (some mode_conv) None & info [] ~doc ~docv)
+  Arg.(required & opt (some mode_conv) None & info ["m";"mode"] ~doc ~docv)
 
 let verbose =
   let doc = "Show the statements being executed." in

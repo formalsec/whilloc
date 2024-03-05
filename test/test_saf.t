@@ -1,5 +1,5 @@
 Tests Model ArrayFork:
-  $ wl test basic saf
+  $ wl test basic --mode saf
   
   =====================
   	Whilloc

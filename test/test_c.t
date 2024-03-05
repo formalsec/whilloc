@@ -1,5 +1,5 @@
 Tests Model ArrayFork:
-  $ wl test basic c
+  $ wl test basic --mode c
   
   =====================
   	Whilloc
@@ -441,7 +441,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   Total number of files tested: 33
 
-  $ wl test large_arrays_fail c
+  $ wl test large_arrays_fail --mode c
   
   =====================
   	Whilloc
@@ -1037,7 +1037,7 @@ Tests Model ArrayFork:
   
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   Total number of files tested: 66
-  $ wl test large_arrays_pass c
+  $ wl test large_arrays_pass --mode c
   
   =====================
   	Whilloc

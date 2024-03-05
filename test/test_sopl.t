@@ -1,5 +1,5 @@
 Tests Model WriteLists:
-  $ wl test basic sopl
+  $ wl test basic --mode sopl
   
   =====================
   	Whilloc
@@ -482,7 +482,7 @@ Tests Model WriteLists:
   
   Found 1 problems!
   Total number of files tested: 33
-  $ wl test large_arrays_fail sopl
+  $ wl test large_arrays_fail --mode sopl
   
   =====================
   	Whilloc
@@ -1078,7 +1078,7 @@ Tests Model WriteLists:
   
   Fatal error: exception Failure("Index out of bounds")
   Total number of files tested: 66
-  $ wl test large_arrays_pass sopl
+  $ wl test large_arrays_pass --mode sopl
   
   =====================
   	Whilloc
