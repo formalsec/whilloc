@@ -50,4 +50,4 @@ let total_time_call (desc : string) (acc : float ref) (f : unit -> 'a) : 'a =
   result
 
 let print_header () =
-  print_string "\n=====================\n\tÆnima\n=====================\n\n"
+  print_string "\n=====================\n\tWhilloc\n=====================\n\n"

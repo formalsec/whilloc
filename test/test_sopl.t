@@ -2,7 +2,7 @@ Tests Model WriteLists:
   $ wl test basic sopl
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/1.wl
@@ -13,9 +13,10 @@ Tests Model WriteLists:
       $_i : Int _
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/2.wl
@@ -29,9 +30,10 @@ Tests Model WriteLists:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/3.wl
@@ -42,9 +44,10 @@ Tests Model WriteLists:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayite/1.wl
@@ -55,9 +58,10 @@ Tests Model WriteLists:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/1.wl
@@ -146,9 +150,10 @@ Tests Model WriteLists:
   (Val Int 4)
   
   Outcome: Returned (Val Int 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/10.wl
@@ -161,9 +166,10 @@ Tests Model WriteLists:
   (Val Int 12)
   
   Outcome: Returned (Val Int 1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/11.wl
@@ -182,9 +188,10 @@ Tests Model WriteLists:
   (+ (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2))) (Val Int 1))
   
   Outcome: Returned (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2)))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/12.wl
@@ -194,9 +201,10 @@ Tests Model WriteLists:
   (* (+ (SymbInt $_ok_computer) (Val Int 1)) (Val Int 2))
   
   Outcome: Returned (+ (SymbInt $_ok_computer) (Val Int 1))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/13.wl
@@ -204,9 +212,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Bool true)
   Outcome: Returned (Val Bool false)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/14.wl
@@ -214,9 +223,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Int 10)
   Outcome: Returned (Val Int 12)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/15.wl
@@ -230,9 +240,10 @@ Tests Model WriteLists:
   Outcome: Returned (Val Int 3)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/16.wl
@@ -254,9 +265,10 @@ Tests Model WriteLists:
   (SymbInt $_XXXXXXXXXXXXXXXXXX)
   
   Outcome: Returned (* (SymbInt $_nvidia) (SymbInt $_XXXXXXXXXXXXXXXXXX))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/17.wl
@@ -264,9 +276,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (Val Bool true)
   Outcome: Returned (Val Bool false)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/18.wl
@@ -280,9 +293,10 @@ Tests Model WriteLists:
   
   Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
   Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/2.wl
@@ -301,9 +315,10 @@ Tests Model WriteLists:
   (Val Int 2)
   
   Outcome: Returned (Val Int -1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/3.wl
@@ -311,9 +326,10 @@ Tests Model WriteLists:
   
   Outcome: Assertion violated, counter example:
       Empty model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/4.wl
@@ -326,9 +342,10 @@ Tests Model WriteLists:
   (Val Int 7)
   
   Outcome: Returned (Val Int 9)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/5.wl
@@ -338,9 +355,10 @@ Tests Model WriteLists:
   (Val Int 24)
   
   Outcome: Returned (Val Int 12)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/6.wl
@@ -348,9 +366,10 @@ Tests Model WriteLists:
   
   Outcome: Assertion violated, counter example:
       Empty model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/7.wl
@@ -369,9 +388,10 @@ Tests Model WriteLists:
   (Val Int 1)
   
   Outcome: Returned (Val Int 1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/8.wl
@@ -390,9 +410,10 @@ Tests Model WriteLists:
   (Val Int 146)
   
   Outcome: Returned (Val Int 73)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/9.wl
@@ -402,9 +423,10 @@ Tests Model WriteLists:
   (Val Int -1)
   
   Outcome: Returned (Val Int -1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/array.wl
@@ -414,9 +436,10 @@ Tests Model WriteLists:
   ((== (Val Int 3) (Val Int 3)) (Val Int 5) (Val Int 0))
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/factorial.wl
@@ -429,9 +452,10 @@ Tests Model WriteLists:
   Outcome: Returned (Val Int 1)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/simple1.wl
@@ -443,9 +467,10 @@ Tests Model WriteLists:
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
       $_i : Int _
+  Found 2 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/delete.wl
@@ -460,18 +485,20 @@ Tests Model WriteLists:
   Outcome: Returned (Val Loc 0)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/symbol_int_c.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/1.wl
@@ -480,7 +507,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/2.wl
@@ -489,7 +516,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/3.wl
@@ -509,9 +536,10 @@ Tests Model WriteLists:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/4.wl
@@ -524,9 +552,10 @@ Tests Model WriteLists:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/5.wl
@@ -535,9 +564,10 @@ Tests Model WriteLists:
   Outcome: Returned (Val Loc 0)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/wasm.wl
@@ -549,11 +579,12 @@ Tests Model WriteLists:
       $_y : Int _
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
+  Found 1 problems
   Total number of files tested: 33
   $ wl test large_arrays_fail sopl
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/10000.wl
@@ -562,7 +593,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/100000.wl
@@ -571,7 +602,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/50000.wl
@@ -580,7 +611,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_0.wl
@@ -589,7 +620,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_1.wl
@@ -598,7 +629,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_2.wl
@@ -607,7 +638,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_3.wl
@@ -616,7 +647,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_0.wl
@@ -625,7 +656,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_1.wl
@@ -634,7 +665,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_2.wl
@@ -643,7 +674,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_3.wl
@@ -652,7 +683,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_0.wl
@@ -661,7 +692,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_1.wl
@@ -670,7 +701,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_2.wl
@@ -679,7 +710,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_3.wl
@@ -688,7 +719,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_0.wl
@@ -697,7 +728,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_1.wl
@@ -706,7 +737,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_2.wl
@@ -715,7 +746,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_0.wl
@@ -724,7 +755,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_1.wl
@@ -733,7 +764,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_2.wl
@@ -742,7 +773,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_0.wl
@@ -751,7 +782,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_1.wl
@@ -760,7 +791,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_2.wl
@@ -769,7 +800,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_0.wl
@@ -778,7 +809,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_1.wl
@@ -787,7 +818,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_2.wl
@@ -796,7 +827,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_0.wl
@@ -805,7 +836,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_1.wl
@@ -814,7 +845,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_2.wl
@@ -823,7 +854,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_0.wl
@@ -832,7 +863,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_1.wl
@@ -841,7 +872,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_2.wl
@@ -850,7 +881,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/10000.wl
@@ -859,7 +890,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/100000.wl
@@ -868,7 +899,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/50000.wl
@@ -877,7 +908,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_0.wl
@@ -886,7 +917,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_1.wl
@@ -895,7 +926,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_2.wl
@@ -904,7 +935,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_3.wl
@@ -913,7 +944,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_0.wl
@@ -922,7 +953,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_1.wl
@@ -931,7 +962,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_2.wl
@@ -940,7 +971,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_3.wl
@@ -949,7 +980,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_0.wl
@@ -958,7 +989,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_1.wl
@@ -967,7 +998,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_2.wl
@@ -976,7 +1007,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_3.wl
@@ -985,7 +1016,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_0.wl
@@ -994,7 +1025,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_1.wl
@@ -1003,7 +1034,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_2.wl
@@ -1012,7 +1043,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_0.wl
@@ -1021,7 +1052,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_1.wl
@@ -1030,7 +1061,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_2.wl
@@ -1039,7 +1070,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_0.wl
@@ -1048,7 +1079,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_1.wl
@@ -1057,7 +1088,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_2.wl
@@ -1066,7 +1097,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_0.wl
@@ -1075,7 +1106,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_1.wl
@@ -1084,7 +1115,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_2.wl
@@ -1093,7 +1124,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_0.wl
@@ -1102,7 +1133,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_1.wl
@@ -1111,7 +1142,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_2.wl
@@ -1120,7 +1151,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_0.wl
@@ -1129,7 +1160,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_1.wl
@@ -1138,7 +1169,7 @@ Tests Model WriteLists:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_2.wl
@@ -1149,597 +1180,663 @@ Tests Model WriteLists:
   $ wl test large_arrays_pass sopl
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/10000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/100000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/50000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/10000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/100000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/50000.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_3.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_0.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_1.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_2.wl
   Execution mode: sopl
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   Total number of files tested: 66
 

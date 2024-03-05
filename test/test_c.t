@@ -2,7 +2,7 @@ Tests Model ArrayFork:
   $ wl test basic c
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/1.wl
@@ -11,7 +11,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/2.wl
@@ -20,7 +20,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/3.wl
@@ -29,7 +29,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayite/1.wl
@@ -38,7 +38,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/1.wl
@@ -127,9 +127,10 @@ Tests Model ArrayFork:
   Int 4
   
   Outcome: Returned Int 0
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/10.wl
@@ -142,9 +143,10 @@ Tests Model ArrayFork:
   Int 12
   
   Outcome: Returned Int 1
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/11.wl
@@ -156,7 +158,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/12.wl
@@ -165,7 +167,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/13.wl
@@ -174,7 +176,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/14.wl
@@ -183,7 +185,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/15.wl
@@ -192,7 +194,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/16.wl
@@ -201,7 +203,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/17.wl
@@ -210,7 +212,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/18.wl
@@ -219,7 +221,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/2.wl
@@ -238,9 +240,10 @@ Tests Model ArrayFork:
   Int 2
   
   Outcome: Returned Int -1
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/3.wl
@@ -248,9 +251,10 @@ Tests Model ArrayFork:
   
   Outcome: Assertion violated, counter example:
       No model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/4.wl
@@ -263,9 +267,10 @@ Tests Model ArrayFork:
   Int 7
   
   Outcome: Returned Int 9
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/5.wl
@@ -275,9 +280,10 @@ Tests Model ArrayFork:
   Int 24
   
   Outcome: Returned Int 12
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/6.wl
@@ -285,9 +291,10 @@ Tests Model ArrayFork:
   
   Outcome: Assertion violated, counter example:
       No model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/7.wl
@@ -306,9 +313,10 @@ Tests Model ArrayFork:
   Int 1
   
   Outcome: Returned Int 1
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/8.wl
@@ -327,9 +335,10 @@ Tests Model ArrayFork:
   Int 146
   
   Outcome: Returned Int 73
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/9.wl
@@ -339,9 +348,10 @@ Tests Model ArrayFork:
   Int -1
   
   Outcome: Returned Int -1
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/array.wl
@@ -351,9 +361,10 @@ Tests Model ArrayFork:
   Int 5
   
   Outcome: Returned Loc 0
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/factorial.wl
@@ -362,7 +373,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/simple1.wl
@@ -371,7 +382,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/delete.wl
@@ -380,7 +391,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/symbol_int_c.wl
@@ -389,7 +400,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/1.wl
@@ -398,7 +409,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/2.wl
@@ -407,7 +418,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/3.wl
@@ -416,7 +427,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/4.wl
@@ -425,7 +436,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/5.wl
@@ -434,7 +445,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/wasm.wl
@@ -446,7 +457,7 @@ Tests Model ArrayFork:
   $ wl test large_arrays_fail c
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/10000.wl
@@ -455,7 +466,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/100000.wl
@@ -464,7 +475,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_c_read/50000.wl
@@ -473,7 +484,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_0.wl
@@ -482,7 +493,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_1.wl
@@ -491,7 +502,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_2.wl
@@ -500,7 +511,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/100000_3.wl
@@ -509,7 +520,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_0.wl
@@ -518,7 +529,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_1.wl
@@ -527,7 +538,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_2.wl
@@ -536,7 +547,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/10000_3.wl
@@ -545,7 +556,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_0.wl
@@ -554,7 +565,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_1.wl
@@ -563,7 +574,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_2.wl
@@ -572,7 +583,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_c_write_s_read/50000_3.wl
@@ -581,7 +592,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_0.wl
@@ -590,7 +601,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_1.wl
@@ -599,7 +610,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/100000_2.wl
@@ -608,7 +619,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_0.wl
@@ -617,7 +628,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_1.wl
@@ -626,7 +637,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/10000_2.wl
@@ -635,7 +646,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_0.wl
@@ -644,7 +655,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_1.wl
@@ -653,7 +664,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_c_read/50000_2.wl
@@ -662,7 +673,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_0.wl
@@ -671,7 +682,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_1.wl
@@ -680,7 +691,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/100000_2.wl
@@ -689,7 +700,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_0.wl
@@ -698,7 +709,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_1.wl
@@ -707,7 +718,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/10000_2.wl
@@ -716,7 +727,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_0.wl
@@ -725,7 +736,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_1.wl
@@ -734,7 +745,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/c_array_s_write_s_read/50000_2.wl
@@ -743,7 +754,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/10000.wl
@@ -752,7 +763,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/100000.wl
@@ -761,7 +772,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_c_read/50000.wl
@@ -770,7 +781,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_0.wl
@@ -779,7 +790,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_1.wl
@@ -788,7 +799,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_2.wl
@@ -797,7 +808,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/100000_3.wl
@@ -806,7 +817,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_0.wl
@@ -815,7 +826,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_1.wl
@@ -824,7 +835,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_2.wl
@@ -833,7 +844,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/10000_3.wl
@@ -842,7 +853,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_0.wl
@@ -851,7 +862,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_1.wl
@@ -860,7 +871,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_2.wl
@@ -869,7 +880,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_c_write_s_read/50000_3.wl
@@ -878,7 +889,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_0.wl
@@ -887,7 +898,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_1.wl
@@ -896,7 +907,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/100000_2.wl
@@ -905,7 +916,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_0.wl
@@ -914,7 +925,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_1.wl
@@ -923,7 +934,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/10000_2.wl
@@ -932,7 +943,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_0.wl
@@ -941,7 +952,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_1.wl
@@ -950,7 +961,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_c_read/50000_2.wl
@@ -959,7 +970,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_0.wl
@@ -968,7 +979,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_1.wl
@@ -977,7 +988,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/100000_2.wl
@@ -986,7 +997,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_0.wl
@@ -995,7 +1006,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_1.wl
@@ -1004,7 +1015,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/10000_2.wl
@@ -1013,7 +1024,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_0.wl
@@ -1022,7 +1033,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_1.wl
@@ -1031,7 +1042,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_fail/s_array_s_write_s_read/50000_2.wl
@@ -1042,34 +1053,37 @@ Tests Model ArrayFork:
   $ wl test large_arrays_pass c
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/10000.wl
   Execution mode: c
   
   Outcome: Returned Loc 0
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/100000.wl
   Execution mode: c
   
   Outcome: Returned Loc 0
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_c_read/50000.wl
   Execution mode: c
   
   Outcome: Returned Loc 0
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_0.wl
@@ -1078,7 +1092,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_1.wl
@@ -1087,7 +1101,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_2.wl
@@ -1096,7 +1110,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/100000_3.wl
@@ -1105,7 +1119,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_0.wl
@@ -1114,7 +1128,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_1.wl
@@ -1123,7 +1137,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_2.wl
@@ -1132,7 +1146,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/10000_3.wl
@@ -1141,7 +1155,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_0.wl
@@ -1150,7 +1164,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_1.wl
@@ -1159,7 +1173,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_2.wl
@@ -1168,7 +1182,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_c_write_s_read/50000_3.wl
@@ -1177,7 +1191,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_0.wl
@@ -1186,7 +1200,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_1.wl
@@ -1195,7 +1209,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/100000_2.wl
@@ -1204,7 +1218,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_0.wl
@@ -1213,7 +1227,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_1.wl
@@ -1222,7 +1236,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/10000_2.wl
@@ -1231,7 +1245,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_0.wl
@@ -1240,7 +1254,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_1.wl
@@ -1249,7 +1263,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_c_read/50000_2.wl
@@ -1258,7 +1272,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_0.wl
@@ -1267,7 +1281,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_1.wl
@@ -1276,7 +1290,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/100000_2.wl
@@ -1285,7 +1299,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_0.wl
@@ -1294,7 +1308,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_1.wl
@@ -1303,7 +1317,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/10000_2.wl
@@ -1312,7 +1326,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_0.wl
@@ -1321,7 +1335,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_1.wl
@@ -1330,7 +1344,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/c_array_s_write_s_read/50000_2.wl
@@ -1339,7 +1353,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/10000.wl
@@ -1348,7 +1362,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/100000.wl
@@ -1357,7 +1371,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_c_read/50000.wl
@@ -1366,7 +1380,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_0.wl
@@ -1375,7 +1389,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_1.wl
@@ -1384,7 +1398,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_2.wl
@@ -1393,7 +1407,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/100000_3.wl
@@ -1402,7 +1416,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_0.wl
@@ -1411,7 +1425,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_1.wl
@@ -1420,7 +1434,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_2.wl
@@ -1429,7 +1443,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/10000_3.wl
@@ -1438,7 +1452,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_0.wl
@@ -1447,7 +1461,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_1.wl
@@ -1456,7 +1470,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_2.wl
@@ -1465,7 +1479,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_c_write_s_read/50000_3.wl
@@ -1474,7 +1488,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_0.wl
@@ -1483,7 +1497,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_1.wl
@@ -1492,7 +1506,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/100000_2.wl
@@ -1501,7 +1515,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_0.wl
@@ -1510,7 +1524,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_1.wl
@@ -1519,7 +1533,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/10000_2.wl
@@ -1528,7 +1542,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_0.wl
@@ -1537,7 +1551,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_1.wl
@@ -1546,7 +1560,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_c_read/50000_2.wl
@@ -1555,7 +1569,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_0.wl
@@ -1564,7 +1578,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_1.wl
@@ -1573,7 +1587,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/100000_2.wl
@@ -1582,7 +1596,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_0.wl
@@ -1591,7 +1605,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_1.wl
@@ -1600,7 +1614,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/10000_2.wl
@@ -1609,7 +1623,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_0.wl
@@ -1618,7 +1632,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_1.wl
@@ -1627,7 +1641,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: large_arrays_pass/s_array_s_write_s_read/50000_2.wl

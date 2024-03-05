@@ -1,4 +1,4 @@
-type t = (string * Value.t) list option
+type t = (string * Value.t) list option [@@deriving yojson]
 
 let empty = Some []
 

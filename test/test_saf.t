@@ -2,7 +2,7 @@ Tests Model ArrayFork:
   $ wl test basic saf
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/1.wl
@@ -15,9 +15,10 @@ Tests Model ArrayFork:
       $_i : Int _
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/2.wl
@@ -51,9 +52,10 @@ Tests Model ArrayFork:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 4 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayfork/3.wl
@@ -71,9 +73,10 @@ Tests Model ArrayFork:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/arrayite/1.wl
@@ -119,9 +122,10 @@ Tests Model ArrayFork:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/1.wl
@@ -210,9 +214,10 @@ Tests Model ArrayFork:
   (Val Int 4)
   
   Outcome: Returned (Val Int 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/10.wl
@@ -225,9 +230,10 @@ Tests Model ArrayFork:
   (Val Int 12)
   
   Outcome: Returned (Val Int 1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/11.wl
@@ -246,9 +252,10 @@ Tests Model ArrayFork:
   (+ (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2))) (Val Int 1))
   
   Outcome: Returned (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2)))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/12.wl
@@ -258,9 +265,10 @@ Tests Model ArrayFork:
   (* (+ (SymbInt $_ok_computer) (Val Int 1)) (Val Int 2))
   
   Outcome: Returned (+ (SymbInt $_ok_computer) (Val Int 1))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/13.wl
@@ -268,9 +276,10 @@ Tests Model ArrayFork:
   
   Outcome: Returned (Val Bool true)
   Outcome: Returned (Val Bool false)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/14.wl
@@ -278,9 +287,10 @@ Tests Model ArrayFork:
   
   Outcome: Returned (Val Int 10)
   Outcome: Returned (Val Int 12)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/15.wl
@@ -294,9 +304,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Int 3)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/16.wl
@@ -318,9 +329,10 @@ Tests Model ArrayFork:
   (SymbInt $_XXXXXXXXXXXXXXXXXX)
   
   Outcome: Returned (* (SymbInt $_nvidia) (SymbInt $_XXXXXXXXXXXXXXXXXX))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/17.wl
@@ -328,9 +340,10 @@ Tests Model ArrayFork:
   
   Outcome: Returned (Val Bool true)
   Outcome: Returned (Val Bool false)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/18.wl
@@ -344,9 +357,10 @@ Tests Model ArrayFork:
   
   Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
   Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/2.wl
@@ -365,9 +379,10 @@ Tests Model ArrayFork:
   (Val Int 2)
   
   Outcome: Returned (Val Int -1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/3.wl
@@ -375,9 +390,10 @@ Tests Model ArrayFork:
   
   Outcome: Assertion violated, counter example:
       Empty model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/4.wl
@@ -390,9 +406,10 @@ Tests Model ArrayFork:
   (Val Int 7)
   
   Outcome: Returned (Val Int 9)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/5.wl
@@ -402,9 +419,10 @@ Tests Model ArrayFork:
   (Val Int 24)
   
   Outcome: Returned (Val Int 12)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/6.wl
@@ -412,9 +430,10 @@ Tests Model ArrayFork:
   
   Outcome: Assertion violated, counter example:
       Empty model
+  Found 1 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/7.wl
@@ -433,9 +452,10 @@ Tests Model ArrayFork:
   (Val Int 1)
   
   Outcome: Returned (Val Int 1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/8.wl
@@ -454,9 +474,10 @@ Tests Model ArrayFork:
   (Val Int 146)
   
   Outcome: Returned (Val Int 73)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/9.wl
@@ -466,9 +487,10 @@ Tests Model ArrayFork:
   (Val Int -1)
   
   Outcome: Returned (Val Int -1)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/common/array.wl
@@ -478,9 +500,10 @@ Tests Model ArrayFork:
   (Val Int 5)
   
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/factorial.wl
@@ -493,9 +516,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Int 1)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/simple1.wl
@@ -507,9 +531,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Int 0)
   Outcome: Assertion violated, counter example:
       $_i : Int _
+  Found 2 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/delete.wl
@@ -545,9 +570,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Loc 0)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/statements/symbol_int_c.wl
@@ -3053,9 +3079,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
   Outcome: Returned (Val Loc 0)
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/1.wl
@@ -3064,7 +3091,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/2.wl
@@ -3073,7 +3100,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("Index out of bounds")
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/3.wl
@@ -3159,9 +3186,10 @@ Tests Model ArrayFork:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Found 9 problems
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/4.wl
@@ -3209,9 +3237,10 @@ Tests Model ArrayFork:
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/tree/5.wl
@@ -3227,9 +3256,10 @@ Tests Model ArrayFork:
   Outcome: Returned (Val Loc 0)
   Outcome: Assumption evaluated to false
   Outcome: Assumption evaluated to false
+  Everything Ok!
   
   =====================
-  	Ænima
+  	Whilloc
   =====================
   
   Input file: basic/wasm.wl
@@ -3241,4 +3271,5 @@ Tests Model ArrayFork:
       $_y : Int _
   Outcome: Returned (Val Int 0)
   Outcome: Returned (Val Int 0)
+  Found 1 problems
   Total number of files tested: 33

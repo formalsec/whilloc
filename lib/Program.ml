@@ -17,7 +17,8 @@ type stmt =
   | Update of string * Term.t * Term.t
   | LookUp of string * string * Term.t
   | Delete of string
-
+  [@@deriving yojson]
+  
 type func = { id : string; args : string list; body : stmt }
 type program = (string, func) Hashtbl.t
 

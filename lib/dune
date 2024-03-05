@@ -1,6 +1,10 @@
+(include_subdirs unqualified)
+
 (library
  (name whilloc)
- (libraries z3))
+ (libraries z3 ppx_deriving_yojson.runtime)
+ (preprocess
+  (pps ppx_deriving_yojson)))
 
 (ocamllex
  (modules lexer))

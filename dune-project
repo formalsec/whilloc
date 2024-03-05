@@ -25,7 +25,7 @@
  (name whilloc)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends ocaml dune z3 menhir bos cmdliner)
+ (depends ocaml dune z3 menhir bos cmdliner ppx_deriving_yojson)
  (tags
   (topics "to describe" your project)))
 

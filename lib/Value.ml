@@ -1,4 +1,4 @@
-type t = Integer of int | Boolean of bool | Loc of int | Error
+type t = Integer of int | Boolean of bool | Loc of int | Error [@@deriving yojson]
 
 let pp ?(no_values = false) fmt (v : t) =
   let open Format in
