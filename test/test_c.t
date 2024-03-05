@@ -126,7 +126,6 @@ Tests Model ArrayFork:
   Int 4
   Int 4
   
-  Outcome: Returned Int 0
   Everything Ok!
   
   =====================
@@ -142,7 +141,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 12
   
-  Outcome: Returned Int 1
   Everything Ok!
   
   =====================
@@ -239,7 +237,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 2
   
-  Outcome: Returned Int -1
   Everything Ok!
   
   =====================
@@ -249,9 +246,7 @@ Tests Model ArrayFork:
   Input file: basic/common/3.wl
   Execution mode: c
   
-  Outcome: Assertion violated, counter example:
-      No model
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -266,7 +261,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 7
   
-  Outcome: Returned Int 9
   Everything Ok!
   
   =====================
@@ -279,7 +273,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 24
   
-  Outcome: Returned Int 12
   Everything Ok!
   
   =====================
@@ -289,9 +282,7 @@ Tests Model ArrayFork:
   Input file: basic/common/6.wl
   Execution mode: c
   
-  Outcome: Assertion violated, counter example:
-      No model
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -312,7 +303,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 1
   
-  Outcome: Returned Int 1
   Everything Ok!
   
   =====================
@@ -334,7 +324,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 146
   
-  Outcome: Returned Int 73
   Everything Ok!
   
   =====================
@@ -347,7 +336,6 @@ Tests Model ArrayFork:
   >Program Print
   Int -1
   
-  Outcome: Returned Int -1
   Everything Ok!
   
   =====================
@@ -360,7 +348,6 @@ Tests Model ArrayFork:
   >Program Print
   Int 5
   
-  Outcome: Returned Loc 0
   Everything Ok!
   
   =====================
@@ -1059,7 +1046,6 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/10000.wl
   Execution mode: c
   
-  Outcome: Returned Loc 0
   Everything Ok!
   
   =====================
@@ -1069,7 +1055,6 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/100000.wl
   Execution mode: c
   
-  Outcome: Returned Loc 0
   Everything Ok!
   
   =====================
@@ -1079,7 +1064,6 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/50000.wl
   Execution mode: c
   
-  Outcome: Returned Loc 0
   Everything Ok!
   
   =====================

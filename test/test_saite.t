@@ -8,12 +8,7 @@ Tests Model ArrayITE:
   Input file: basic/arrayfork/1.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assertion violated, counter example:
-      $_i : Int _
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -22,15 +17,7 @@ Tests Model ArrayITE:
   Input file: basic/arrayfork/2.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assertion violated, counter example:
-      $_i : Int _
-      $_v : Int _
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -39,11 +26,6 @@ Tests Model ArrayITE:
   Input file: basic/arrayfork/3.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -53,11 +35,6 @@ Tests Model ArrayITE:
   Input file: basic/arrayite/1.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -149,7 +126,6 @@ Tests Model ArrayITE:
   (Val Int 4)
   (Val Int 4)
   
-  Outcome: Returned (Val Int 0)
   Everything Ok!
   
   =====================
@@ -165,7 +141,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 12)
   
-  Outcome: Returned (Val Int 1)
   Everything Ok!
   
   =====================
@@ -187,7 +162,6 @@ Tests Model ArrayITE:
   >Program Print
   (+ (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2))) (Val Int 1))
   
-  Outcome: Returned (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2)))
   Everything Ok!
   
   =====================
@@ -200,7 +174,6 @@ Tests Model ArrayITE:
   >Program Print
   (* (+ (SymbInt $_ok_computer) (Val Int 1)) (Val Int 2))
   
-  Outcome: Returned (+ (SymbInt $_ok_computer) (Val Int 1))
   Everything Ok!
   
   =====================
@@ -210,8 +183,6 @@ Tests Model ArrayITE:
   Input file: basic/common/13.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Bool true)
-  Outcome: Returned (Val Bool false)
   Everything Ok!
   
   =====================
@@ -221,8 +192,6 @@ Tests Model ArrayITE:
   Input file: basic/common/14.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Int 10)
-  Outcome: Returned (Val Int 12)
   Everything Ok!
   
   =====================
@@ -235,11 +204,6 @@ Tests Model ArrayITE:
   >Program Print
   (SymbInt $_x)
   
-  Outcome: Returned (Val Int 5)
-  Outcome: Returned (Val Int 4)
-  Outcome: Returned (Val Int 3)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -264,7 +228,6 @@ Tests Model ArrayITE:
   (SymbInt $_rita)
   (SymbInt $_XXXXXXXXXXXXXXXXXX)
   
-  Outcome: Returned (* (SymbInt $_nvidia) (SymbInt $_XXXXXXXXXXXXXXXXXX))
   Everything Ok!
   
   =====================
@@ -274,8 +237,6 @@ Tests Model ArrayITE:
   Input file: basic/common/17.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Bool true)
-  Outcome: Returned (Val Bool false)
   Everything Ok!
   
   =====================
@@ -291,8 +252,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Bool false)
   
-  Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
-  Outcome: Returned (+ (SymbInt $_x) (Val Int 1))
   Everything Ok!
   
   =====================
@@ -314,7 +273,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 2)
   
-  Outcome: Returned (Val Int -1)
   Everything Ok!
   
   =====================
@@ -324,9 +282,7 @@ Tests Model ArrayITE:
   Input file: basic/common/3.wl
   Execution mode: saite
   
-  Outcome: Assertion violated, counter example:
-      Empty model
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -341,7 +297,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 7)
   
-  Outcome: Returned (Val Int 9)
   Everything Ok!
   
   =====================
@@ -354,7 +309,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 24)
   
-  Outcome: Returned (Val Int 12)
   Everything Ok!
   
   =====================
@@ -364,9 +318,7 @@ Tests Model ArrayITE:
   Input file: basic/common/6.wl
   Execution mode: saite
   
-  Outcome: Assertion violated, counter example:
-      Empty model
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -387,7 +339,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 1)
   
-  Outcome: Returned (Val Int 1)
   Everything Ok!
   
   =====================
@@ -409,7 +360,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 146)
   
-  Outcome: Returned (Val Int 73)
   Everything Ok!
   
   =====================
@@ -422,7 +372,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int -1)
   
-  Outcome: Returned (Val Int -1)
   Everything Ok!
   
   =====================
@@ -435,7 +384,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Int 5)
   
-  Outcome: Returned (Val Loc 0)
   Everything Ok!
   
   =====================
@@ -445,13 +393,6 @@ Tests Model ArrayITE:
   Input file: basic/factorial.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Int 120)
-  Outcome: Returned (Val Int 24)
-  Outcome: Returned (Val Int 6)
-  Outcome: Returned (Val Int 2)
-  Outcome: Returned (Val Int 1)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -461,13 +402,7 @@ Tests Model ArrayITE:
   Input file: basic/simple1.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Int 0)
-  Outcome: Assertion violated, counter example:
-      $_i : Int _
-  Outcome: Returned (Val Int 0)
-  Outcome: Assertion violated, counter example:
-      $_i : Int _
-  Found 2 problems
+  Found 2 problems!
   
   =====================
   	Whilloc
@@ -482,9 +417,6 @@ Tests Model ArrayITE:
   >Program Print
   (Val Loc 0)
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -494,7 +426,6 @@ Tests Model ArrayITE:
   Input file: basic/statements/symbol_int_c.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
   Everything Ok!
   
   =====================
@@ -522,21 +453,7 @@ Tests Model ArrayITE:
   Input file: basic/tree/3.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assertion violated, counter example:
-      $_i : Int _
-      $_j : Int _
-      $_k : Int _
-      $_v : Int _
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Found 1 problems
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -545,13 +462,6 @@ Tests Model ArrayITE:
   Input file: basic/tree/4.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -561,9 +471,6 @@ Tests Model ArrayITE:
   Input file: basic/tree/5.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Loc 0)
-  Outcome: Assumption evaluated to false
-  Outcome: Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -573,12 +480,6 @@ Tests Model ArrayITE:
   Input file: basic/wasm.wl
   Execution mode: saite
   
-  Outcome: Returned (Val Int 0)
-  Outcome: Assertion violated, counter example:
-      $_x : Int _
-      $_y : Int _
-  Outcome: Returned (Val Int 0)
-  Outcome: Returned (Val Int 0)
-  Found 1 problems
+  Found 1 problems!
   Total number of files tested: 33
 
