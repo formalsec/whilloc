@@ -7,7 +7,7 @@ module M = struct
   let pp (fmt : Fmt.t) (heap : t) : unit =
     ignore fmt;
     ignore heap;
-    assert false
+    failwith "Not Implemented"
 
   let to_string (h : t) : string =
     ignore h;

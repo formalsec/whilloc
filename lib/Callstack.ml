@@ -38,7 +38,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (cs : 'store t) : unit =
     | Toplevel -> pp_str fmt "Toplevel"
     | Intermediate (store, cont, var) ->
         fprintf fmt "Intermediate: %a@.%a@.%s" (Store.pp pp_val) store
-          (pp_lst "\n\t\t" Program.pp)
+          (pp_lst "\n\t\t" Program.pp_stmt)
           cont var
   in
   pp_lst "\n" pp_frame fmt cs

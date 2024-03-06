@@ -1,22 +1,21 @@
 open Value
 
 module M : Heap_intf.M with type vt = Value.t = struct
-  type t = (int, Value.t array) Hashtbl.t * int
+  type bt = Value.t array
+  type t = (int, bt) Hashtbl.t * int
   type vt = Value.t (* indexes and sizes are always values *)
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let pp (fmt : Fmt.t) (heap : t) : unit =
-    ignore fmt;
-    ignore heap;
-    assert false
+  let pp_block fmt (block : bt) =
+    Fmt.fprintf fmt "%a" (Fmt.pp_lst ", " Value.pp) (Array.to_list block)
 
-  let block_str (block : Value.t array) : string =
-    let blockList = Array.to_list block in
-    String.concat ", " (List.map Value.to_string blockList)
+  let pp (fmt : Fmt.t) ((heap, _) : t) : unit =
+    let open Fmt in
+    let pp_binding fmt (_, v) = fprintf fmt "%a" pp_block v in
+    fprintf fmt "%a" (pp_hashtbl "\n" pp_binding) heap
 
-  let to_string ((h, _) : t) : string =
-    Hashtbl.fold (fun _ b acc -> block_str b ^ "\n" ^ acc) h ""
+  let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
   let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
     let tbl, next = h in

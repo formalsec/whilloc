@@ -1,7 +1,10 @@
 module M : Heap_intf.M with type vt = Term.t = struct
-  type vt = Term.t
-  type range = vt * vt
+  type vt = Term.t [@@deriving yojson]
+  type range = vt * vt [@@deriving yojson]
+
   type tree_t = Leaf of range * vt | Node of range * tree_t list
+  [@@deriving yojson]
+
   type t = (int, tree_t) Hashtbl.t * int
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
@@ -9,7 +12,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let pp (fmt : Fmt.t) (heap : t) : unit =
     ignore fmt;
     ignore heap;
-    assert false
+    failwith "Not Implemented"
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =
     let rec iter_tree (tree : tree_t) : string =

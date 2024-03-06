@@ -29,7 +29,7 @@ let get_function (id : string) (prog : program) : func =
   with _ ->
     failwith ("NameError: Program.get_function, name " ^ id ^ " is not defined")
 
-let rec pp (fmt : Fmt.t) (s : stmt) : unit =
+let rec pp_stmt (fmt : Fmt.t) (s : stmt) : unit =
   let open Fmt in
   match s with
   | Skip -> fprintf fmt "Skip"
@@ -42,16 +42,16 @@ let rec pp (fmt : Fmt.t) (s : stmt) : unit =
   | Symbol_int_c (s, v, e) ->
       fprintf fmt "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s
         v Term.pp e
-  | Sequence s -> fprintf fmt "Sequence:@.  %a" (pp_lst "\n  " pp) s
+  | Sequence s -> fprintf fmt "Sequence:@.  %a" (pp_lst "\n  " pp_stmt) s
   | Return e -> fprintf fmt "Return: %a" Term.pp e
   | Assert e -> fprintf fmt "Assert: %a" Term.pp e
   | Assume e -> fprintf fmt "Assume: %a" Term.pp e
   | Print exprs -> fprintf fmt "Print:  %a" (pp_lst ", " Term.pp) exprs
   | IfElse (expr, s1, s2) ->
-      fprintf fmt "If (%a)@.  %a@.Else@.  %a" Term.pp expr pp s1 pp s2
+      fprintf fmt "If (%a)@.  %a@.Else@.  %a" Term.pp expr pp_stmt s1 pp_stmt s2
   | FunCall (x, f, args) ->
       fprintf fmt "Function Call: %s=%s(%a)" x f (pp_lst ", " Term.pp) args
-  | While (expr, s) -> fprintf fmt "While (%a)@\n   %a" Term.pp expr pp s
+  | While (expr, s) -> fprintf fmt "While (%a)@\n   %a" Term.pp expr pp_stmt s
   | New (arr, sz) -> fprintf fmt "New array: %s has size %a" arr Term.pp sz
   | Update (arr, e1, e2) ->
       fprintf fmt "Update: %s at loc %a is assigned %a" arr Term.pp e1 Term.pp
@@ -61,11 +61,13 @@ let rec pp (fmt : Fmt.t) (s : stmt) : unit =
         Term.pp e arr
   | Delete arr -> fprintf fmt "Delete: %s" arr
 
-let string_of_stmt (s : stmt) : string = Format.asprintf "%a" pp s
+let string_of_stmt (s : stmt) : string = Format.asprintf "%a" pp_stmt s
 
-let string_of_function (f : func) : string =
-  "Function id: " ^ f.id ^ "\n" ^ "Argumetns  : (" ^ String.concat ", " f.args
-  ^ ")\n" ^ "Body       : " ^ string_of_stmt f.body ^ "\n"
+let pp_func (fmt : Fmt.t) (f : func) : unit =
+  let open Fmt in
+  fprintf fmt " Function id: %s@.Arguments  : (%a)@.Body       : %a@." f.id
+    (pp_lst ", " pp_str) f.args pp_stmt f.body
 
+let string_of_function (f : func) : string = Format.asprintf "%a" pp_func f
 let print_statement (s : stmt) : unit = s |> string_of_stmt |> print_endline
 let print_function (f : func) : unit = f |> string_of_function |> print_endline

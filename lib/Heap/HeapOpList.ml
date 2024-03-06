@@ -7,21 +7,18 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = { map = Hashtbl.create Parameters.size; next = 0 }
 
-  let pp (fmt : Fmt.t) (heap : t) : unit =
-    ignore fmt;
-    ignore heap;
-    assert false
+  let pp_block (fmt : Fmt.t) (block : size * op list) =
+    let open Fmt in
+    let pp_op fmt (i, v, _) = fprintf fmt "(%a %a)" Term.pp i Term.pp v in
+    let sz, ops = block in
+    fprintf fmt "(%a, [%a])" Term.pp sz (pp_lst ", " pp_op) ops
 
-  let to_string (h : t) : string =
-    Hashtbl.fold
-      (fun k (sz, ops) accum ->
-        accum ^ Int.to_string k ^ " -> (" ^ Term.to_string sz ^ ", " ^ "["
-        ^ String.concat ", "
-            (List.map
-               (fun (i, v, _) -> Term.to_string i ^ " " ^ Term.to_string v)
-               ops)
-        ^ "]" ^ ")")
-      h.map ""
+  let pp (fmt : Fmt.t) (heap : t) : unit =
+    let open Fmt in
+    let pp_binding fmt (x, v) = fprintf fmt "%a -> %a" pp_int x pp_block v in
+    fprintf fmt "%a" (pp_hashtbl "\n" pp_binding) heap.map
+
+  let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : vt) (index : vt) (pc : vt PC.t) : bool =
     let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in

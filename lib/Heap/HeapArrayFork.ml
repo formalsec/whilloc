@@ -9,7 +9,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
   let pp_block fmt (block : bt) =
-    fprintf fmt "%a" (Fmt.pp_lst ", " Term.pp) (Array.to_list block)
+    Fmt.fprintf fmt "%a" (Fmt.pp_lst ", " Term.pp) (Array.to_list block)
 
   let pp (fmt : Fmt.t) (heap : t) : unit =
     let open Fmt in
