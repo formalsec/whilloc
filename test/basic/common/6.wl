@@ -5,7 +5,7 @@ function is_one(x) {
     return 73
 };
 
-function aenima() {
+function main() {
     a = is_one(1);
     return a
 }

@@ -3,7 +3,7 @@ function f(x,y) {
     return 1
 };
 
-function aenima() {
+function main() {
     x = f(5,6);
     print(x);
     a=true;

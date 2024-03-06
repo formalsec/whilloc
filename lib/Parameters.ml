@@ -1,4 +1,4 @@
-let main_id = "aenima" (*Ænima*)
+let main_id = "main" (*Ænima*)
 let symbol_prefix = "$_" (* Symbols X̂x̂§ *)
 let tank = 100000
 let size = 1000

@@ -4,7 +4,7 @@ function f(x,y) {
     return z
 };
 
-function aenima() {
+function main() {
     x = f(5,6);
     print(x);
     return x

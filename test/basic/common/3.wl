@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = 3;
     x = x+1;
     if (x>4) {

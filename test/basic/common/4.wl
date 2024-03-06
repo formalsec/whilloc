@@ -14,7 +14,7 @@ function increment(x) {
     return x+1
 };
 
-function aenima() {
+function main() {
     x = increment_twice(5);
     print(x);
     f2 = multiply(3,3);

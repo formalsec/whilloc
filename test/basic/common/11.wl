@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = 5;
     print(x+1);
     y = symbol_int("descending");

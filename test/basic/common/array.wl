@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = new(8);
     x[3] = 5;
     y = x[3];

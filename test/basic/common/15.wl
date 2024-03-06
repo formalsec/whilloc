@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = symbol_int("x");
     assume(x>=1);
     assume(x<=3);

@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
   x = symbol_int("i");
 
   if (x > 10) {

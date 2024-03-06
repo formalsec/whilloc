@@ -1,4 +1,4 @@
-function aenima() {    
+function main() {    
 
     i = symbol_int_c("i", i>=0 && i<15000);
     v = symbol_int_c("v", v>=5000 && v<10000);

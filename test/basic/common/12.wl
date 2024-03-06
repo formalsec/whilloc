@@ -5,7 +5,7 @@ function create_symbol () {
     return x
 };
 
-function aenima() {
+function main() {
     y = create_symbol();
     print(y*2);
     return y

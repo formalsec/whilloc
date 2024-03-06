@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = symbol_int("miguel");
     y = symbol_int("rita");
     z = symbol_int("XXXXXXXXXXXXXXXXXX");

@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     a = 4;
     b = 2;
     x = symbol_int("x");
