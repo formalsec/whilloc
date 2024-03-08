@@ -4,13 +4,10 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
-  let pp (fmt : Fmt.t) (heap : t) : unit =
-    ignore fmt;
-    ignore heap;
+  let pp (_fmt : Fmt.t) (_heap : t) : unit =
     failwith "Not Implemented"
 
-  let to_string (h : t) : string =
-    ignore h;
+  let to_string (_h : t) : string =
     failwith "Not Implemented"
 
   let malloc _h (_sz : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list =

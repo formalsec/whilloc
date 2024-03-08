@@ -5,8 +5,8 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
   let open Fmt in
   let (_, _, st, _, pc, h), out = ret in
   fprintf fmt
-    "#RETURN:@. -Outcome   : %a@. -Store     : %a@. -Path cond.: %a@. \
-     -Heap      : %a@."
+    "#RETURN:@\n -Outcome   : %a@\n -Store     : %a@\n -Path cond.: %a@\n \
+     -Heap      : %a@\n"
     (Outcome.pp ~no_values:false)
     out (Store.pp pp_val) st (PC.pp pp_val) pc pp_heap h
 

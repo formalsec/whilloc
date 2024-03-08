@@ -8,8 +8,8 @@ type ('v, 'h) t = {
 let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (fmt : Format.formatter) (state : ('v, 'h) t) : unit =
   Format.fprintf fmt
-    "{@.-Store         : %a@.-Callstack     : %a@.-Path cond.    : \
-     %a@.-Heap          : %a@.}"
+    "{@\n-Store         : %a@\n-Callstack     : %a@\n-Path cond.    : \
+     %a@\n-Heap          : %a@\n}"
     (Store.pp pp_val) state.store (Callstack.pp pp_val) state.cs (PC.pp pp_val)
     state.pc pp_heap state.heap
 

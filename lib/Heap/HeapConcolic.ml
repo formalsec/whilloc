@@ -4,49 +4,27 @@ module M = struct
 
   let init () : t = Hashtbl.create Parameters.size
 
-  let pp (fmt : Fmt.t) (heap : t) : unit =
-    ignore fmt;
-    ignore heap;
+  let pp (_fmt : Fmt.t) (_heap : t) : unit =
     failwith "Not Implemented"
 
-  let to_string (h : t) : string =
-    ignore h;
+  let to_string (_h : t) : string =
     failwith "Not Implemented"
 
-  let malloc h (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
-    ignore sz;
-    ignore pc;
-    ignore h;
+  let malloc _h (_sz : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list =
     []
 
-  let update h (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
+  let update _h (_arr : vt) (_index : vt) (_v : vt) (_pc : vt PC.t) :
       (t * vt PC.t) list =
-    ignore arr;
-    ignore v;
-    ignore index;
-    ignore h;
-    ignore pc;
     []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list
+  let lookup _h (_arr : vt) (_index : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list
       =
-    ignore index;
-    ignore arr;
-    ignore pc;
-    ignore h;
     []
 
-  let free h (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
-    ignore arr;
-    ignore pc;
-    ignore h;
+  let free _h (_arr : vt) (_pc : vt PC.t) : (t * vt PC.t) list =
     []
 
-  let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt PC.t) : bool =
-    ignore pc;
-    ignore heap;
-    ignore v;
-    ignore i;
+  let in_bounds (_heap : t) (_v : vt) (_i : vt) (_pc : vt PC.t) : bool =
     failwith "not implemented"
 
   let clone _ = assert false

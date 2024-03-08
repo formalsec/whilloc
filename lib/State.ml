@@ -31,9 +31,9 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
   let open Fmt in
   let s, cont, store, cs, pc, heap = state in
   fprintf fmt
-    ">STATE:@. -Cur Statement : %a@.  -Continuation  : %a@.  -Store         : \
-     %a@.  -Callstack    : %a@.  -Path cond.    : %a@.  -Heap          : %a@."
-    Program.pp_stmt s (pp_lst "; " Program.pp_stmt) cont (Store.pp pp_val) store
+    ">STATE:@\n -Cur Statement : %a@\n  -Continuation  : %a@\n  -Store         : \
+     %a@\n  -Callstack    : %a@\n  -Path cond.    : %a@\n  -Heap          : %a@\n"
+    Program.pp_stmt s (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "; ") Program.pp_stmt) cont (Store.pp pp_val) store
     (Callstack.pp pp_val) cs (PC.pp pp_val) pc pp_heap heap
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)

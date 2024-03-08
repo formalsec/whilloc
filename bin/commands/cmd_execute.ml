@@ -48,7 +48,9 @@ let mode_to_string = function
 let write_report report =
   let json = report |> report_to_yojson |> Yojson.Safe.to_string in
   let file = Fpath.v "report.json" in
-  Bos.OS.File.write file json |> Rresult.R.get_ok
+  match Bos.OS.File.write file json with
+  | Ok v -> v
+  | Error (`Msg err) -> failwith err
 
 let run input mode =
   let start = Sys.time () in

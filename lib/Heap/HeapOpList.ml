@@ -11,12 +11,12 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let open Fmt in
     let pp_op fmt (i, v, _) = fprintf fmt "(%a %a)" Term.pp i Term.pp v in
     let sz, ops = block in
-    fprintf fmt "(%a, [%a])" Term.pp sz (pp_lst ", " pp_op) ops
+    fprintf fmt "(%a, [%a])" Term.pp sz (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt ", ") pp_op) ops
 
   let pp (fmt : Fmt.t) (heap : t) : unit =
     let open Fmt in
     let pp_binding fmt (x, v) = fprintf fmt "%a -> %a" pp_int x pp_block v in
-    fprintf fmt "%a" (pp_hashtbl "\n" pp_binding) heap.map
+    fprintf fmt "%a" (pp_hashtbl ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_binding) heap.map
 
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 

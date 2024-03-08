@@ -8,12 +8,12 @@ module M : Heap_intf.M with type vt = Value.t = struct
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let pp_block fmt (block : bt) =
-    Fmt.fprintf fmt "%a" (Fmt.pp_lst ", " Value.pp) (Array.to_list block)
+    Fmt.fprintf fmt "%a" (Fmt.pp_lst ~pp_sep:(fun fmt () -> Fmt.fprintf fmt ", ") Value.pp) (Array.to_list block)
 
   let pp (fmt : Fmt.t) ((heap, _) : t) : unit =
     let open Fmt in
     let pp_binding fmt (_, v) = fprintf fmt "%a" pp_block v in
-    fprintf fmt "%a" (pp_hashtbl "\n" pp_binding) heap
+    fprintf fmt "%a" (pp_hashtbl ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_binding) heap
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
@@ -43,7 +43,6 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let lookup (h : t) (arr : vt) (index : vt) (pc : vt PC.t) :
       (t * vt * vt PC.t) list =
-    ignore pc;
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -69,8 +68,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
         | _ -> failwith "InternalError: illegal free")
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (addr : vt) (i : vt) (pc : vt PC.t) : bool =
-    ignore pc;
+  let in_bounds (heap : t) (addr : vt) (i : vt) (_pc : vt PC.t) : bool =
     match addr with
     | Loc l -> (
         let tbl, _ = heap in

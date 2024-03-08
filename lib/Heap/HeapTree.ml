@@ -9,9 +9,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let pp (fmt : Fmt.t) (heap : t) : unit =
-    ignore fmt;
-    ignore heap;
+  let pp (_fmt : Fmt.t) (_heap : t) : unit =
     failwith "Not Implemented"
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =

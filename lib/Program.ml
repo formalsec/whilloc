@@ -33,7 +33,7 @@ let rec pp_stmt (fmt : Fmt.t) (s : stmt) : unit =
   let open Fmt in
   match s with
   | Skip -> fprintf fmt "Skip"
-  | Clear -> fprintf fmt "Clear@."
+  | Clear -> fprintf fmt "Clear@\n"
   | Assign (x, e) -> fprintf fmt "Assignment: %s = %a" x Term.pp e
   | Symbol_bool (s, v) ->
       fprintf fmt "Boolean Symbol declaration: name=%s, value=§__%s" s v
@@ -42,15 +42,15 @@ let rec pp_stmt (fmt : Fmt.t) (s : stmt) : unit =
   | Symbol_int_c (s, v, e) ->
       fprintf fmt "Integer Symbol declaration: name=%s, value=§__%s, cond=%a" s
         v Term.pp e
-  | Sequence s -> fprintf fmt "Sequence:@.  %a" (pp_lst "\n  " pp_stmt) s
+  | Sequence s -> fprintf fmt "Sequence:@\n  %a" (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "@\n ") pp_stmt) s
   | Return e -> fprintf fmt "Return: %a" Term.pp e
   | Assert e -> fprintf fmt "Assert: %a" Term.pp e
   | Assume e -> fprintf fmt "Assume: %a" Term.pp e
-  | Print exprs -> fprintf fmt "Print:  %a" (pp_lst ", " Term.pp) exprs
+  | Print exprs -> fprintf fmt "Print:  %a" (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt ", ") Term.pp) exprs
   | IfElse (expr, s1, s2) ->
-      fprintf fmt "If (%a)@.  %a@.Else@.  %a" Term.pp expr pp_stmt s1 pp_stmt s2
+      fprintf fmt "If (%a)@\n  %a@\nElse@\n  %a" Term.pp expr pp_stmt s1 pp_stmt s2
   | FunCall (x, f, args) ->
-      fprintf fmt "Function Call: %s=%s(%a)" x f (pp_lst ", " Term.pp) args
+      fprintf fmt "Function Call: %s=%s(%a)" x f (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt ", ") Term.pp) args
   | While (expr, s) -> fprintf fmt "While (%a)@\n   %a" Term.pp expr pp_stmt s
   | New (arr, sz) -> fprintf fmt "New array: %s has size %a" arr Term.pp sz
   | Update (arr, e1, e2) ->
@@ -65,8 +65,8 @@ let string_of_stmt (s : stmt) : string = Format.asprintf "%a" pp_stmt s
 
 let pp_func (fmt : Fmt.t) (f : func) : unit =
   let open Fmt in
-  fprintf fmt " Function id: %s@.Arguments  : (%a)@.Body       : %a@." f.id
-    (pp_lst ", " pp_str) f.args pp_stmt f.body
+  fprintf fmt " Function id: %s@\nArguments  : (%a)@\nBody       : %a@\n" f.id
+    (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt ", ") pp_str) f.args pp_stmt f.body
 
 let string_of_function (f : func) : string = Format.asprintf "%a" pp_func f
 let print_statement (s : stmt) : unit = s |> string_of_stmt |> print_endline

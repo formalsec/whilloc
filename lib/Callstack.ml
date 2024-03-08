@@ -37,11 +37,11 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (cs : 'store t) : unit =
   let pp_frame fmt = function
     | Toplevel -> pp_str fmt "Toplevel"
     | Intermediate (store, cont, var) ->
-        fprintf fmt "Intermediate: %a@.%a@.%s" (Store.pp pp_val) store
-          (pp_lst "\n\t\t" Program.pp_stmt)
+        fprintf fmt "Intermediate: %a@\n%a@\n%s" (Store.pp pp_val) store
+          (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "@\n  ") Program.pp_stmt)
           cont var
   in
-  pp_lst "\n" pp_frame fmt cs
+  (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_frame fmt) cs
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (cs : 'v t) : string =
   Format.asprintf "%a" (pp pp_val) cs

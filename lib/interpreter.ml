@@ -55,7 +55,7 @@ module Make
     let/ state = Choice.get in
     Printf.printf "Heap: %s\n" (Heap.to_string state.heap);
     Printf.printf "State: %s\n" (SState.to_string Eval.pp Heap.pp state); *)
-    Printf.printf "Stmt: %s\n" (Program.string_of_stmt s);
+    Fmt.printf "Stmt: %a@." Program.pp_stmt s;
     match s with
     | Skip | Clear -> return cont
     | Sequence (s1 :: s2) -> step prog s1 (s2 @ cont)
