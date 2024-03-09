@@ -2,7 +2,7 @@ function f(x,y) {
     return 73
 };
 
-function aenima() {
+function main() {
     y = 10;
     while (y<12) {
         y=y+1;

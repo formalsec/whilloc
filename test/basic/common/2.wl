@@ -6,7 +6,7 @@ function multiply(x,y) {
     return x*y
 };
 
-function aenima() {
+function main() {
     x = 3;
     y = 2;
     z = multiply(x,y);

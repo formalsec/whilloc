@@ -28,14 +28,12 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
     let value, expression = e in
     (EvalConcrete.negate value, EvalSymbolic.negate expression)
 
-  let to_string (e : t) : string =
+  let pp (fmt : Fmt.t) (e : t) : unit =
     let value, expression = e in
-    "("
-    ^ EvalConcrete.to_string value
-    ^ ", "
-    ^ EvalSymbolic.to_string expression
-    ^ ")"
+    Format.fprintf fmt "(%a, %a)" EvalConcrete.pp value EvalSymbolic.pp
+      expression
 
+  let to_string (e : t) : string = Format.asprintf "%a" pp e
   let print (e : t) : unit = to_string e |> print_endline
 
   let make_symbol (name : string) (tp : string) =

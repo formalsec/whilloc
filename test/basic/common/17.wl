@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     x = symbol_bool("x");
     if (x) {
         res = true

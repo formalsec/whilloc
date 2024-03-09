@@ -1,4 +1,4 @@
-function aenima() {    
+function main() {    
 
     s = symbol_int_c("s", s>=10000);
 

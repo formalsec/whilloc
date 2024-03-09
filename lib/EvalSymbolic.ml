@@ -60,7 +60,8 @@ module M : Eval_intf.M with type t = Term.t = struct
     (Option.is_some model, model)
 
   let negate (e : t) : t = Term.negate e
-  let to_string (e : t) : string = Term.to_string e
+  let pp (fmt : Fmt.t) (e : t) : unit = Term.pp fmt e
+  let to_string (e : t) : string = Fmt.asprintf "%a" pp e
   let print (e : t) : unit = to_string e |> print_endline
 
   let make_symbol (name : string) (tp : string) =

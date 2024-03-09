@@ -1,4 +1,4 @@
-function aenima() {
+function main() {
     i = symbol_int("i");
     j = symbol_int("j");
     k = symbol_int("k");

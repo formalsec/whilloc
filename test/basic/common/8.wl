@@ -5,7 +5,7 @@ function f(x,y) {
     return 73
 };
 
-function aenima() {
+function main() {
     print(true,true);
     x = f(5,6);
     return x

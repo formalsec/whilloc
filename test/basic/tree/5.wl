@@ -1,4 +1,4 @@
-function aenima() {    
+function main() {    
 
     k = symbol_int("k");
 

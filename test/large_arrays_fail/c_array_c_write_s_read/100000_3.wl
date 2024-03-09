@@ -1,4 +1,4 @@
-function aenima() {    
+function main() {    
 
     x = new(100000);
 

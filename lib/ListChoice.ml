@@ -26,8 +26,8 @@ module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type vt = Eval.t) :
   let select v (s : state) =
     let pc = s.pc in
     let not_v = Eval.negate v in
-    let pc_v = PathCondition.add_condition pc v in
-    let pc_not_v = PathCondition.add_condition pc not_v in
+    let pc_v = PC.add_condition pc v in
+    let pc_not_v = PC.add_condition pc not_v in
     match (Eval.is_true pc_v, Eval.is_true pc_not_v) with
     | false, false -> assert false
     | true, false -> [ (true, { s with pc = pc_v }) ]

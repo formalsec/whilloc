@@ -37,7 +37,7 @@ function C(n,k) {
     return fact / (order * overcount)
 };
 
-function aenima() {
+function main() {
 
     a = 3;
     b = factorial(3);

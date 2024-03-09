@@ -25,7 +25,7 @@ let run_single mode file =
   try
     Fun.protect ~finally:unset (fun () ->
         set ();
-        try Cmd_execute.run file mode ~no_values:true with
+        try Cmd_execute.run file mode with
         | Timeout ->
             Printf.printf
               "Timeout occurred while processing file: %s (Max Timeout: %f \

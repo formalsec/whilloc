@@ -15,7 +15,7 @@ function factorial(x) {
     print(true)
 };
 
-function aenima() {
+function main() {
     a = factorial(4);
     print(a);
     return 12;

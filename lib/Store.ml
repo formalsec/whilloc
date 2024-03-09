@@ -34,12 +34,14 @@ let fold (f : 'a -> 'b -> 'c -> 'c) (htbl : ('a, 'b) Hashtbl.t) (init : 'c) : 'c
     =
   Hashtbl.fold f htbl init
 
-let to_string (str : 'v -> string) (store : 'v t) : string =
-  "\n"
-  ^ String.concat "\n"
-      (Hashtbl.fold
-         (fun x y z -> ("\t\t" ^ x ^ "  ->  " ^ str y) :: z)
-         store [])
+let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (store : 'v t) : unit =
+  let open Fmt in
+  let pp_binding fmt (x, v) = fprintf fmt "%s -> %a" x pp_val v in
+  if Hashtbl.length store = 0 then pp_str fmt "{}"
+  else fprintf fmt "{ %a }" (pp_hashtbl ~pp_sep:pp_comma pp_binding) store
 
-let print (str : 'v -> string) (store : 'v t) : unit =
-  to_string str store |> print_endline
+let to_string (pp_val : Fmt.t -> 'v -> unit) (store : 'v t) : string =
+  Fmt.asprintf "%a" (pp pp_val) store
+
+let print (pp_val : Fmt.t -> 'v -> unit) (store : 'v t) : unit =
+  to_string pp_val store |> print_endline

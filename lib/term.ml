@@ -1,4 +1,4 @@
-type unop = Neg | Not | Abs | StringOfInt
+type unop = Neg | Not | Abs | StringOfInt [@@deriving yojson]
 
 type binop =
   | Plus
@@ -18,7 +18,7 @@ type binop =
   | Lte
   | Equals
   | NEquals
-
+[@@deriving yojson]
 (* type rop = Gt | Lt | Ge | LE | Eq | Ne *)
 
 type t =
@@ -30,6 +30,7 @@ type t =
   | B_symb of string
   | I_symb of string
   | Ite of t * t * t
+[@@deriving yojson]
 
 let make_true : t = Val (Value.Boolean true)
 let make_false : t = Val (Value.Boolean false)

@@ -18,12 +18,18 @@ module ST = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapTree.M) (ST_Choice)
 module SOPL =
   Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
 
-type mode = 
-  | Concrete
-  | Saf
-  | Saite
-  | St
-  | Sopl
+type mode = Concrete | Saf | Saite | St | Sopl [@@deriving yojson]
+
+type report = {
+  filename : string;
+  mode : mode;
+  execution_time : float;
+  solver_time : float;
+  num_paths : int;
+  num_problems : int;
+  problems : Outcome.t list;
+}
+[@@deriving yojson]
 
 type options = {
   input : Fpath.t;
@@ -39,45 +45,88 @@ let mode_to_string = function
   | St -> "st"
   | Sopl -> "sopl"
 
-let run ?(no_values = false) input mode =
+let write_report report =
+  let json = report |> report_to_yojson |> Yojson.Safe.to_string in
+  let file = Fpath.v "report.json" in
+  match Bos.OS.File.write file json with
+  | Ok v -> v
+  | Error (`Msg err) -> failwith err
+
+let run input mode =
   let start = Sys.time () in
   print_header ();
   let program = input |> read_file |> parse_program |> create_program in
-  Printf.printf "Input file: %s\nExecution mode: %s\n\n" input (mode_to_string mode);
-  (match mode with
-  | Concrete ->
-      let rets = C.interpret program in
-      List.iter
-        (fun (out, _) ->
-          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-        rets
-  | Saf ->
-      let rets = SAF.interpret program in
-      List.iter
-        (fun (out, _) ->
-          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-        rets
-  | Saite ->
-      let rets = SAITE.interpret program in
-      List.iter
-        (fun (out, _) ->
-          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-        rets
-  | St ->
-      let rets = ST.interpret program in
-      List.iter
-        (fun (out, _) ->
-          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-        rets
-  | Sopl ->
-      let rets = SOPL.interpret program in
-      List.iter
-        (fun (out, _) ->
-          Format.printf "Outcome: %a@." (Outcome.pp ~no_values) out)
-        rets)
-  (* ;Printf.printf "Total Execution time of Solver: %f\n" (!Translator.solver_time) *);
+  Printf.printf "Input file: %s\nExecution mode: %s\n\n" input
+    (mode_to_string mode);
+  let problems, num_paths =
+    match mode with
+    | Concrete ->
+        let rets = C.interpret program in
+        ( List.filter_map
+            (fun (out, _) ->
+              match out with
+              | Outcome.Error _ | Outcome.EndGas -> Some out
+              | _ -> None)
+            rets,
+          List.length rets )
+    | Saf ->
+        let rets = SAF.interpret program in
+        ( List.filter_map
+            (fun (out, _) ->
+              match out with
+              | Outcome.Error _ | Outcome.EndGas -> Some out
+              | _ -> None)
+            rets,
+          List.length rets )
+    | Saite ->
+        let rets = SAITE.interpret program in
+        ( List.filter_map
+            (fun (out, _) ->
+              match out with
+              | Outcome.Error _ | Outcome.EndGas -> Some out
+              | _ -> None)
+            rets,
+          List.length rets )
+    | St ->
+        let rets = ST.interpret program in
+        ( List.filter_map
+            (fun (out, _) ->
+              match out with
+              | Outcome.Error _ | Outcome.EndGas -> Some out
+              | _ -> None)
+            rets,
+          List.length rets )
+    | Sopl ->
+        let rets = SOPL.interpret program in
+        ( List.filter_map
+            (fun (out, _) ->
+              match out with
+              | Outcome.Error _ | Outcome.EndGas -> Some out
+              | _ -> None)
+            rets,
+          List.length rets )
+  in
+  let execution_time = Sys.time () -. start in
+  let num_problems = List.length problems in
+  if num_problems = 0 then Printf.printf "Everything Ok!\n"
+  else Printf.printf "Found %d problems!\n" num_problems;
   if !Utils.verbose then
-    Printf.printf "Total Execution time: %f\n" (Sys.time () -. start)
+    Printf.printf
+      "\n\
+       =====================\n\
+       Total Execution time: %f\n\
+       Total Solver time: %f\n"
+      execution_time !Translator.solver_time;
+  write_report
+    {
+      execution_time;
+      mode;
+      num_paths;
+      num_problems;
+      problems;
+      filename = input;
+      solver_time = !Translator.solver_time;
+    }
 
 let main (opts : options) =
   Utils.verbose := opts.verbose;
