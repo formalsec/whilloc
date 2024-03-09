@@ -9,12 +9,12 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
   let pp_block fmt (block : bt) =
-    Fmt.fprintf fmt "%a" (Fmt.pp_lst ~pp_sep:(fun fmt () -> fprintf fmt ", ") Term.pp) (Array.to_list block)
+    Fmt.fprintf fmt "%a" (Fmt.pp_lst ~pp_sep:Fmt.pp_comma Term.pp) (Array.to_list block)
 
   let pp (fmt : Fmt.t) (heap : t) : unit =
     let open Fmt in
     let pp_binding fmt (_, v) = fprintf fmt "%a" pp_block v in
-    fprintf fmt "%a" (pp_hashtbl ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_binding) heap.map
+    fprintf fmt "%a" (pp_hashtbl ~pp_sep:pp_newline pp_binding) heap.map
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 

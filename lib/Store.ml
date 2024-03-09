@@ -38,7 +38,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (store : 'v t) : unit =
   let open Fmt in
   let pp_binding fmt (x, v) = fprintf fmt "%s -> %a" x pp_val v in
   if Hashtbl.length store = 0 then pp_str fmt "{}"
-  else fprintf fmt "{ %a }" (pp_hashtbl ~pp_sep:(fun fmt () -> fprintf fmt ", ") pp_binding) store
+  else fprintf fmt "{ %a }" (pp_hashtbl ~pp_sep:pp_comma pp_binding) store
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (store : 'v t) : string =
   Fmt.asprintf "%a" (pp pp_val) store

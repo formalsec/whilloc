@@ -19,16 +19,16 @@ let get_value (model : t) (var : string) : Value.t =
       | v -> v)
 
 let pp ?(no_values = false) (fmt : Format.formatter) (model : t) : unit =
-  let open Format in
+  let open Fmt in
   let pp_binding fmt (x, v) =
-    Format.fprintf fmt "%s : %a" x (Value.pp ~no_values) v
+    fprintf fmt "%s : %a" x (Value.pp ~no_values) v
   in
   match model with
   | None -> pp_print_string fmt "No model"
   | Some [] -> pp_print_string fmt "Empty model"
   | Some m ->
       let m = List.sort (fun (x1, _) (x2, _) -> String.compare x1 x2) m in
-      pp_print_list ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_binding fmt m
+      pp_lst ~pp_sep:pp_newline pp_binding fmt m
 
 let to_string (model : t) : string =
   Format.asprintf "%a" (pp ~no_values:false) model

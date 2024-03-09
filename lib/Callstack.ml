@@ -41,7 +41,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (cs : 'store t) : unit =
           (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "@\n  ") Program.pp_stmt)
           cont var
   in
-  (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "@\n") pp_frame fmt) cs
+  (pp_lst ~pp_sep:pp_newline pp_frame fmt) cs
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (cs : 'v t) : string =
   Format.asprintf "%a" (pp pp_val) cs

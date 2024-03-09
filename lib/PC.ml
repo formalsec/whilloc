@@ -9,7 +9,7 @@ let negate (pc : 'v list) : 'v =
     pc Term.make_false
 
 let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (pc : 'value list) : unit =
-  Fmt.fprintf fmt "%a" (Fmt.pp_lst ~pp_sep:(fun fmt () -> Fmt.fprintf fmt " AND ") pp_val) pc
+  (Fmt.pp_lst ~pp_sep:(fun fmt () -> Fmt.fprintf fmt " AND ") pp_val) fmt pc
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pc : 'v list) : string =
   Fmt.asprintf "%a" (pp pp_val) pc

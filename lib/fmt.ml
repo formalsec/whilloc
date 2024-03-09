@@ -24,3 +24,7 @@ let pp_hashtbl ?(pp_sep = pp_print_cut) (pp_v : t -> 'a * 'b -> unit) (fmt : t)
 
 let pp_lst ?(pp_sep = pp_print_cut) (pp_v : t -> 'a -> unit) (fmt : t) (lst : 'a list) =
   pp_print_list ~pp_sep pp_v fmt lst
+
+
+  let pp_newline fmt () = fprintf fmt "@\n"
+  let pp_comma fmt () = pp_print_string fmt ", "
