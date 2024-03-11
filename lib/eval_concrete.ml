@@ -1,5 +1,5 @@
 module M : Eval_intf.M with type t = Value.t = struct
-  open EvalExpression
+  open Eval_expression
 
   type t = Value.t
   type st = t Store.t
@@ -11,13 +11,13 @@ module M : Eval_intf.M with type t = Value.t = struct
     | Unop (op, e) -> eval_unop_expr op (eval store e)
     | Binop (op, e1, e2) -> eval_binop_expr op (eval store e1) (eval store e2)
     | B_symb s ->
-        failwith
-          ("InternalError: EvalConcrete.eval, tried to evaluate a symbolic \
-            expression" ^ s ^ "in a concrete execution context")
+      failwith
+        ( "InternalError: Eval_concrete.eval, tried to evaluate a symbolic \
+           expression" ^ s ^ "in a concrete execution context" )
     | I_symb s ->
-        failwith
-          ("InternalError: EvalConcrete.eval, tried to evaluate a symbolic \
-            expression" ^ s ^ "in a concrete execution context")
+      failwith
+        ( "InternalError: Eval_concrete.eval, tried to evaluate a symbolic \
+           expression" ^ s ^ "in a concrete execution context" )
     | Ite (e1, e2, e3) -> eval_ite e1 e2 e3
 
   let is_true (v : t list) : bool =
@@ -25,21 +25,21 @@ module M : Eval_intf.M with type t = Value.t = struct
       try List.hd v
       with _ ->
         failwith
-          "InternalError: EvalConcrete.is_true, tried to evaluate an empty \
+          "InternalError: Eval_concrete.is_true, tried to evaluate an empty \
            list of values"
     in
     match v' with
     | Boolean b -> b
     | Integer _ ->
-        failwith
-          "InternalError: EvalConcrete.is_true, guard expressions must be of \
-           type boolean"
+      failwith
+        "InternalError: Eval_concrete.is_true, guard expressions must be of \
+         type boolean"
     | Loc l ->
-        failwith
-          ("InternalError: EvalConcrete.is_true, location value "
-         ^ string_of_int l
-         ^ " cannot be evaluated to true or false in concrete evaluation \
-            contexts")
+      failwith
+        ( "InternalError: Eval_concrete.is_true, location value "
+        ^ string_of_int l
+        ^ " cannot be evaluated to true or false in concrete evaluation \
+           contexts" )
     | Error -> failwith "ERROR ERROR"
 
   let test_assert (exprs : t list) : bool * Model.t = (is_true exprs, None)
@@ -49,12 +49,12 @@ module M : Eval_intf.M with type t = Value.t = struct
     | Boolean true -> Boolean false
     | Boolean false -> Boolean true
     | _ ->
-        failwith
-          "InternalError: EvalConcrete.negate, tried to negate a non boolean \
-           value"
+      failwith
+        "InternalError: Eval_concrete.negate, tried to negate a non boolean \
+         value"
 
   let pp (fmt : Fmt.t) (v : t) : unit = Value.pp fmt v
-  let to_string (v : t) : string = Format.asprintf "%a" pp v
+  let to_string (v : t) : string = Fmt.asprintf "%a" pp v
   let print (v : t) : unit = to_string v |> print_endline
 
   let make_symbol (name : string) (tp : string) =

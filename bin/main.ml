@@ -8,24 +8,22 @@ module AppInfo = struct
      allocation support."
 
   let description =
-    [
-      "Whilloc is a parametric interpreter that supports concrete, symbolic, \
+    [ "Whilloc is a parametric interpreter that supports concrete, symbolic, \
        and concolic execution of programs written in a simple \"while\"-like \
-       programming language with memory allocation support.";
-      "Use wl <command> --help for more information on a specific command.";
+       programming language with memory allocation support."
+    ; "Use wl <command> --help for more information on a specific command."
     ]
 
   let sdocs = Manpage.s_common_options
 
   let man =
-    [
-      `S Manpage.s_description;
-      `P (List.nth description 0);
-      `P (List.nth description 1);
-      `S Manpage.s_common_options;
-      `P "These options are common to all commands.";
-      `S Manpage.s_bugs;
-      `P "Check bug reports at https://github.com/formalsec/whilloc/issues";
+    [ `S Manpage.s_description
+    ; `P (List.nth description 0)
+    ; `P (List.nth description 1)
+    ; `S Manpage.s_common_options
+    ; `P "These options are common to all commands."
+    ; `S Manpage.s_bugs
+    ; `P "Check bug reports at https://github.com/formalsec/whilloc/issues"
     ]
 
   let man_xrefs = []

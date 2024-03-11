@@ -28,7 +28,7 @@ let translate_uop (op : unop) (v : Z3.Expr.expr) : Z3.Expr.expr =
   | StringOfInt -> assert false
 
 let translate_binop (op : binop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
-    Z3.Expr.expr =
+  Z3.Expr.expr =
   match op with
   | Plus -> Z3.Arithmetic.mk_add ctx [ v1; v2 ]
   | Minus -> Z3.Arithmetic.mk_sub ctx [ v1; v2 ]
@@ -45,30 +45,30 @@ let translate_binop (op : binop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
   | And -> Z3.Boolean.mk_and ctx [ v1; v2 ]
   | Xor -> Z3.Boolean.mk_xor ctx v1 v2
   | _ ->
-      Format.kasprintf failwith
-        "TODO: Encoding.encode_binop, missing implementation of %a"
-        Term.pp_binop op
+    Fmt.kasprintf failwith
+      "TODO: Encoding.encode_binop, missing implementation of %a" Term.pp_binop
+      op
 
 let rec translate (e : Term.t) : Z3.Expr.expr =
   match e with
   | Val v -> translate_value v
   | Var v ->
-      failwith
-        ("InternalError: Encoding.encode_expr, tried to encode variable " ^ v)
+    failwith
+      ("InternalError: Encoding.encode_expr, tried to encode variable " ^ v)
   | Unop (op, e) ->
-      let e' = translate e in
-      translate_uop op e'
+    let e' = translate e in
+    translate_uop op e'
   | Binop (op, e1, e2) ->
-      let e1' = translate e1 in
-      let e2' = translate e2 in
-      translate_binop op e1' e2'
+    let e1' = translate e1 in
+    let e2' = translate e2 in
+    translate_binop op e1' e2'
   | B_symb s -> Z3.Boolean.mk_const_s ctx s
   | I_symb s -> Z3.Arithmetic.Integer.mk_const_s ctx s
   | Ite (e1, e2, e3) ->
-      let e1' = translate e1 in
-      let e2' = translate e2 in
-      let e3' = translate e3 in
-      Z3.Boolean.mk_ite ctx e1' e2' e3'
+    let e1' = translate e1 in
+    let e2' = translate e2 in
+    let e3' = translate e3 in
+    Z3.Boolean.mk_ite ctx e1' e2' e3'
 
 let is_sat (exprs : Term.t list) : bool =
   let exprs' = List.map translate exprs in
@@ -80,27 +80,25 @@ let is_sat (exprs : Term.t list) : bool =
   | Z3.Solver.UNKNOWN -> assert false
 
 let get_interp (model : Z3.Model.model) (const : Z3.FuncDecl.func_decl) :
-    (string * Value.t) option =
+  (string * Value.t) option =
   let* interp = Z3.Model.get_const_interp model const in
   let* v =
     match Z3.Expr.get_sort interp |> Z3.Sort.get_sort_kind with
     | Z3enums.INT_SORT ->
-        let x =
-          int_of_string @@ Z3.Arithmetic.Integer.numeral_to_string interp
-        in
-        Some (Integer x)
+      let x = int_of_string @@ Z3.Arithmetic.Integer.numeral_to_string interp in
+      Some (Integer x)
     | Z3enums.BOOL_SORT -> (
-        match Z3.Boolean.get_bool_value interp with
-        | Z3enums.L_TRUE -> Some (Boolean true)
-        | Z3enums.L_FALSE -> Some (Boolean false)
-        | Z3enums.L_UNDEF -> assert false)
+      match Z3.Boolean.get_bool_value interp with
+      | Z3enums.L_TRUE -> Some (Boolean true)
+      | Z3enums.L_FALSE -> Some (Boolean false)
+      | Z3enums.L_UNDEF -> assert false )
     | _ -> None
   in
   Some (Z3.Symbol.to_string @@ Z3.FuncDecl.get_name const, v)
 
 let find_model ?(print_model = false) (es : Term.t list) :
-    (string * Value.t) list option =
+  (string * Value.t) list option =
   assert (is_sat es);
   let* model = Z3.Solver.get_model solver in
-  if print_model then Format.printf "%s@." (Z3.Model.to_string model);
+  if print_model then Fmt.printf "%s@." (Z3.Model.to_string model);
   list_map (get_interp model) (Z3.Model.get_const_decls model)

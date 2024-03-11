@@ -2,12 +2,12 @@ open Whilloc
 
 exception Timeout
 
-type options = {
-  inputs : Fpath.t;
-  mode : Cmd_execute.mode;
-  timeout : float option;
-  verbose : bool;
-}
+type options =
+  { inputs : Fpath.t
+  ; mode : Cmd_execute.mode
+  ; timeout : float option
+  ; verbose : bool
+  }
 
 let _max_timeout = ref 0.0
 let unset () = Sys.set_signal Sys.sigalrm Sys.Signal_ignore
@@ -17,9 +17,9 @@ let set =
   fun () ->
     Sys.set_signal Sys.sigalrm (Sys.Signal_handle raise);
     ignore
-    @@ (Unix.setitimer Unix.ITIMER_REAL
-          { Unix.it_interval = 0.; Unix.it_value = !_max_timeout }
-         : Unix.interval_timer_status)
+    @@ ( Unix.setitimer Unix.ITIMER_REAL
+           { Unix.it_interval = 0.; Unix.it_value = !_max_timeout }
+         : Unix.interval_timer_status )
 
 let run_single mode file =
   try
@@ -27,13 +27,13 @@ let run_single mode file =
         set ();
         try Cmd_execute.run file mode with
         | Timeout ->
-            Printf.printf
-              "Timeout occurred while processing file: %s (Max Timeout: %f \
-               seconds)\n"
-              file !_max_timeout
+          Printf.printf
+            "Timeout occurred while processing file: %s (Max Timeout: %f \
+             seconds)\n"
+            file !_max_timeout
         (* maybe is not the best way to treat exceptions *)
         | ex ->
-            Printf.printf "Fatal error: exception %s\n" (Printexc.to_string ex))
+          Printf.printf "Fatal error: exception %s\n" (Printexc.to_string ex) )
   with Timeout -> Printf.printf "General timeout\n"
 
 let run (opts : options) : unit =

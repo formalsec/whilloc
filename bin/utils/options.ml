@@ -31,12 +31,11 @@ end
 
 let mode_conv =
   Arg.enum
-    [
-      ("c", Cmd_execute.Concrete);
-      ("saf", Cmd_execute.Saf);
-      ("saite", Cmd_execute.Saite);
-      ("st", Cmd_execute.St);
-      ("sopl", Cmd_execute.Sopl);
+    [ ("c", Cmd_execute.Concrete)
+    ; ("saf", Cmd_execute.Saf)
+    ; ("saite", Cmd_execute.Saite)
+    ; ("st", Cmd_execute.St)
+    ; ("sopl", Cmd_execute.Sopl)
     ]
 
 let mode =

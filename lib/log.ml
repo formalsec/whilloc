@@ -1,1 +1,1 @@
-let error fmt = Format.kasprintf failwith fmt
+let error fmt = Fmt.kasprintf failwith fmt

@@ -2,7 +2,7 @@ module type Choice = sig
   type 'a t
   type v
   type h
-  type state = (v, h) SState.t
+  type state = (v, h) Sstate.t
 
   val return : 'a -> 'a t
   val bind : 'a t -> ('a -> 'b t) -> 'b t
