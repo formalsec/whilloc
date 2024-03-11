@@ -38,7 +38,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : string =
-  Format.asprintf "%a" (pp pp_val pp_heap) state
+  Fmt.asprintf "%a" (pp pp_val pp_heap) state
 
 let print (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : unit =

@@ -54,7 +54,7 @@ module M : Eval_intf.M with type t = Value.t = struct
            value"
 
   let pp (fmt : Fmt.t) (v : t) : unit = Value.pp fmt v
-  let to_string (v : t) : string = Format.asprintf "%a" pp v
+  let to_string (v : t) : string = Fmt.asprintf "%a" pp v
   let print (v : t) : unit = to_string v |> print_endline
 
   let make_symbol (name : string) (tp : string) =

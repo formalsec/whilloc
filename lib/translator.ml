@@ -45,7 +45,7 @@ let translate_binop (op : binop) (v1 : Z3.Expr.expr) (v2 : Z3.Expr.expr) :
   | And -> Z3.Boolean.mk_and ctx [ v1; v2 ]
   | Xor -> Z3.Boolean.mk_xor ctx v1 v2
   | _ ->
-      Format.kasprintf failwith
+      Fmt.kasprintf failwith
         "TODO: Encoding.encode_binop, missing implementation of %a"
         Term.pp_binop op
 
@@ -102,5 +102,5 @@ let find_model ?(print_model = false) (es : Term.t list) :
     (string * Value.t) list option =
   assert (is_sat es);
   let* model = Z3.Solver.get_model solver in
-  if print_model then Format.printf "%s@." (Z3.Model.to_string model);
+  if print_model then Fmt.printf "%s@." (Z3.Model.to_string model);
   list_map (get_interp model) (Z3.Model.get_const_decls model)

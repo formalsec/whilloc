@@ -18,7 +18,7 @@ let get_value (model : t) (var : string) : Value.t =
             var
       | v -> v)
 
-let pp ?(no_values = false) (fmt : Format.formatter) (model : t) : unit =
+let pp ?(no_values = false) (fmt : Fmt.formatter) (model : t) : unit =
   let open Fmt in
   let pp_binding fmt (x, v) =
     fprintf fmt "%s : %a" x (Value.pp ~no_values) v
@@ -31,4 +31,4 @@ let pp ?(no_values = false) (fmt : Format.formatter) (model : t) : unit =
       pp_lst ~pp_sep:pp_newline pp_binding fmt m
 
 let to_string (model : t) : string =
-  Format.asprintf "%a" (pp ~no_values:false) model
+  Fmt.asprintf "%a" (pp ~no_values:false) model

@@ -12,7 +12,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
 
 let string_of_return (pp_val : Fmt.t -> 'v -> unit)
     (pp_heap : Fmt.t -> 'h -> unit) (ret : ('v, 'h) t) : string =
-  Format.asprintf "%a" (pp pp_val pp_heap) ret
+  Fmt.asprintf "%a" (pp pp_val pp_heap) ret
 
 let get_outcome (ret : ('v, 'h) t) : Outcome.t =
   let _, out = ret in

@@ -64,8 +64,8 @@ let rec get_symbols (e : t) : string list =
   | Binop (_, e1, e2) -> get_symbols e1 @ get_symbols e2
   | Ite (e1, e2, e3) -> get_symbols e1 @ get_symbols e2 @ get_symbols e3
 
-let pp_string = Format.pp_print_string
-let fprintf = Format.fprintf
+let pp_string = Fmt.pp_print_string
+let fprintf = Fmt.fprintf
 
 let pp_unop fmt (op : unop) =
   match op with
@@ -104,4 +104,4 @@ let rec pp fmt (e : t) =
   | Binop (op, v1, v2) -> fprintf fmt "(%a %a %a)" pp_binop op pp v1 pp v2
   | Ite (e1, e2, e3) -> fprintf fmt "(%a %a %a)" pp e1 pp e2 pp e3
 
-let to_string (e : t) : string = Format.asprintf "%a" pp e
+let to_string (e : t) : string = Fmt.asprintf "%a" pp e

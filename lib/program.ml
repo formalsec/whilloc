@@ -61,13 +61,13 @@ let rec pp_stmt (fmt : Fmt.t) (s : stmt) : unit =
         Term.pp e arr
   | Delete arr -> fprintf fmt "Delete: %s" arr
 
-let string_of_stmt (s : stmt) : string = Format.asprintf "%a" pp_stmt s
+let string_of_stmt (s : stmt) : string = Fmt.asprintf "%a" pp_stmt s
 
 let pp_func (fmt : Fmt.t) (f : func) : unit =
   let open Fmt in
   fprintf fmt " Function id: %s@\nArguments  : (%a)@\nBody       : %a@\n" f.id
     (pp_lst ~pp_sep:pp_comma pp_str) f.args pp_stmt f.body
 
-let string_of_function (f : func) : string = Format.asprintf "%a" pp_func f
+let string_of_function (f : func) : string = Fmt.asprintf "%a" pp_func f
 let print_statement (s : stmt) : unit = s |> string_of_stmt |> print_endline
 let print_function (f : func) : unit = f |> string_of_function |> print_endline

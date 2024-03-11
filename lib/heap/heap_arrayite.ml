@@ -15,7 +15,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let pp_binding fmt (_, v) = fprintf fmt "%a" pp_block v in
     fprintf fmt "%a" (pp_hashtbl ~pp_sep:pp_newline pp_binding) heap
 
-  let to_string (heap : t) : string = Format.asprintf "%a" pp heap
+  let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
     let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in

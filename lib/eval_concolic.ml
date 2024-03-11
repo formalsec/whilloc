@@ -30,10 +30,10 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
 
   let pp (fmt : Fmt.t) (e : t) : unit =
     let value, expression = e in
-    Format.fprintf fmt "(%a, %a)" Eval_concrete.pp value Eval_symbolic.pp
+    Fmt.fprintf fmt "(%a, %a)" Eval_concrete.pp value Eval_symbolic.pp
       expression
 
-  let to_string (e : t) : string = Format.asprintf "%a" pp e
+  let to_string (e : t) : string = Fmt.asprintf "%a" pp e
   let print (e : t) : unit = to_string e |> print_endline
 
   let make_symbol (name : string) (tp : string) =

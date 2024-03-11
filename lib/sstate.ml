@@ -6,8 +6,8 @@ type ('v, 'h) t = {
 }
 
 let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
-    (fmt : Format.formatter) (state : ('v, 'h) t) : unit =
-  Format.fprintf fmt
+    (fmt : Fmt.formatter) (state : ('v, 'h) t) : unit =
+  Fmt.fprintf fmt
     "{@\n-Store         : %a@\n-Callstack     : %a@\n-Path cond.    : \
      %a@\n-Heap          : %a@\n}"
     (Store.pp pp_val) state.store (Callstack.pp pp_val) state.cs (Pc.pp pp_val)
@@ -15,7 +15,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : string =
-  Format.asprintf "%a" (pp pp_val pp_heap) state
+  Fmt.asprintf "%a" (pp pp_val pp_heap) state
 
 let print (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : unit =

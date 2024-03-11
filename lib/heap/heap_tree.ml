@@ -29,7 +29,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =
     let f = open_out ("output/" ^ string_of_int idx ^ "_tree.json") in
-    let tree_json = Format.asprintf "%a" pp_block tree in
+    let tree_json = Fmt.asprintf "%a" pp_block tree in
     Printf.fprintf f "%s\n" tree_json;
     close_out f
 
