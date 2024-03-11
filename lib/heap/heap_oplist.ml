@@ -2,7 +2,12 @@ module M : Heap_intf.M with type vt = Term.t = struct
   type addr = int
   type size = Term.t
   type op = Term.t * Term.t * Term.t Pc.t
-  type t = { map : (addr, size * op list) Hashtbl.t; mutable next : int }
+
+  type t =
+    { map : (addr, size * op list) Hashtbl.t
+    ; mutable next : int
+    }
+
   type vt = Term.t
 
   let init () : t = { map = Hashtbl.create Parameters.size; next = 0 }
@@ -30,17 +35,16 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt Pc.t) : bool =
     match v with
     | Val (Loc l) -> (
-        match Hashtbl.find_opt heap.map l with
-        | Some (sz, _) -> (
-            match sz with
-            | Val (Integer _) | I_symb _ -> is_within sz i pc
-            | _ ->
-                failwith
-                  "InternalError: HeapOpList.in_bounds, size not an integer")
+      match Hashtbl.find_opt heap.map l with
+      | Some (sz, _) -> (
+        match sz with
+        | Val (Integer _) | I_symb _ -> is_within sz i pc
         | _ ->
-            failwith
-              "InternalError: HeapOpList.in_bounds, accessed OpList is not in \
-               the heap")
+          failwith "InternalError: HeapOpList.in_bounds, size not an integer" )
+      | _ ->
+        failwith
+          "InternalError: HeapOpList.in_bounds, accessed OpList is not in the \
+           heap" )
     | _ -> failwith "InternalError: HeapOpList.in_bounds, v must be location"
 
   let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
@@ -50,7 +54,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     [ (h, Val (Loc next), pc) ]
 
   let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt Pc.t) :
-      (t * vt Pc.t) list =
+    (t * vt Pc.t) list =
     let lbl = match arr with Val (Loc i) -> i | _ -> assert false in
     let arr' = Hashtbl.find_opt h.map lbl in
     let f ((sz, oplist) : size * op list) : unit =
@@ -67,7 +71,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let v =
       List.fold_left
         (fun ac (i, v, _) ->
-          Term.Ite (Term.Binop (Term.Equals, index, i), v, ac))
+          Term.Ite (Term.Binop (Term.Equals, index, i), v, ac) )
         (Term.Val (Value.Integer 0)) (List.rev ops)
     in
     [ (h, v, pc) ]

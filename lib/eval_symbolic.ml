@@ -26,7 +26,7 @@ module M : Eval_intf.M with type t = Term.t = struct
     | Unop (op, e) -> Unop (op, simplify_expr e)
     | Binop (op, e1, e2) -> Binop (op, simplify_expr e1, simplify_expr e2)
     | Ite (e1, e2, e3) ->
-        Ite (simplify_expr e1, simplify_expr e2, simplify_expr e3)
+      Ite (simplify_expr e1, simplify_expr e2, simplify_expr e3)
 
   let rec eval (store : st) (e : t) : t =
     (* We can't reduce the expression 'e' to a value if it contains symbolic variables, so we just replace each symbolic variable with its symbolic value *)
@@ -39,18 +39,18 @@ module M : Eval_intf.M with type t = Term.t = struct
       | Var x -> Store.get store x
       | Unop (op, e) -> Val (eval store e |> get_val |> eval_unop_expr op)
       | Binop (op, e1, e2) ->
-          Val
-            (eval_binop_expr op
-               (eval store e1 |> get_val)
-               (eval store e2 |> get_val))
+        Val
+          (eval_binop_expr op
+             (eval store e1 |> get_val)
+             (eval store e2 |> get_val) )
       | B_symb _ ->
-          failwith
-            "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
-             boolean"
+        failwith
+          "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
+           boolean"
       | I_symb _ ->
-          failwith
-            "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
-             integer"
+        failwith
+          "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
+           integer"
       | Ite (_, _, _) -> failwith "InternalError: concrete Ite not implemented"
 
   let is_true (exprs : t list) : bool = Translator.is_sat exprs

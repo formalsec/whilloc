@@ -1,4 +1,9 @@
-type unop = Neg | Not | Abs | StringOfInt [@@deriving yojson]
+type unop =
+  | Neg
+  | Not
+  | Abs
+  | StringOfInt
+[@@deriving yojson]
 
 type binop =
   | Plus
@@ -44,9 +49,9 @@ let get_value_from_expr (e : t) : Value.t =
   match e with
   | Val v -> v
   | _ ->
-      failwith
-        "InternalError: Expression.get_value_from_expr, tried to retrieve a \
-         value from a non value constructor"
+    failwith
+      "InternalError: Expression.get_value_from_expr, tried to retrieve a \
+       value from a non value constructor"
 
 let rec flatten (e : t) : t list =
   match e with

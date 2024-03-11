@@ -10,10 +10,10 @@ module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type vt = Eval.t) :
   let return x s = [ (x, s) ]
 
   let bind f k
-      (* f : 'a t *)
-      (* k : 'a -> 'b t *)
-      (* 'b t *)
-        s =
+    (* f : 'a t *)
+    (* k : 'a -> 'b t *)
+    (* 'b t *)
+      s =
     let lst = f s in
     (* ('a * state) list *)
     let lst' = List.map (fun (a, s') -> (k a) s' (* ('b * state) list *)) lst in
@@ -33,10 +33,9 @@ module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type vt = Eval.t) :
     | true, false -> [ (true, { s with pc = pc_v }) ]
     | false, true -> [ (false, { s with pc = pc_not_v }) ]
     | true, true ->
-        [
-          (true, { (Sstate.dup s Heap.clone) with pc = pc_v });
-          (false, { (Sstate.dup s Heap.clone) with pc = pc_not_v });
-        ]
+      [ (true, { (Sstate.dup s Heap.clone) with pc = pc_v })
+      ; (false, { (Sstate.dup s Heap.clone) with pc = pc_not_v })
+      ]
 
   let lift (f : state -> ('a * state) list) : 'a t = f
   let run (s : state) (f : 'a t) : ('a * state) list = f s

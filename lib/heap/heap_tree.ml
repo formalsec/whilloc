@@ -2,25 +2,26 @@ module M : Heap_intf.M with type vt = Term.t = struct
   type vt = Term.t
   type range = vt * vt
 
-  type tree_t = Leaf of range * vt | Node of range * tree_t list
+  type tree_t =
+    | Leaf of range * vt
+    | Node of range * tree_t list
 
   type t = (int, tree_t) Hashtbl.t * int
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let rec pp_block (fmt : Fmt.t) (block : tree_t) : unit =
-    let open Fmt in 
+    let open Fmt in
     match block with
-    | Leaf ((l, r), v) -> 
+    | Leaf ((l, r), v) ->
       fprintf fmt "{ \"leaf\": { \"range\": \"[%a, %a]\", \"value\": \"%a\"} }"
-        Term.pp l
-        Term.pp r
-        Term.pp v
-    | Node ((l, r), ch) -> 
-      fprintf fmt "{ \"node\": { \"range\": \"[%a, %a]\", \"children\": [ %a ]} }"
-        Term.pp l
-        Term.pp r
-        (pp_lst ~pp_sep:pp_comma pp_block) ch
+        Term.pp l Term.pp r Term.pp v
+    | Node ((l, r), ch) ->
+      fprintf fmt
+        "{ \"node\": { \"range\": \"[%a, %a]\", \"children\": [ %a ]} }" Term.pp
+        l Term.pp r
+        (pp_lst ~pp_sep:pp_comma pp_block)
+        ch
 
   let pp (fmt : Fmt.t) ((heap, _) : t) : unit =
     let open Fmt in
@@ -45,71 +46,70 @@ module M : Heap_intf.M with type vt = Term.t = struct
     [ ((h', curr + 1), Term.Val (Loc curr), pc) ]
 
   let update h (arr : vt) (index : vt) (v : vt) (pc : vt Pc.t) :
-      (t * vt Pc.t) list =
+    (t * vt Pc.t) list =
     let h', next = h in
     let rec update_tree (tree : tree_t) (index : vt) (v : vt) (pc : vt Pc.t) :
-        (tree_t * vt Pc.t) list option =
+      (tree_t * vt Pc.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
-          let ge_left = Term.Binop (Gte, index, left) in
-          let l_right = Term.Binop (Lt, index, right) in
-          let cond = Term.Binop (And, ge_left, l_right) in
-          let pc' = cond :: pc in
-          if Translator.is_sat pc' then
-            let index_plus_1 = Term.Binop (Plus, index, Val (Integer 1)) in
-            let leaves =
-              [
-                Leaf ((left, index), old_v);
-                Leaf ((index, index_plus_1), v);
-                Leaf ((index_plus_1, right), old_v);
-              ]
-            in
-            Some [ (Node ((left, right), leaves), pc') ]
-          else None
+        let ge_left = Term.Binop (Gte, index, left) in
+        let l_right = Term.Binop (Lt, index, right) in
+        let cond = Term.Binop (And, ge_left, l_right) in
+        let pc' = cond :: pc in
+        if Translator.is_sat pc' then
+          let index_plus_1 = Term.Binop (Plus, index, Val (Integer 1)) in
+          let leaves =
+            [ Leaf ((left, index), old_v)
+            ; Leaf ((index, index_plus_1), v)
+            ; Leaf ((index_plus_1, right), old_v)
+            ]
+          in
+          Some [ (Node ((left, right), leaves), pc') ]
+        else None
       | Node ((left, right), trees) ->
-          let ge_left = Term.Binop (Gte, index, left) in
-          let l_right = Term.Binop (Lt, index, right) in
-          let cond = Term.Binop (And, ge_left, l_right) in
-          let pc' = cond :: pc in
-          if Translator.is_sat pc' then
-            let l = List.map (fun t -> update_tree t index v pc') trees in
-            let t1, t2, t3 =
-              match trees with
-              | t1 :: t2 :: [ t3 ] -> (t1, t2, t3)
-              | _ -> failwith "unreachable"
-            in
-            match l with
-            | nt1 :: nt2 :: [ nt3 ] ->
-                let l1 =
-                  match nt1 with
-                  | Some l1 ->
-                      List.map
-                        (fun (nt1, pc1) ->
-                          (Node ((left, right), [ nt1; t2; t3 ]), pc1))
-                        l1
-                  | None -> []
-                in
-                let l2 =
-                  match nt2 with
-                  | Some l2 ->
-                      List.map
-                        (fun (nt2, pc2) ->
-                          (Node ((left, right), [ t1; nt2; t3 ]), pc2))
-                        l2
-                  | None -> []
-                in
-                let l3 =
-                  match nt3 with
-                  | Some l3 ->
-                      List.map
-                        (fun (nt3, pc3) ->
-                          (Node ((left, right), [ t1; t2; nt3 ]), pc3))
-                        l3
-                  | None -> []
-                in
-                Some (l1 @ l2 @ l3)
+        let ge_left = Term.Binop (Gte, index, left) in
+        let l_right = Term.Binop (Lt, index, right) in
+        let cond = Term.Binop (And, ge_left, l_right) in
+        let pc' = cond :: pc in
+        if Translator.is_sat pc' then
+          let l = List.map (fun t -> update_tree t index v pc') trees in
+          let t1, t2, t3 =
+            match trees with
+            | t1 :: t2 :: [ t3 ] -> (t1, t2, t3)
             | _ -> failwith "unreachable"
-          else None
+          in
+          match l with
+          | nt1 :: nt2 :: [ nt3 ] ->
+            let l1 =
+              match nt1 with
+              | Some l1 ->
+                List.map
+                  (fun (nt1, pc1) ->
+                    (Node ((left, right), [ nt1; t2; t3 ]), pc1) )
+                  l1
+              | None -> []
+            in
+            let l2 =
+              match nt2 with
+              | Some l2 ->
+                List.map
+                  (fun (nt2, pc2) ->
+                    (Node ((left, right), [ t1; nt2; t3 ]), pc2) )
+                  l2
+              | None -> []
+            in
+            let l3 =
+              match nt3 with
+              | Some l3 ->
+                List.map
+                  (fun (nt3, pc3) ->
+                    (Node ((left, right), [ t1; t2; nt3 ]), pc3) )
+                  l3
+              | None -> []
+            in
+            Some (l1 @ l2 @ l3)
+          | _ -> failwith "unreachable"
+        else None
     in
     let i =
       match arr with
@@ -120,12 +120,12 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let new_trees = update_tree tree index v pc in
     match new_trees with
     | Some new_trees ->
-        List.map
-          (fun (new_tree, pc') ->
-            let new_h = Hashtbl.copy h' in
-            Hashtbl.replace new_h i new_tree;
-            ((new_h, next), pc'))
-          new_trees
+      List.map
+        (fun (new_tree, pc') ->
+          let new_h = Hashtbl.copy h' in
+          Hashtbl.replace new_h i new_tree;
+          ((new_h, next), pc') )
+        new_trees
     | None -> failwith "Out of bounds access"
 
   let must_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
@@ -146,24 +146,23 @@ module M : Heap_intf.M with type vt = Term.t = struct
     Translator.is_sat ([ e1; e2 ] @ pc)
 
   let rec search_tree (index : vt) (pc : vt Pc.t) (tree : tree_t) :
-      (vt * vt) list =
+    (vt * vt) list =
     match tree with
     | Leaf (r, v) ->
-        let lower, upper = r in
-        let in_range = may_within_range r index pc in
-        if in_range then
-          [
-            ( v,
-              Term.Binop
-                ( And,
-                  Term.Binop (Lt, index, upper),
-                  Term.Binop (Gte, index, lower) ) );
-          ]
-        else []
+      let lower, upper = r in
+      let in_range = may_within_range r index pc in
+      if in_range then
+        [ ( v
+          , Term.Binop
+              ( And
+              , Term.Binop (Lt, index, upper)
+              , Term.Binop (Gte, index, lower) ) )
+        ]
+      else []
     | Node (r, tree_list) ->
-        let in_range = may_within_range r index pc in
-        if in_range then List.concat (List.map (search_tree index pc) tree_list)
-        else []
+      let in_range = may_within_range r index pc in
+      if in_range then List.concat (List.map (search_tree index pc) tree_list)
+      else []
 
   let lookup h (arr : vt) (index : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list
       =
@@ -171,28 +170,27 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
     match arr with
     | Val (Loc l) -> (
-        match Hashtbl.find_opt tbl l with
-        | Some tree ->
-            let v =
-              List.fold_left
-                (fun ac (v, c) -> Term.Ite (c, v, ac))
-                (Term.Val (Value.Integer 0))
-                (search_tree index pc tree)
-            in
-            [ (h, v, pc) ]
-        | _ ->
-            failwith
-              "InternalError: HeapTree.lookup, accessed tree is not in the heap"
-        )
+      match Hashtbl.find_opt tbl l with
+      | Some tree ->
+        let v =
+          List.fold_left
+            (fun ac (v, c) -> Term.Ite (c, v, ac))
+            (Term.Val (Value.Integer 0))
+            (search_tree index pc tree)
+        in
+        [ (h, v, pc) ]
+      | _ ->
+        failwith
+          "InternalError: HeapTree.lookup, accessed tree is not in the heap" )
     | _ -> failwith "InternalError: HeapTree.lookup, arr must be location"
 
   let free h (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
     let h', _ = h in
     (* let ign = to_string h in
        ignore ign; *)
-    (match arr with
+    ( match arr with
     | Val (Loc i) -> Hashtbl.remove h' i
-    | _ -> failwith "Invalid allocation index");
+    | _ -> failwith "Invalid allocation index" );
     [ (h, pc) ]
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
@@ -200,14 +198,13 @@ module M : Heap_intf.M with type vt = Term.t = struct
     let h', _ = heap in
     match arr with
     | Val (Loc l) -> (
-        match Hashtbl.find_opt h' l with
-        | Some tree -> (
-            match tree with
-            | Leaf (r, _) | Node (r, _) -> must_within_range r i pc)
-        | _ ->
-            failwith
-              "InternalError: HeapTree.in_bounds, accessed tree is not in the \
-               heap")
+      match Hashtbl.find_opt h' l with
+      | Some tree -> (
+        match tree with Leaf (r, _) | Node (r, _) -> must_within_range r i pc )
+      | _ ->
+        failwith
+          "InternalError: HeapTree.in_bounds, accessed tree is not in the heap"
+      )
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
 
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
