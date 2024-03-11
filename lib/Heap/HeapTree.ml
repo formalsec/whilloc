@@ -1,33 +1,37 @@
 module M : Heap_intf.M with type vt = Term.t = struct
-  type vt = Term.t [@@deriving yojson]
-  type range = vt * vt [@@deriving yojson]
+  type vt = Term.t
+  type range = vt * vt
 
   type tree_t = Leaf of range * vt | Node of range * tree_t list
-  [@@deriving yojson]
 
   type t = (int, tree_t) Hashtbl.t * int
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let pp (_fmt : Fmt.t) (_heap : t) : unit =
-    failwith "Not Implemented"
+  let rec pp_block (fmt : Fmt.t) (block : tree_t) : unit =
+    let open Fmt in 
+    match block with
+    | Leaf ((l, r), v) -> 
+      fprintf fmt "{ \"leaf\": { \"range\": \"[%a, %a]\", \"value\": \"%a\"} }"
+        Term.pp l
+        Term.pp r
+        Term.pp v
+    | Node ((l, r), ch) -> 
+      fprintf fmt "{ \"node\": { \"range\": \"[%a, %a]\", \"children\": [ %a ]} }"
+        Term.pp l
+        Term.pp r
+        (pp_lst ~pp_sep:pp_comma pp_block) ch
+
+  let pp (fmt : Fmt.t) ((heap, _) : t) : unit =
+    let open Fmt in
+    let pp_binding fmt (_, v) = fprintf fmt "%a" pp_block v in
+    fprintf fmt "%a" (pp_hashtbl ~pp_sep:pp_newline pp_binding) heap
 
   let tree_to_json (idx : int) (tree : tree_t) : unit =
-    let rec iter_tree (tree : tree_t) : string =
-      match tree with
-      | Leaf ((l, r), v) ->
-          "{ \"leaf\": { \"range\": \"[" ^ Term.to_string l ^ ", "
-          ^ Term.to_string r ^ "[\", \"value\": " ^ "\"" ^ Term.to_string v
-          ^ "\"" ^ " } }"
-      | Node ((l, r), ch) ->
-          "{ \"node\": { \"range\": \"[" ^ Term.to_string l ^ ", "
-          ^ Term.to_string r ^ "[\", \"children\": " ^ "[ "
-          ^ String.concat ", " (List.map iter_tree ch)
-          ^ " ]" ^ " } }"
-    in
     let f = open_out ("output/" ^ string_of_int idx ^ "_tree.json") in
-    let tree_json = iter_tree tree in
-    Printf.fprintf f "%s\n" tree_json
+    let tree_json = Format.asprintf "%a" pp_block tree in
+    Printf.fprintf f "%s\n" tree_json;
+    close_out f
 
   let to_string (h : t) : string =
     let h', _ = h in
