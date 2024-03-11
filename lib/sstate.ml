@@ -1,7 +1,7 @@
 type ('v, 'h) t = {
   store : 'v Store.t;
   cs : 'v Callstack.t;
-  pc : 'v PC.t;
+  pc : 'v Pc.t;
   heap : 'h;
 }
 
@@ -10,7 +10,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
   Format.fprintf fmt
     "{@\n-Store         : %a@\n-Callstack     : %a@\n-Path cond.    : \
      %a@\n-Heap          : %a@\n}"
-    (Store.pp pp_val) state.store (Callstack.pp pp_val) state.cs (PC.pp pp_val)
+    (Store.pp pp_val) state.store (Callstack.pp pp_val) state.cs (Pc.pp pp_val)
     state.pc pp_heap state.heap
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)

@@ -10,21 +10,21 @@ module M = struct
   let to_string (_h : t) : string =
     failwith "Not Implemented"
 
-  let malloc _h (_sz : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list =
+  let malloc _h (_sz : vt) (_pc : vt Pc.t) : (t * vt * vt Pc.t) list =
     []
 
-  let update _h (_arr : vt) (_index : vt) (_v : vt) (_pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let update _h (_arr : vt) (_index : vt) (_v : vt) (_pc : vt Pc.t) :
+      (t * vt Pc.t) list =
     []
 
-  let lookup _h (_arr : vt) (_index : vt) (_pc : vt PC.t) : (t * vt * vt PC.t) list
+  let lookup _h (_arr : vt) (_index : vt) (_pc : vt Pc.t) : (t * vt * vt Pc.t) list
       =
     []
 
-  let free _h (_arr : vt) (_pc : vt PC.t) : (t * vt PC.t) list =
+  let free _h (_arr : vt) (_pc : vt Pc.t) : (t * vt Pc.t) list =
     []
 
-  let in_bounds (_heap : t) (_v : vt) (_i : vt) (_pc : vt PC.t) : bool =
+  let in_bounds (_heap : t) (_v : vt) (_i : vt) (_pc : vt Pc.t) : bool =
     failwith "not implemented"
 
   let clone _ = assert false

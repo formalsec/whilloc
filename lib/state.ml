@@ -1,5 +1,5 @@
 type ('v, 'h) t =
-  Program.stmt * Program.stmt list * 'v Store.t * 'v Callstack.t * 'v PC.t * 'h
+  Program.stmt * Program.stmt list * 'v Store.t * 'v Callstack.t * 'v Pc.t * 'h
 
 let get_statement (state : ('v, 'h) t) : Program.stmt =
   let stmt, _, _, _, _, _ = state in
@@ -17,7 +17,7 @@ let get_callstack (state : ('v, 'h) t) : 'v Callstack.t =
   let _, _, _, cs, _, _ = state in
   cs
 
-let get_pathcondition (state : ('v, 'h) t) : 'v PC.t =
+let get_pathcondition (state : ('v, 'h) t) : 'v Pc.t =
   let _, _, _, _, pc, _ = state in
   pc
 
@@ -34,7 +34,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     ">STATE:@\n -Cur Statement : %a@\n  -Continuation  : %a@\n  -Store         : \
      %a@\n  -Callstack    : %a@\n  -Path cond.    : %a@\n  -Heap          : %a@\n"
     Program.pp_stmt s (pp_lst ~pp_sep:(fun fmt () -> fprintf fmt "; ") Program.pp_stmt) cont (Store.pp pp_val) store
-    (Callstack.pp pp_val) cs (PC.pp pp_val) pc pp_heap heap
+    (Callstack.pp pp_val) cs (Pc.pp pp_val) pc pp_heap heap
 
 let to_string (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     (state : ('v, 'h) t) : string =

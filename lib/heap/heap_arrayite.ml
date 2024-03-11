@@ -17,14 +17,14 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
-  let is_within (sz : int) (index : vt) (pc : vt PC.t) : bool =
+  let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
     let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in
     let e2 = Term.Binop (Gte, index, Val (Value.Integer sz)) in
     let e3 = Term.Binop (Or, e1, e2) in
 
     not (Translator.is_sat (e3 :: pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool =
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
     let h, _ = heap in
     match arr with
     | Val (Loc l) -> (
@@ -49,7 +49,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | None -> failwith "Block does not exist")
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
     let tbl, next = h in
     match sz with
     | Val (Integer i) ->
@@ -58,8 +58,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
     | _ ->
         failwith "InternalError: HeapArrayIte.malloc, size must be an integer"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt PC.t) :
-      (t * vt PC.t) list =
+  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
+      (t * vt Pc.t) list =
     let heap', curr = heap in
     let loc, block = find_block heap loc in
     match index with
@@ -80,8 +80,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
         [ ((heap', curr), path) ]
     | _ -> failwith "Invalid index"
 
-  let lookup (h : t) (arr : vt) (index : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup (h : t) (arr : vt) (index : vt) (pc : vt Pc.t) :
+      (t * vt * vt Pc.t) list =
     let tbl, _ = h in
     match index with
     | Val (Integer i) -> (
@@ -131,7 +131,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
             failwith
               "InternalError:  HeapArrayIte.update, arr must be a location")
 
-  let free (h : t) (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
+  let free (h : t) (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
     let tbl, _ = h in
     match arr with
     | Val (Loc l) -> (

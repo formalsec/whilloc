@@ -18,14 +18,14 @@ module M : Heap_intf.M with type vt = Term.t = struct
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
-  let is_within (sz : int) (index : vt) (pc : vt PC.t) : bool =
+  let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
     let e1 = Term.Binop (Lt, index, Val (Value.Integer 0)) in
     let e2 = Term.Binop (Gte, index, Val (Value.Integer sz)) in
     let e3 = Term.Binop (Or, e1, e2) in
 
     not (Translator.is_sat ([ e3 ] @ pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt PC.t) : bool =
+  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
     match arr with
     | Val (Loc l) -> (
         match Hashtbl.find_opt heap.map l with
@@ -48,7 +48,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
         | None -> failwith "Block does not exist")
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (heap : t) (size : vt) (path : vt PC.t) : (t * vt * vt PC.t) list =
+  let malloc (heap : t) (size : vt) (path : vt Pc.t) : (t * vt * vt Pc.t) list =
     match size with
     | Val (Integer size') ->
         let block = Array.make size' (Val (Integer 0)) in
@@ -56,8 +56,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
         [ ({ heap with i = heap.i + 1 }, Val (Loc heap.i), path) ]
     | _ -> failwith "Size needs to be a concrete integer"
 
-  let lookup (heap : t) (loc : vt) (index : vt) (path : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup (heap : t) (loc : vt) (index : vt) (path : vt Pc.t) :
+      (t * vt * vt Pc.t) list =
     let _, block = find_block heap loc in
     match index with
     | Val (Integer index') ->
@@ -69,7 +69,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           List.mapi
             (fun index' expr ->
               let cond = Binop (Equals, I_symb sym, Val (Integer index')) in
-              (copy heap, expr, PC.add_condition path cond))
+              (copy heap, expr, Pc.add_condition path cond))
             blockList
         in
         List.filteri
@@ -80,8 +80,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt PC.t) :
-      (t * vt PC.t) list =
+  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
+      (t * vt Pc.t) list =
     let loc, block = find_block heap loc in
     match index with
     | Val (Integer index') ->
@@ -98,7 +98,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
               let _ = Array.set newBlock index' v in
               let _ = Hashtbl.replace newHeap loc newBlock in
               let cond = Binop (Equals, I_symb sym, Val (Integer index')) in
-              ({ heap with map = newHeap }, PC.add_condition path cond))
+              ({ heap with map = newHeap }, Pc.add_condition path cond))
             blockList
         in
         List.filteri
@@ -109,7 +109,7 @@ module M : Heap_intf.M with type vt = Term.t = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let free (heap : t) (loc : vt) (path : vt PC.t) : (t * vt PC.t) list =
+  let free (heap : t) (loc : vt) (path : vt Pc.t) : (t * vt Pc.t) list =
     let loc', _ = find_block heap loc in
     let _ = Hashtbl.remove heap.map loc' in
     [ (heap, path) ]

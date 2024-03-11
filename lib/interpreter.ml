@@ -9,7 +9,7 @@ module Make
 
   type t = Eval.t
   type h = Heap.t
-  type state = (Eval.t, Heap.t) SState.t
+  type state = (Eval.t, Heap.t) Sstate.t
 
   (* Evaluates an expressions *)
   let eval = Eval.eval
@@ -21,7 +21,7 @@ module Make
   let make_symbol = Eval.make_symbol
 
   (* Adds an expression to a path condition *)
-  let add_condition = PC.add_condition
+  let add_condition = Pc.add_condition
 
   (* Integer constant that bounds the number of steps performed by the interpreter *)
   let tank = Parameters.tank
@@ -31,11 +31,11 @@ module Make
   let initial_state (program : Program.program) : state * Program.stmt list =
     let main = Program.get_function Parameters.main_id program in
     let state =
-      SState.
+      Sstate.
         {
           heap = Heap.init ();
           store = Store.create_empty_store Parameters.size;
-          pc = PC.create_pathcondition;
+          pc = Pc.create_pathcondition;
           cs = Callstack.create_callstack;
         }
     in
@@ -54,7 +54,7 @@ module Make
     if !Utils.verbose then (* Printf.printf "\n";
     let/ state = Choice.get in
     Printf.printf "Heap: %s\n" (Heap.to_string state.heap);
-    Printf.printf "State: %s\n" (SState.to_string Eval.pp Heap.pp state); *)
+    Printf.printf "State: %s\n" (Sstate.to_string Eval.pp Heap.pp state); *)
     Fmt.printf "Stmt: %a@." Program.pp_stmt s;
     match s with
     | Skip | Clear -> return cont
@@ -98,7 +98,7 @@ module Make
               Store.set s.store x symb_val;
               let v = eval s.store c in
               let pc' = add_condition s.pc v in
-              if is_true pc' then [ ((), SState.{ s with pc = pc' }) ] else []
+              if is_true pc' then [ ((), Sstate.{ s with pc = pc' }) ] else []
             in
             let/ () = Choice.lift f_symb_int in
             return cont)
@@ -170,7 +170,7 @@ module Make
           List.map
             (fun (hp, loc, pc') ->
               ( loc,
-                SState.
+                Sstate.
                   {
                     heap = hp;
                     pc = pc';
@@ -200,7 +200,7 @@ module Make
                       else (s.store, s.cs)
                     in
                     ( (),
-                      SState.{ heap = hp; pc = pc'; store = store'; cs = cs' }
+                      Sstate.{ heap = hp; pc = pc'; store = store'; cs = cs' }
                     ))
                   lst
               else failwith "Index out of bounds"
@@ -224,7 +224,7 @@ module Make
                       if dup then (Store.dup s.store, Callstack.dup s.cs)
                       else (s.store, s.cs)
                     in
-                    (v, SState.{ heap = hp; pc = pc'; store = store'; cs = cs' }))
+                    (v, Sstate.{ heap = hp; pc = pc'; store = store'; cs = cs' }))
                   lst
               else failwith "Index out of bounds"
           | None -> failwith "InternalError: array is not defined"
@@ -246,7 +246,7 @@ module Make
                     if dup then (Store.dup s.store, Callstack.dup s.cs)
                     else (s.store, s.cs)
                   in
-                  ((), SState.{ heap = hp; pc = pc'; store = store'; cs = cs' }))
+                  ((), Sstate.{ heap = hp; pc = pc'; store = store'; cs = cs' }))
                 lst
           | None -> failwith "InternalError: array is not defined"
         in

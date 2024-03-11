@@ -8,7 +8,7 @@ let pp (pp_val : Fmt.t -> 'v -> unit) (pp_heap : Fmt.t -> 'h -> unit)
     "#RETURN:@\n -Outcome   : %a@\n -Store     : %a@\n -Path cond.: %a@\n \
      -Heap      : %a@\n"
     (Outcome.pp ~no_values:false)
-    out (Store.pp pp_val) st (PC.pp pp_val) pc pp_heap h
+    out (Store.pp pp_val) st (Pc.pp pp_val) pc pp_heap h
 
 let string_of_return (pp_val : Fmt.t -> 'v -> unit)
     (pp_heap : Fmt.t -> 'h -> unit) (ret : ('v, 'h) t) : string =
@@ -18,7 +18,7 @@ let get_outcome (ret : ('v, 'h) t) : Outcome.t =
   let _, out = ret in
   out
 
-let get_pc (ret : ('v, 'h) t) : 'v PC.t =
+let get_pc (ret : ('v, 'h) t) : 'v Pc.t =
   let state, _ = ret in
   State.get_pathcondition state
 

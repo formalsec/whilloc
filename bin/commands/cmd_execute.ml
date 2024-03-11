@@ -1,22 +1,22 @@
 open Whilloc
 open Utils
-module C_Choice = ListChoice.Make (EvalConcrete.M) (HeapConcrete.M)
-module SAF_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayFork.M)
-module SAITE_Choice = ListChoice.Make (EvalSymbolic.M) (HeapArrayITE.M)
-module ST_Choice = ListChoice.Make (EvalSymbolic.M) (HeapTree.M)
-module SOPL_Choice = ListChoice.Make (EvalSymbolic.M) (HeapOpList.M)
-module C = Interpreter.Make (EvalConcrete.M) (DFS.M) (HeapConcrete.M) (C_Choice)
 
+(* Choice *)
+module C_Choice = List_choice.Make (Eval_concrete.M) (Heap_concrete.M)
+module SAF_Choice = List_choice.Make (Eval_symbolic.M) (Heap_array_fork.M)
+module SAITE_Choice = List_choice.Make (Eval_symbolic.M) (Heap_arrayite.M)
+module ST_Choice = List_choice.Make (Eval_symbolic.M) (Heap_tree.M)
+module SOPL_Choice = List_choice.Make (Eval_symbolic.M) (Heap_oplist.M)
+
+(* Interpreter *)
+module C = Interpreter.Make (Eval_concrete.M) (Dfs.M) (Heap_concrete.M) (C_Choice)
 module SAF =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayFork.M) (SAF_Choice)
-
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_array_fork.M) (SAF_Choice)
 module SAITE =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapArrayITE.M) (SAITE_Choice)
-
-module ST = Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapTree.M) (ST_Choice)
-
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_arrayite.M) (SAITE_Choice)
+module ST = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_tree.M) (ST_Choice)
 module SOPL =
-  Interpreter.Make (EvalSymbolic.M) (DFS.M) (HeapOpList.M) (SOPL_Choice)
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_oplist.M) (SOPL_Choice)
 
 type mode = Concrete | Saf | Saite | St | Sopl [@@deriving yojson]
 

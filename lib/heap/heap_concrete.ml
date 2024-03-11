@@ -17,7 +17,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
-  let malloc (h : t) (sz : vt) (pc : vt PC.t) : (t * vt * vt PC.t) list =
+  let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
     let tbl, next = h in
     match sz with
     | Integer i ->
@@ -26,8 +26,8 @@ module M : Heap_intf.M with type vt = Value.t = struct
     | _ ->
         failwith "InternalError: HeapConcrete.malloc, size must be an integer"
 
-  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt PC.t) :
-      (t * vt PC.t) list =
+  let update (h : t) (arr : vt) (index : vt) (v : vt) (pc : vt Pc.t) :
+      (t * vt Pc.t) list =
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -41,8 +41,8 @@ module M : Heap_intf.M with type vt = Value.t = struct
           "InternalError: HeapConcrete.update, arr must be location and index \
            must be an integer"
 
-  let lookup (h : t) (arr : vt) (index : vt) (pc : vt PC.t) :
-      (t * vt * vt PC.t) list =
+  let lookup (h : t) (arr : vt) (index : vt) (pc : vt Pc.t) :
+      (t * vt * vt Pc.t) list =
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -57,7 +57,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
           "InternalError: HeapConcrete.update, arr must be location and index \
            must be an integer"
 
-  let free (h : t) (arr : vt) (pc : vt PC.t) : (t * vt PC.t) list =
+  let free (h : t) (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
     let tbl, _ = h in
     match arr with
     | Loc l -> (
@@ -68,7 +68,7 @@ module M : Heap_intf.M with type vt = Value.t = struct
         | _ -> failwith "InternalError: illegal free")
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (addr : vt) (i : vt) (_pc : vt PC.t) : bool =
+  let in_bounds (heap : t) (addr : vt) (i : vt) (_pc : vt Pc.t) : bool =
     match addr with
     | Loc l -> (
         let tbl, _ = heap in

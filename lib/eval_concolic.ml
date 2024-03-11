@@ -2,8 +2,8 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
   type t = Value.t * Term.t
   type st = t Store.t
 
-  module EvalConcrete = EvalConcrete.M
-  module EvalSymbolic = EvalSymbolic.M
+  module Eval_concrete = Eval_concrete.M
+  module Eval_symbolic = Eval_symbolic.M
 
   let project_store (store : st) : Value.t Store.t * Term.t Store.t =
     let key_values = Store.fold (fun k v z -> (k, fst v) :: z) store [] in
@@ -14,23 +14,23 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
 
   let eval (store : st) (e : Term.t) : t =
     let cstore, sstore = project_store store in
-    (EvalConcrete.eval cstore e, EvalSymbolic.eval sstore e)
+    (Eval_concrete.eval cstore e, Eval_symbolic.eval sstore e)
 
   let is_true (exprs : t list) : bool =
     let v, _ = List.split exprs in
-    EvalConcrete.is_true v
+    Eval_concrete.is_true v
 
   let test_assert (exprs : t list) : bool * Model.t =
     let _, e = List.split exprs in
-    EvalSymbolic.test_assert e
+    Eval_symbolic.test_assert e
 
   let negate (e : t) : t =
     let value, expression = e in
-    (EvalConcrete.negate value, EvalSymbolic.negate expression)
+    (Eval_concrete.negate value, Eval_symbolic.negate expression)
 
   let pp (fmt : Fmt.t) (e : t) : unit =
     let value, expression = e in
-    Format.fprintf fmt "(%a, %a)" EvalConcrete.pp value EvalSymbolic.pp
+    Format.fprintf fmt "(%a, %a)" Eval_concrete.pp value Eval_symbolic.pp
       expression
 
   let to_string (e : t) : string = Format.asprintf "%a" pp e
@@ -43,7 +43,7 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
       else Term.make_symb_int symbolic_name
     in
     let concrete_value =
-      match SymbMap.map symbolic_name with
+      match Symb_map.map symbolic_name with
       | None -> Value.Integer (Utils.random_int ())
       | Some v -> v
     in

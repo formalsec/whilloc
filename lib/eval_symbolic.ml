@@ -1,5 +1,5 @@
 module M : Eval_intf.M with type t = Term.t = struct
-  open EvalExpression
+  open Eval_expression
   open Term
 
   type t = Term.t
@@ -45,11 +45,11 @@ module M : Eval_intf.M with type t = Term.t = struct
                (eval store e2 |> get_val))
       | B_symb _ ->
           failwith
-            "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic \
+            "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
              boolean"
       | I_symb _ ->
           failwith
-            "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic \
+            "InternalError: Eval_symbolic.eval, tried to evaluate a symbolic \
              integer"
       | Ite (_, _, _) -> failwith "InternalError: concrete Ite not implemented"
 
