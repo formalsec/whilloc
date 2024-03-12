@@ -1,11 +1,14 @@
-module M : Eval_intf.M with type t = Value.t * Term.t = struct
-  type t = Value.t * Term.t
+module M : Eval_intf.M with type t = Value.t * Encoding.Expr.t = struct
+  type t = Value.t * Encoding.Expr.t
   type st = t Store.t
 
   module Eval_concrete = Eval_concrete.M
   module Eval_symbolic = Eval_symbolic.M
+  module E = Encoding.Expr
+  module T = Encoding.Ty
+  module S = Encoding.Symbol
 
-  let project_store (store : st) : Value.t Store.t * Term.t Store.t =
+  let project_store (store : st) : Value.t Store.t * Encoding.Expr.t Store.t =
     let key_values = Store.fold (fun k v z -> (k, fst v) :: z) store [] in
     let key_symbols = Store.fold (fun k v z -> (k, snd v) :: z) store [] in
     let concrete_store = Store.create_store key_values in
@@ -39,8 +42,8 @@ module M : Eval_intf.M with type t = Value.t * Term.t = struct
   let make_symbol (name : string) (tp : string) =
     let symbolic_name = Parameters.symbol_prefix ^ name in
     let symbolic_value =
-      if String.equal "bool" tp then Term.make_symb_bool symbolic_name
-      else Term.make_symb_int symbolic_name
+      if String.equal "bool" tp then E.mk_symbol (S.mk_symbol T.Ty_bool symbolic_name)
+      else E.mk_symbol (S.mk_symbol T.Ty_int symbolic_name)
     in
     let concrete_value =
       match Symb_map.map symbolic_name with

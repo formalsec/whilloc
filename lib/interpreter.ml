@@ -51,10 +51,9 @@ module Make
     Outcome.t Choice.t =
     let return stmts = Choice.return (Outcome.Cont stmts) in
     if !Utils.verbose then
-      (* Printf.printf "\n";
+      Printf.printf "\n";
          let/ state = Choice.get in
-         Printf.printf "Heap: %s\n" (Heap.to_string state.heap);
-         Printf.printf "State: %s\n" (Sstate.to_string Eval.pp Heap.pp state); *)
+         Printf.printf "Heap: %s\n#####################\n" (Heap.to_string state.heap);
       Fmt.printf "Stmt: %a@." Program.pp_stmt s;
     match s with
     | Skip | Clear -> return cont

@@ -2,7 +2,8 @@
 
 (library
  (name whilloc)
- (libraries z3 ppx_deriving_yojson.runtime)
+ (libraries z3 ppx_deriving_yojson.runtime encoding)
+ (modules (:standard \ heap_tree heap_arrayite heap_oplist heap_symbolic heap_concolic))
  (preprocess
   (pps ppx_deriving_yojson)))
 

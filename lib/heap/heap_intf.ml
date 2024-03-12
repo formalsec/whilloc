@@ -2,6 +2,7 @@ module type M = sig
   type t (* the representation of the heap itself *)
   type vt (* the type of the index and size of the arrays *)
 
+  module Eval : Eval_intf.M with type t = vt
   val init : unit -> t
   val pp : Fmt.t -> t -> unit
   val to_string : t -> string
