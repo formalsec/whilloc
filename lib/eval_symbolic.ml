@@ -45,9 +45,7 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
     | Val Integer n -> E.(make @@ Val (V.Int n))
     | Val Boolean true -> E.(make @@ Val (V.True))
     | Val Boolean false -> E.(make @@ Val (V.False))
-    | Val Loc n -> 
-      let n' = E.(make @@ Val (V.Int n)) in
-      E.(make @@ Ptr (Int32.of_int 0, n'))
+    | Val Loc n -> E.(make @@ Val (V.Int n))
     | Var x -> Store.get store x
     | Unop (op, e) ->
         let op' = eval_unop op in
