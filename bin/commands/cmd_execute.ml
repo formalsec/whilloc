@@ -5,7 +5,7 @@ open Utils
 module C_Choice = List_choice.Make (Eval_concrete.M) (Heap_concrete.M)
 module SAF_Choice = List_choice.Make (Eval_symbolic.M) (Heap_array_fork.M)
 module SAITE_Choice = List_choice.Make (Eval_symbolic.M) (Heap_arrayite.M)
-(* module ST_Choice = List_choice.Make (Eval_symbolic.M) (Heap_tree.M) *)
+module ST_Choice = List_choice.Make (Eval_symbolic.M) (Heap_tree.M)
 (* module SOPL_Choice = List_choice.Make (Eval_symbolic.M) (Heap_oplist.M) *)
 
 (* Interpreter *)
@@ -14,7 +14,7 @@ module C = Interpreter.Make (Eval_concrete.M) (Dfs.M) (Heap_concrete.M) (C_Choic
 module SAF = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_array_fork.M) (SAF_Choice)
 
 module SAITE = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_arrayite.M) (SAITE_Choice)
-(* module ST = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_tree.M) (ST_Choice) *)
+module ST = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_tree.M) (ST_Choice)
 (* module SOPL =  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_oplist.M) (SOPL_Choice) *)
 
 type mode =
@@ -92,7 +92,7 @@ let run ?(test=false) input mode =
             | _ -> None )
           rets
       , List.length rets )
-    (*| St ->
+    | St ->
       let rets = ST.interpret program in
       ( List.filter_map
           (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
@@ -101,7 +101,7 @@ let run ?(test=false) input mode =
             | _ -> None )
           rets
       , List.length rets )
-    | Sopl ->
+    (*| Sopl ->
       let rets = SOPL.interpret program in
       ( List.filter_map
           (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
