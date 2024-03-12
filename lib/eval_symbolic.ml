@@ -1,6 +1,5 @@
 module M : Eval_intf.M with type t = Encoding.Expr.t = struct
   open Term
-
   module E = Encoding.Expr
   module V = Encoding.Value
   module T = Encoding.Ty
@@ -17,8 +16,10 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
     | Term.Neg -> T.Neg
     | Term.Not -> T.Not
     | Term.Abs -> T.Abs
-    | Term.StringOfInt -> failwith 
-      "InternalError: EvalSymbolic.eval_unop, StringOfInt not implemented in Encoding"
+    | Term.StringOfInt ->
+      failwith
+        "InternalError: EvalSymbolic.eval_unop, StringOfInt not implemented in \
+         Encoding"
 
   let eval_binop (op : Term.binop) =
     match op with
@@ -42,60 +43,64 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
 
   let rec eval (store : st) (e : Term.t) : t =
     match e with
-    | Val Integer n -> E.(make @@ Val (V.Int n))
-    | Val Boolean true -> E.(make @@ Val (V.True))
-    | Val Boolean false -> E.(make @@ Val (V.False))
-    | Val Loc n -> E.(make @@ Val (V.Int n))
+    | Val (Integer n) -> E.(make @@ Val (V.Int n))
+    | Val (Boolean true) -> E.(make @@ Val V.True)
+    | Val (Boolean false) -> E.(make @@ Val V.False)
+    | Val (Loc n) -> E.(make @@ Val (V.Int n))
     | Var x -> Store.get store x
-    | Unop (op, e) ->
-        let op' = eval_unop op in
-        let e' = eval store e in
-        (match op' with
-        | T.Not -> E.(unop T.Ty_bool op' e')
-        | _ -> E.(unop T.Ty_int op' e'))
-    | Binop (op, e1, e2) ->
-        let op' = eval_binop op in
-        let e1' = eval store e1 in
-        let e2' = eval store e2 in
-        (match op' with
-        | Some T.Or, None -> E.(binop T.Ty_bool T.Or e1' e2')
-        | Some T.And, None -> E.(binop T.Ty_bool T.And e1' e2')
-        | Some T.Xor, None -> E.(binop T.Ty_bool T.Xor e1' e2')
-        | Some b, None -> E.(binop T.Ty_int b e1' e2')
-        | None, Some r -> E.(relop T.Ty_int r e1' e2')
-        | _ -> assert false)
+    | Unop (op, e) -> (
+      let op' = eval_unop op in
+      let e' = eval store e in
+      match op' with
+      | T.Not -> E.(unop T.Ty_bool op' e')
+      | _ -> E.(unop T.Ty_int op' e') )
+    | Binop (op, e1, e2) -> (
+      let op' = eval_binop op in
+      let e1' = eval store e1 in
+      let e2' = eval store e2 in
+      match op' with
+      | Some T.Or, None -> E.(binop T.Ty_bool T.Or e1' e2')
+      | Some T.And, None -> E.(binop T.Ty_bool T.And e1' e2')
+      | Some T.Xor, None -> E.(binop T.Ty_bool T.Xor e1' e2')
+      | Some b, None -> E.(binop T.Ty_int b e1' e2')
+      | None, Some r -> E.(relop T.Ty_int r e1' e2')
+      | _ -> assert false )
     | B_symb _ ->
-        failwith
-          "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic \
-           boolean"
+      failwith
+        "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic boolean"
     | I_symb _ ->
-        failwith
-          "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic \
-           integer"
+      failwith
+        "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic integer"
     | Ite (_, _, _) -> failwith "InternalError: concrete Ite not implemented"
     | _ -> assert false
 
-  let is_true (exprs : t list) : bool = 
-    Slv.Z3_batch.check solver exprs
+  let is_true (exprs : t list) : bool = Slv.Z3_batch.check solver exprs
 
   let translate_value (v : V.t) : Value.t =
     match v with
     | V.Int n -> Value.Integer n
     | V.True -> Value.Boolean true
     | V.False -> Value.Boolean false
-    | _ -> failwith "InternalError: EvalSymbolic.val_translator, value from Encoding not implemented"
+    | _ ->
+      failwith
+        "InternalError: EvalSymbolic.val_translator, value from Encoding not \
+         implemented"
 
-  let hashtbl_to_list (tbl : (S.t, V.t) Hashtbl.t) : (string * Value.t) list option =
-    Some (Hashtbl.fold (fun k v acc -> (S.to_string k, translate_value v) :: acc) tbl [])
+  let hashtbl_to_list (tbl : (S.t, V.t) Hashtbl.t) :
+    (string * Value.t) list option =
+    Some
+      (Hashtbl.fold
+         (fun k v acc -> (S.to_string k, translate_value v) :: acc)
+         tbl [] )
 
   let test_assert (exprs : t list) : bool * Model.t =
     assert (is_true exprs);
     let enc_model = Slv.Z3_batch.model solver in
     match enc_model with
-    | Some m -> 
+    | Some m ->
       let model = hashtbl_to_list m in
       (Option.is_some model, model)
-    | None ->  (false, None)
+    | None -> (false, None)
 
   let negate (e : t) : t = E.(unop T.Ty_bool T.Not e)
   let pp (fmt : Fmt.t) (e : t) : unit = E.pp fmt e
@@ -105,7 +110,8 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
   let make_symbol (name : string) (tp : string) =
     let symb_name = Parameters.symbol_prefix ^ name in
     let symb_value =
-      if String.equal "bool" tp then E.mk_symbol (S.mk_symbol T.Ty_bool symb_name)
+      if String.equal "bool" tp then
+        E.mk_symbol (S.mk_symbol T.Ty_bool symb_name)
       else E.mk_symbol (S.mk_symbol T.Ty_int symb_name)
     in
     Some symb_value

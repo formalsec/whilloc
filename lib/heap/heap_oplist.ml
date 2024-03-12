@@ -2,7 +2,6 @@ open Encoding
 
 module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   type vt = Encoding.Expr.t
-
   type addr = int
   type size = vt
   type op = vt * vt * vt Pc.t
@@ -11,7 +10,6 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
     { map : (addr, size * op list) Hashtbl.t
     ; mutable next : int
     }
-
 
   module Eval = Eval_symbolic.M
 
@@ -31,10 +29,10 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : vt) (index : vt) (pc : vt Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in 
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index sz) in 
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in 
-    
+    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
+    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index sz) in
+    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+
     not (Eval.is_true (e3 :: pc))
 
   let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt Pc.t) : bool =
@@ -44,8 +42,10 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
       | Some (sz, _) -> (
         match Expr.view sz with
         | Val (Int _) -> is_within sz i pc
-        | Symbol _ -> if Expr.ty sz = Ty_int then is_within sz i pc else 
-          failwith "InternalError: HeapOpList.in_bounds, size not an integer"
+        | Symbol _ ->
+          if Expr.ty sz = Ty_int then is_within sz i pc
+          else
+            failwith "InternalError: HeapOpList.in_bounds, size not an integer"
         | _ ->
           failwith "InternalError: HeapOpList.in_bounds, size not an integer" )
       | _ ->
@@ -78,8 +78,8 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
     let v =
       List.fold_left
         (fun ac (i, v, _) ->
-          Expr.(Bool.ite (Expr.(relop Ty.Ty_int Ty.Eq index i)) v ac))
-        (Expr.(make @@ Val (Int 0)))
+          Expr.(Bool.ite Expr.(relop Ty.Ty_int Ty.Eq index i) v ac) )
+        Expr.(make @@ Val (Int 0))
         (List.rev ops)
     in
     [ (h, v, pc) ]

@@ -1,4 +1,5 @@
 open Encoding
+
 module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   type vt = Encoding.Expr.t
   type range = vt * vt
@@ -10,6 +11,7 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   type t = (int, tree_t) Hashtbl.t * int
 
   module Eval = Eval_symbolic.M
+
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let rec pp_block (fmt : Fmt.t) (block : tree_t) : unit =
@@ -17,7 +19,7 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
     match block with
     | Leaf ((l, r), v) ->
       fprintf fmt "{ \"leaf\": { \"range\": \"[%a, %a]\", \"value\": \"%a\"} }"
-      Expr.pp l Expr.pp r Expr.pp v
+        Expr.pp l Expr.pp r Expr.pp v
     | Node ((l, r), ch) ->
       fprintf fmt
         "{ \"node\": { \"range\": \"[%a, %a]\", \"children\": [ %a ]} }" Expr.pp
@@ -43,7 +45,9 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
 
   let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
     let h', curr = h in
-    let tree = Leaf (Expr.(make @@ Val (Int 0), sz), Expr.(make @@ Val (Int 0))) in 
+    let tree =
+      Leaf (Expr.(make @@ Val (Int 0), sz), Expr.(make @@ Val (Int 0)))
+    in
     Hashtbl.replace h' curr tree;
     [ ((h', curr + 1), Expr.(make @@ Val (Int curr)), pc) ]
 
@@ -55,11 +59,13 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
       match tree with
       | Leaf ((left, right), old_v) ->
         let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
-        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in 
-        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in 
+        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
+        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
         let pc' = cond :: pc in
         if Eval.is_true pc' then
-          let index_plus_1 = Expr.(binop Ty.Ty_int Ty.Add index (make @@ (Val (Int 1)))) in 
+          let index_plus_1 =
+            Expr.(binop Ty.Ty_int Ty.Add index (make @@ Val (Int 1)))
+          in
           let leaves =
             [ Leaf ((left, index), old_v)
             ; Leaf ((index, index_plus_1), v)
@@ -70,8 +76,8 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
         else None
       | Node ((left, right), trees) ->
         let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
-        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in 
-        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in 
+        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
+        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
         let pc' = cond :: pc in
         if Eval.is_true pc' then
           let l = List.map (fun t -> update_tree t index v pc') trees in
@@ -132,16 +138,16 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
 
   let must_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
     let lower, upper = r in
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index lower) in 
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index upper) in 
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in 
+    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index lower) in
+    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index upper) in
+    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
     not (Eval.is_true (e3 :: pc))
 
   let may_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
     let lower, upper = r in
-    let e1 = Expr.(relop Ty.Ty_int Ty.Ge index lower) in 
-    let e2 = Expr.(relop Ty.Ty_int Ty.Lt index upper) in 
+    let e1 = Expr.(relop Ty.Ty_int Ty.Ge index lower) in
+    let e2 = Expr.(relop Ty.Ty_int Ty.Lt index upper) in
 
     Eval.is_true ([ e1; e2 ] @ pc)
 
@@ -153,10 +159,10 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
       let in_range = may_within_range r index pc in
       if in_range then
         [ ( v
-          , Expr.(binop Ty.Ty_bool 
-          Ty.And 
-          (relop Ty.Ty_int Ty.Lt index upper)
-          (relop Ty.Ty_int Ty.Ge index lower) ))
+          , Expr.(
+              binop Ty.Ty_bool Ty.And
+                (relop Ty.Ty_int Ty.Lt index upper)
+                (relop Ty.Ty_int Ty.Ge index lower) ) )
         ]
       else []
     | Node (r, tree_list) ->

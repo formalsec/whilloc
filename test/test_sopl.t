@@ -10,7 +10,7 @@ Tests Model WriteLists:
   
   Returned 0
   Assertion violated, counter example:
-      $_i : Int 3
+      $_i : Int _
   Assumption evaluated to false
   Assumption evaluated to false
   Found 1 problems!
@@ -24,8 +24,8 @@ Tests Model WriteLists:
   
   Returned 0
   Assertion violated, counter example:
-      $_i : Int 0
-      $_v : Int 0
+      $_i : Int _
+      $_v : Int _
   Assumption evaluated to false
   Assumption evaluated to false
   Assumption evaluated to false
@@ -463,10 +463,10 @@ Tests Model WriteLists:
   
   Returned 0
   Assertion violated, counter example:
-      $_i : Int 22
+      $_i : Int _
   Returned 0
   Assertion violated, counter example:
-      $_i : Int -158
+      $_i : Int _
   Found 2 problems!
   
   =====================
@@ -524,10 +524,10 @@ Tests Model WriteLists:
   
   Returned 0
   Assertion violated, counter example:
-      $_i : Int 5
-      $_j : Int 2
-      $_k : Int 5
-      $_v : Int 7
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
   Assumption evaluated to false
   Assumption evaluated to false
   Assumption evaluated to false
@@ -575,8 +575,8 @@ Tests Model WriteLists:
   
   Returned 0
   Assertion violated, counter example:
-      $_x : Int 1
-      $_y : Int 4
+      $_x : Int _
+      $_y : Int _
   Returned 0
   Returned 0
   Found 1 problems!

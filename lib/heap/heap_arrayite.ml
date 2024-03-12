@@ -1,9 +1,8 @@
 open Encoding
 
-module M : Heap_intf.M with type vt =  Encoding.Expr.t = struct
-  type vt =  Encoding.Expr.t
-
-  type bt =  vt array
+module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
+  type vt = Encoding.Expr.t
+  type bt = vt array
   type t = (int, bt) Hashtbl.t * int
 
   module Eval = Eval_symbolic.M
@@ -23,10 +22,10 @@ module M : Heap_intf.M with type vt =  Encoding.Expr.t = struct
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in 
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in 
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in 
-    
+    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
+    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
+    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+
     not (Eval.is_true (e3 :: pc))
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
@@ -77,9 +76,11 @@ module M : Heap_intf.M with type vt =  Encoding.Expr.t = struct
         let block' =
           Array.mapi
             (fun j old_expr ->
-              let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j))) in
+              let e =
+                Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j)))
+              in
               if Eval.is_true (e :: path) then Expr.(Bool.ite e v old_expr)
-              else old_expr)
+              else old_expr )
             block
         in
         let _ = Hashtbl.replace heap' loc block' in
@@ -93,7 +94,7 @@ module M : Heap_intf.M with type vt =  Encoding.Expr.t = struct
     match Expr.view index with
     | Val (Int i) -> (
       (* quando o 'index' tem tipo "value", por exemplo: 5,2,... *)
-      match Expr.view  arr with
+      match Expr.view arr with
       | Val (Int l) -> (
         match Hashtbl.find_opt tbl l with
         | Some arr -> [ (h, arr.(i), pc) ]
@@ -113,16 +114,22 @@ module M : Heap_intf.M with type vt =  Encoding.Expr.t = struct
               (List.filteri
                  (fun index' _ ->
                    (* can be optimized *)
-                   let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index'))) in
+                   let e =
+                     Expr.(
+                       relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')) )
+                   in
                    Eval.is_true (e :: pc) )
                  (Array.to_list
                     (Array.mapi
-                       (fun j e -> (Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j))), e))
+                       (fun j e ->
+                         ( Expr.(
+                             relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j)) )
+                         , e ) )
                        arr ) ) )
           in
           let f (bop, e) l =
             match Expr.view e with
-            | Triop (_, Ty.Ite, a, b, _)-> 
+            | Triop (_, Ty.Ite, a, b, _) ->
               let e1 = Expr.(binop Ty.Ty_bool Ty.And bop a) in
               Expr.(Bool.ite e1 b l)
             | _ -> Expr.(Bool.ite bop e l)

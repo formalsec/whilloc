@@ -1,6 +1,8 @@
-module M : Heap_intf.M with type vt = Term.t = struct
-  type t = (int, Term.t array) Hashtbl.t
-  type vt = Term.t
+module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
+  type vt = Encoding.Expr.t
+  type t = (int, vt array) Hashtbl.t
+
+  module Eval = Eval_symbolic.M
 
   let init () : t = Hashtbl.create Parameters.size
   let pp (_fmt : Fmt.t) (_heap : t) : unit = failwith "Not Implemented"

@@ -9,13 +9,19 @@ module ST_Choice = List_choice.Make (Eval_symbolic.M) (Heap_tree.M)
 module SOPL_Choice = List_choice.Make (Eval_symbolic.M) (Heap_oplist.M)
 
 (* Interpreter *)
-module C = Interpreter.Make (Eval_concrete.M) (Dfs.M) (Heap_concrete.M) (C_Choice)
+module C =
+  Interpreter.Make (Eval_concrete.M) (Dfs.M) (Heap_concrete.M) (C_Choice)
 
-module SAF = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_array_fork.M) (SAF_Choice)
+module SAF =
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_array_fork.M) (SAF_Choice)
 
-module SAITE = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_arrayite.M) (SAITE_Choice)
+module SAITE =
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_arrayite.M) (SAITE_Choice)
+
 module ST = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_tree.M) (ST_Choice)
-module SOPL =  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_oplist.M) (SOPL_Choice)
+
+module SOPL =
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_oplist.M) (SOPL_Choice)
 
 type mode =
   | Concrete
@@ -57,7 +63,7 @@ let write_report report =
   | Ok v -> v
   | Error (`Msg err) -> failwith err
 
-let run ?(test=false) input mode =
+let run ?(no_values = false) ?(test = false) input mode =
   let start = Sys.time () in
   print_header ();
   let program = input |> read_file |> parse_program |> create_program in
@@ -66,9 +72,10 @@ let run ?(test=false) input mode =
   let problems, num_paths =
     match mode with
     | Concrete ->
-      let rets = C.interpret program in 
+      let rets = C.interpret program in
       ( List.filter_map
-          (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -77,7 +84,8 @@ let run ?(test=false) input mode =
     | Saf ->
       let rets = SAF.interpret program in
       ( List.filter_map
-          (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -86,7 +94,8 @@ let run ?(test=false) input mode =
     | Saite ->
       let rets = SAITE.interpret program in
       ( List.filter_map
-          (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -95,7 +104,8 @@ let run ?(test=false) input mode =
     | St ->
       let rets = ST.interpret program in
       ( List.filter_map
-          (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -104,13 +114,15 @@ let run ?(test=false) input mode =
     | Sopl ->
       let rets = SOPL.interpret program in
       ( List.filter_map
-          (fun (out, _) -> if test then Format.printf "%a@." (Outcome.pp ~no_values:false) out;
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
           rets
       , List.length rets )
   in
+
   let execution_time = Sys.time () -. start in
   let num_problems = List.length problems in
   if num_problems = 0 then Printf.printf "Everything Ok!\n"
@@ -121,7 +133,8 @@ let run ?(test=false) input mode =
        =====================\n\
        Total Execution time: %f\n\
        Total Solver time: %f\n"
-      execution_time 0.0(* !Translator.solver_time *);
+      execution_time
+      !Encoding.Solver.Z3_batch.solver_time;
   write_report
     { execution_time
     ; mode
@@ -129,7 +142,7 @@ let run ?(test=false) input mode =
     ; num_problems
     ; problems
     ; filename = input
-    ; solver_time = 0. (* !Translator.solver_time *)
+    ; solver_time = !Encoding.Solver.Z3_batch.solver_time
     }
 
 let main (opts : options) =

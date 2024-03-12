@@ -42,7 +42,8 @@ module M : Eval_intf.M with type t = Value.t * Encoding.Expr.t = struct
   let make_symbol (name : string) (tp : string) =
     let symbolic_name = Parameters.symbol_prefix ^ name in
     let symbolic_value =
-      if String.equal "bool" tp then E.mk_symbol (S.mk_symbol T.Ty_bool symbolic_name)
+      if String.equal "bool" tp then
+        E.mk_symbol (S.mk_symbol T.Ty_bool symbolic_name)
       else E.mk_symbol (S.mk_symbol T.Ty_int symbolic_name)
     in
     let concrete_value =

@@ -4,7 +4,9 @@ module M : Heap_intf.M with type vt = Value.t = struct
   type bt = Value.t array
   type t = (int, bt) Hashtbl.t * int
   type vt = Value.t (* indexes and sizes are always values *)
-  module Eval = Eval_concrete.M 
+
+  module Eval = Eval_concrete.M
+
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let pp_block fmt (block : bt) =

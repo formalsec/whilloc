@@ -30,6 +30,6 @@ let cmd_options inputs mode timeout verbose print : Cmd_test.options =
 let options =
   Term.(
     const cmd_options $ Options.File.inputs $ Options.mode $ Options.timeout
-    $ Options.verbose $ Options.print)
+    $ Options.verbose $ Options.print )
 
 let term = Term.(const Cmd_test.main $ options)

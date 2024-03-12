@@ -26,7 +26,7 @@ let run_single mode print file =
   try
     Fun.protect ~finally:unset (fun () ->
         set ();
-        try Cmd_execute.run ~test:print file mode with
+        try Cmd_execute.run ~test:print ~no_values:true file mode with
         | Timeout ->
           Printf.printf
             "Timeout occurred while processing file: %s (Max Timeout: %f \
@@ -39,7 +39,8 @@ let run_single mode print file =
 
 let run (opts : options) : unit =
   let files = Dir.get_files opts.inputs in
-  List.iter (run_single opts.mode opts.print)
+  List.iter
+    (run_single opts.mode opts.print)
     (List.map Fpath.to_string (List.sort Fpath.compare files));
   Printf.printf "Total number of files tested: %d\n" (List.length files)
 

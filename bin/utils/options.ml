@@ -52,9 +52,9 @@ let verbose =
   let doc = "Shows the statements being executed." in
   Arg.(value & flag & info [ "v"; "verbose" ] ~doc)
 
-let print = 
+let print =
   let doc = "Shows the results of each execution." in
-  Arg.(value & flag & info [ "p"; "print"] ~doc)
+  Arg.(value & flag & info [ "p"; "print" ] ~doc)
 
 let timeout =
   let docv = "DURATION" in
