@@ -1,5 +1,5 @@
 Tests Model ArrayFork:
-  $ wl test basic --mode c
+  $ wl test basic --mode c -p
   
   =====================
   	Whilloc
@@ -126,6 +126,7 @@ Tests Model ArrayFork:
   Int 4
   Int 4
   
+  Returned Int 0
   Everything Ok!
   
   =====================
@@ -141,6 +142,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 12
   
+  Returned Int 1
   Everything Ok!
   
   =====================
@@ -237,6 +239,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 2
   
+  Returned Int -1
   Everything Ok!
   
   =====================
@@ -246,6 +249,8 @@ Tests Model ArrayFork:
   Input file: basic/common/3.wl
   Execution mode: c
   
+  Assertion violated, counter example:
+      No model
   Found 1 problems!
   
   =====================
@@ -261,6 +266,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 7
   
+  Returned Int 9
   Everything Ok!
   
   =====================
@@ -273,6 +279,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 24
   
+  Returned Int 12
   Everything Ok!
   
   =====================
@@ -282,6 +289,8 @@ Tests Model ArrayFork:
   Input file: basic/common/6.wl
   Execution mode: c
   
+  Assertion violated, counter example:
+      No model
   Found 1 problems!
   
   =====================
@@ -303,6 +312,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 1
   
+  Returned Int 1
   Everything Ok!
   
   =====================
@@ -324,6 +334,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 146
   
+  Returned Int 73
   Everything Ok!
   
   =====================
@@ -336,6 +347,7 @@ Tests Model ArrayFork:
   >Program Print
   Int -1
   
+  Returned Int -1
   Everything Ok!
   
   =====================
@@ -348,6 +360,7 @@ Tests Model ArrayFork:
   >Program Print
   Int 5
   
+  Returned Loc 0
   Everything Ok!
   
   =====================
@@ -441,7 +454,7 @@ Tests Model ArrayFork:
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   Total number of files tested: 33
 
-  $ wl test large_arrays_fail --mode c
+  $ wl test large_arrays_fail --mode c -p
   
   =====================
   	Whilloc
@@ -1037,7 +1050,7 @@ Tests Model ArrayFork:
   
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
   Total number of files tested: 66
-  $ wl test large_arrays_pass --mode c
+  $ wl test large_arrays_pass --mode c -p
   
   =====================
   	Whilloc
@@ -1046,6 +1059,7 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/10000.wl
   Execution mode: c
   
+  Returned Loc 0
   Everything Ok!
   
   =====================
@@ -1055,6 +1069,7 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/100000.wl
   Execution mode: c
   
+  Returned Loc 0
   Everything Ok!
   
   =====================
@@ -1064,6 +1079,7 @@ Tests Model ArrayFork:
   Input file: large_arrays_pass/c_array_c_write_c_read/50000.wl
   Execution mode: c
   
+  Returned Loc 0
   Everything Ok!
   
   =====================

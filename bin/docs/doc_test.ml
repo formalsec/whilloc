@@ -24,12 +24,12 @@ let man =
 
 let man_xrefs = [ `Page ("wl execute", 2) ]
 
-let cmd_options inputs mode timeout verbose : Cmd_test.options =
-  { inputs; mode; timeout; verbose }
+let cmd_options inputs mode timeout verbose print : Cmd_test.options =
+  { inputs; mode; timeout; verbose; print }
 
 let options =
   Term.(
     const cmd_options $ Options.File.inputs $ Options.mode $ Options.timeout
-    $ Options.verbose )
+    $ Options.verbose $ Options.print)
 
 let term = Term.(const Cmd_test.main $ options)
