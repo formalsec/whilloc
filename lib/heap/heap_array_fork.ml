@@ -77,7 +77,7 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
         List.filteri
           (fun index' _ ->
             (* can be optimized *)
-            let e = Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index'))) in 
+            let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index'))) in 
             Eval.is_true (e :: path))
           temp
           else failwith "Invalid index"
@@ -101,14 +101,14 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
               let newHeap = Hashtbl.copy heap.map in
               let _ = Array.set newBlock index' v in
               let _ = Hashtbl.replace newHeap loc newBlock in
-              let cond = Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index'))) in 
+              let cond = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index'))) in 
               ({ heap with map = newHeap }, Pc.add_condition path cond))
             blockList
         in
         List.filteri
           (fun index' _ ->
             (* can be optimized *)
-            let e = Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index'))) in 
+            let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index'))) in 
             Eval.is_true (e :: path))
           temp
         else failwith "Invalid index"
