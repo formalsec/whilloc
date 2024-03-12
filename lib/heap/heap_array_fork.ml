@@ -1,6 +1,6 @@
 open Encoding
 
-module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
+module M = struct
   type vt = Encoding.Expr.t
   type bt = vt array
 
@@ -9,7 +9,7 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
     ; i : int
     }
 
-  module Eval = Eval_symbolic.M
+  module Eval = Eval_symbolic
 
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
@@ -135,3 +135,6 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
 
   let clone h = copy h
 end
+
+module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+include M

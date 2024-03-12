@@ -26,7 +26,7 @@ module M = struct
 end
 
 module M' : Heap_intf.M with type vt = Value.t * Encoding.Expr.t = M
-
+include M
 (*
 type t = (int, int arry) Hashtbl.t
 

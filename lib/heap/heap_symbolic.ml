@@ -1,8 +1,8 @@
-module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
+module M = struct
   type vt = Encoding.Expr.t
   type t = (int, vt array) Hashtbl.t
 
-  module Eval = Eval_symbolic.M
+  module Eval = Eval_symbolic
 
   let init () : t = Hashtbl.create Parameters.size
   let pp (_fmt : Fmt.t) (_heap : t) : unit = failwith "Not Implemented"
@@ -27,6 +27,8 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   let clone _ = assert false
 end
 
+module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+include M
 (*
 type t = (int, int arry) Hashtbl.t
 

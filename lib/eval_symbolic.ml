@@ -1,4 +1,4 @@
-module M : Eval_intf.M with type t = Encoding.Expr.t = struct
+module M = struct
   open Term
   module E = Encoding.Expr
   module V = Encoding.Value
@@ -116,3 +116,6 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
     in
     Some symb_value
 end
+
+module M' : Eval_intf.M with type t = Encoding.Expr.t = M
+include M

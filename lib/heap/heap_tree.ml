@@ -1,6 +1,6 @@
 open Encoding
 
-module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
+module M = struct
   type vt = Encoding.Expr.t
   type range = vt * vt
 
@@ -10,7 +10,7 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
 
   type t = (int, tree_t) Hashtbl.t * int
 
-  module Eval = Eval_symbolic.M
+  module Eval = Eval_symbolic
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
@@ -216,3 +216,6 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
   let clone h = copy h
 end
+
+module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+include M

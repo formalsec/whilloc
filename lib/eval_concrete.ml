@@ -1,4 +1,4 @@
-module M : Eval_intf.M with type t = Value.t = struct
+module M = struct
   open Eval_expression
 
   type t = Value.t
@@ -61,3 +61,6 @@ module M : Eval_intf.M with type t = Value.t = struct
     let _ = (name, tp) in
     None
 end
+
+module M' : Eval_intf.M with type t = Value.t = M
+include M'

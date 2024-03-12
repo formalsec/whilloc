@@ -1,9 +1,9 @@
-module M : Eval_intf.M with type t = Value.t * Encoding.Expr.t = struct
+module M = struct
   type t = Value.t * Encoding.Expr.t
   type st = t Store.t
 
-  module Eval_concrete = Eval_concrete.M
-  module Eval_symbolic = Eval_symbolic.M
+  module Eval_concrete = Eval_concrete
+  module Eval_symbolic = Eval_symbolic
   module E = Encoding.Expr
   module T = Encoding.Ty
   module S = Encoding.Symbol
@@ -53,3 +53,6 @@ module M : Eval_intf.M with type t = Value.t * Encoding.Expr.t = struct
     in
     Some (concrete_value, symbolic_value)
 end
+
+module M' : Eval_intf.M with type t = Value.t * Encoding.Expr.t = M
+include M
