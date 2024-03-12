@@ -59,7 +59,7 @@ module M : Eval_intf.M with type t = Encoding.Expr.t = struct
         let e2' = eval store e2 in
         (match op' with
         | Some b, None -> E.(binop T.Ty_int b e1' e2')
-        | None, Some r -> E.(relop T.Ty_bool r e1' e2')
+        | None, Some r -> E.(relop T.Ty_int r e1' e2')
         | _ -> assert false)
     | B_symb _ ->
         failwith

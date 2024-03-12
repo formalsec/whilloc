@@ -20,8 +20,8 @@ module M : Heap_intf.M with type vt = Encoding.Expr.t = struct
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
   let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_bool Ty.Lt index (make @@ Val (Int 0))) in 
-    let e2 = Expr.(relop Ty.Ty_bool Ty.Ge index (make @@ Val (Int sz))) in 
+    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in 
+    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in 
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in 
     
     not (Eval.is_true (e3 :: pc))

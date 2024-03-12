@@ -28,7 +28,7 @@ module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type vt = Eval.t) :
     let not_v = Eval.negate v in
     let pc_v = Pc.add_condition pc v in
     let pc_not_v = Pc.add_condition pc not_v in
-    match ((Format.printf "%a\n" (Fmt.pp_lst Eval.pp) pc_v;Eval.is_true pc_v), (Printf.printf "Ola\n";Eval.is_true pc_not_v)) with
+    match (Eval.is_true pc_v, Eval.is_true pc_not_v) with
     | false, false -> assert false
     | true, false -> [ (true, { s with pc = pc_v }) ]
     | false, true -> [ (false, { s with pc = pc_not_v }) ]
