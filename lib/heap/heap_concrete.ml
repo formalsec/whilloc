@@ -5,8 +5,6 @@ module M = struct
   type t = (int, bt) Hashtbl.t * int
   type vt = Value.t (* indexes and sizes are always values *)
 
-  module Eval = Eval_concrete
-
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let pp_block fmt (block : bt) =

@@ -9,8 +9,6 @@ module M = struct
     ; i : int
     }
 
-  module Eval = Eval_symbolic
-
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
   let pp_block fmt (block : bt) =
@@ -30,7 +28,7 @@ module M = struct
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
-    not (Eval.is_true (e3 :: pc))
+    not (Eval_symbolic.is_true (e3 :: pc))
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
     match Expr.view arr with
@@ -88,7 +86,7 @@ module M = struct
             let e =
               Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
             in
-            Eval.is_true (e :: path) )
+            Eval_symbolic.is_true (e :: path) )
           temp
       else failwith "Invalid index"
     | _ -> failwith "Invalid index"
@@ -123,7 +121,7 @@ module M = struct
             let e =
               Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
             in
-            Eval.is_true (e :: path) )
+            Eval_symbolic.is_true (e :: path) )
           temp
       else failwith "Invalid index"
     | _ -> failwith "Invalid index"

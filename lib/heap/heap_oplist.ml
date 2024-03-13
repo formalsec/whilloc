@@ -33,7 +33,7 @@ module M = struct
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index sz) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
-    not (Eval.is_true (e3 :: pc))
+    not (Eval_symbolic.is_true (e3 :: pc))
 
   let in_bounds (heap : t) (v : vt) (i : vt) (pc : vt Pc.t) : bool =
     match Expr.view v with

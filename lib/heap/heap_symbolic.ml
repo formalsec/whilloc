@@ -2,8 +2,6 @@ module M = struct
   type vt = Encoding.Expr.t
   type t = (int, vt array) Hashtbl.t
 
-  module Eval = Eval_symbolic
-
   let init () : t = Hashtbl.create Parameters.size
   let pp (_fmt : Fmt.t) (_heap : t) : unit = failwith "Not Implemented"
   let to_string (_h : t) : string = failwith "Not Implemented"

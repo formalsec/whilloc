@@ -10,8 +10,6 @@ module M = struct
 
   type t = (int, tree_t) Hashtbl.t * int
 
-  module Eval = Eval_symbolic
-
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let rec pp_block (fmt : Fmt.t) (block : tree_t) : unit =
@@ -62,7 +60,7 @@ module M = struct
         let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
         let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
         let pc' = cond :: pc in
-        if Eval.is_true pc' then
+        if Eval_symbolic.is_true pc' then
           let index_plus_1 =
             Expr.(binop Ty.Ty_int Ty.Add index (make @@ Val (Int 1)))
           in
@@ -79,7 +77,7 @@ module M = struct
         let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
         let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
         let pc' = cond :: pc in
-        if Eval.is_true pc' then
+        if Eval_symbolic.is_true pc' then
           let l = List.map (fun t -> update_tree t index v pc') trees in
           let t1, t2, t3 =
             match trees with
@@ -142,14 +140,14 @@ module M = struct
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index upper) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
-    not (Eval.is_true (e3 :: pc))
+    not (Eval_symbolic.is_true (e3 :: pc))
 
   let may_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
     let lower, upper = r in
     let e1 = Expr.(relop Ty.Ty_int Ty.Ge index lower) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Lt index upper) in
 
-    Eval.is_true ([ e1; e2 ] @ pc)
+    Eval_symbolic.is_true ([ e1; e2 ] @ pc)
 
   let rec search_tree (index : vt) (pc : vt Pc.t) (tree : tree_t) :
     (vt * vt) list =
