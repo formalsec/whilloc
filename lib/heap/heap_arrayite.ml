@@ -5,7 +5,6 @@ module M = struct
   type bt = vt array
   type t = (int, bt) Hashtbl.t * int
 
-
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
   let pp_block fmt (block : bt) =
@@ -78,7 +77,8 @@ module M = struct
               let e =
                 Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j)))
               in
-              if Eval_symbolic.is_true (e :: path) then Expr.(Bool.ite e v old_expr)
+              if Eval_symbolic.is_true (e :: path) then
+                Expr.(Bool.ite e v old_expr)
               else old_expr )
             block
         in

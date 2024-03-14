@@ -70,86 +70,86 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1))
+  6
   
   >Program Print
-  (int.div (int.mul (int.mul (int.mul (int.mul (int.mul (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1)) (int.add (int.add (int.add 1 1) 1) 1)) (int.add (int.add (int.add (int.add 1 1) 1) 1) 1)) (int.add (int.add (int.add (int.add (int.add 1 1) 1) 1) 1) 1)) (int.add (int.add (int.add (int.add (int.add (int.add 1 1) 1) 1) 1) 1) 1)) (int.add (int.add (int.add (int.add (int.add (int.add (int.add 1 1) 1) 1) 1) 1) 1) 1)) (int.mul (int.mul (int.mul (int.mul (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1)) (int.add (int.add (int.add 1 1) 1) 1)) (int.add (int.add (int.add (int.add 1 1) 1) 1) 1)) (int.add (int.add (int.add (int.add (int.add 1 1) 1) 1) 1) 1)) (int.mul (int.mul 1 1) (int.add 1 1))))
-  
-  >Program Print
-  5
+  28
   
   >Program Print
   5
   
   >Program Print
-  (int.add 5 5)
+  5
   
   >Program Print
-  (int.mul 3 3)
+  10
   
   >Program Print
-  1
-  1
-  
-  >Program Print
-  1
-  (int.add 1 1)
+  9
   
   >Program Print
   1
-  (int.add (int.add 1 1) 1)
-  
-  >Program Print
-  1
-  (int.add (int.add (int.add 1 1) 1) 1)
-  
-  >Program Print
-  (int.add 1 1)
   1
   
   >Program Print
-  (int.add 1 1)
-  (int.add 1 1)
+  1
+  2
   
   >Program Print
-  (int.add 1 1)
-  (int.add (int.add 1 1) 1)
+  1
+  3
   
   >Program Print
-  (int.add 1 1)
-  (int.add (int.add (int.add 1 1) 1) 1)
+  1
+  4
   
   >Program Print
-  (int.add (int.add 1 1) 1)
+  2
   1
   
   >Program Print
-  (int.add (int.add 1 1) 1)
-  (int.add 1 1)
+  2
+  2
   
   >Program Print
-  (int.add (int.add 1 1) 1)
-  (int.add (int.add 1 1) 1)
+  2
+  3
   
   >Program Print
-  (int.add (int.add 1 1) 1)
-  (int.add (int.add (int.add 1 1) 1) 1)
+  2
+  4
   
   >Program Print
-  (int.add (int.add (int.add 1 1) 1) 1)
+  3
   1
   
   >Program Print
-  (int.add (int.add (int.add 1 1) 1) 1)
-  (int.add 1 1)
+  3
+  2
   
   >Program Print
-  (int.add (int.add (int.add 1 1) 1) 1)
-  (int.add (int.add 1 1) 1)
+  3
+  3
   
   >Program Print
-  (int.add (int.add (int.add 1 1) 1) 1)
-  (int.add (int.add (int.add 1 1) 1) 1)
+  3
+  4
+  
+  >Program Print
+  4
+  1
+  
+  >Program Print
+  4
+  2
+  
+  >Program Print
+  4
+  3
+  
+  >Program Print
+  4
+  4
   
   Returned 0
   Everything Ok!
@@ -162,10 +162,10 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.add 10 1)
+  11
   
   >Program Print
-  (int.add (int.add 10 1) 1)
+  12
   
   Returned 1
   Everything Ok!
@@ -178,18 +178,18 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.add 5 1)
+  6
   
   >Program Print
   $_descending
   
   >Program Print
-  (int.add (int.add $_descending 3) (int.mul 5 2))
+  (int.add (int.add $_descending 3) 10)
   
   >Program Print
-  (int.add (int.add (int.add $_descending 3) (int.mul 5 2)) 1)
+  (int.add (int.add (int.add $_descending 3) 10) 1)
   
-  Returned (int.add (int.add $_descending 3) (int.mul 5 2))
+  Returned (int.add (int.add $_descending 3) 10)
   Everything Ok!
   
   =====================
@@ -223,8 +223,8 @@ Tests Model Tree:
   Input file: basic/common/14.wl
   Execution mode: st
   
-  Returned (int.add 9 1)
-  Returned (int.add 11 1)
+  Returned 10
+  Returned 12
   Everything Ok!
   
   =====================
@@ -237,9 +237,9 @@ Tests Model Tree:
   >Program Print
   $_x
   
-  Returned (int.add (int.add (int.add (int.add 1 1) 1) 1) 1)
-  Returned (int.add (int.add (int.add 1 1) 1) 1)
-  Returned (int.add (int.add 1 1) 1)
+  Returned 5
+  Returned 4
+  Returned 3
   Assumption evaluated to false
   Assumption evaluated to false
   Everything Ok!
@@ -305,13 +305,13 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.mul 3 2)
+  6
   
   >Program Print
   false
   
   >Program Print
-  (int.add 2 1)
+  3
   
   >Program Print
   2
@@ -338,12 +338,12 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.add 5 1)
+  6
   
   >Program Print
-  (int.add (int.add 5 1) 1)
+  7
   
-  Returned (int.mul 3 3)
+  Returned 9
   Everything Ok!
   
   =====================
@@ -354,7 +354,7 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.mul (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1)) (int.add (int.add (int.add 1 1) 1) 1))
+  24
   
   Returned 12
   Everything Ok!
@@ -406,10 +406,10 @@ Tests Model Tree:
   >Program Print
   false
   true
-  (int.add 3 2)
+  5
   
   >Program Print
-  (int.mul 73 2)
+  146
   
   Returned 73
   Everything Ok!
@@ -422,9 +422,9 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (int.sub 5 6)
+  -1
   
-  Returned (int.sub 5 6)
+  Returned -1
   Everything Ok!
   
   =====================
@@ -435,7 +435,7 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (bool.ite (bool.and (int.lt 3 (int.add 3 1)) (int.ge 3 3)) 5 0)
+  (bool.ite (bool.and true true) 5 0)
   
   Returned 0
   Everything Ok!
@@ -447,11 +447,11 @@ Tests Model Tree:
   Input file: basic/factorial.wl
   Execution mode: st
   
-  Returned (int.mul (int.mul (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1)) (int.add (int.add (int.add 1 1) 1) 1)) (int.add (int.add (int.add (int.add 1 1) 1) 1) 1))
-  Returned (int.mul (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1)) (int.add (int.add (int.add 1 1) 1) 1))
-  Returned (int.mul (int.mul (int.mul 1 1) (int.add 1 1)) (int.add (int.add 1 1) 1))
-  Returned (int.mul (int.mul 1 1) (int.add 1 1))
-  Returned (int.mul 1 1)
+  Returned 120
+  Returned 24
+  Returned 6
+  Returned 2
+  Returned 1
   Assumption evaluated to false
   Assumption evaluated to false
   Everything Ok!
