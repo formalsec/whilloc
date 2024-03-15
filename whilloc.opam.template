@@ -1,0 +1,3 @@
+pin-depends: [
+  [ "encoding.dev" "git+https://github.com/formalsec/encoding#c32220f7306e696982245fe73f2f11fa6788f5cd"]
+]
