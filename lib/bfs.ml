@@ -6,3 +6,5 @@ module M : Search_intf.M = struct
   let join (new_states : 't list) (old_states : 't list) : 't list =
     join_enqueue new_states old_states
 end
+
+include M

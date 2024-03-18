@@ -2,7 +2,7 @@
 
 (library
  (name whilloc)
- (libraries z3 ppx_deriving_yojson.runtime)
+ (libraries z3 ppx_deriving_yojson.runtime encoding)
  (preprocess
   (pps ppx_deriving_yojson)))
 

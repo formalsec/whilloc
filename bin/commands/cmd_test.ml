@@ -7,6 +7,7 @@ type options =
   ; mode : Cmd_execute.mode
   ; timeout : float option
   ; verbose : bool
+  ; print : bool
   }
 
 let _max_timeout = ref 0.0
@@ -21,11 +22,11 @@ let set =
            { Unix.it_interval = 0.; Unix.it_value = !_max_timeout }
          : Unix.interval_timer_status )
 
-let run_single mode file =
+let run_single mode print file =
   try
     Fun.protect ~finally:unset (fun () ->
         set ();
-        try Cmd_execute.run file mode with
+        try Cmd_execute.run ~test:print ~no_values:true file mode with
         | Timeout ->
           Printf.printf
             "Timeout occurred while processing file: %s (Max Timeout: %f \
@@ -38,7 +39,8 @@ let run_single mode file =
 
 let run (opts : options) : unit =
   let files = Dir.get_files opts.inputs in
-  List.iter (run_single opts.mode)
+  List.iter
+    (run_single opts.mode opts.print)
     (List.map Fpath.to_string (List.sort Fpath.compare files));
   Printf.printf "Total number of files tested: %d\n" (List.length files)
 

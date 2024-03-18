@@ -1,6 +1,6 @@
 open Value
 
-module M : Heap_intf.M with type vt = Value.t = struct
+module M = struct
   type bt = Value.t array
   type t = (int, bt) Hashtbl.t * int
   type vt = Value.t (* indexes and sizes are always values *)
@@ -85,6 +85,9 @@ module M : Heap_intf.M with type vt = Value.t = struct
 
   let clone _ = assert false
 end
+
+module M' : Heap_intf.M with type vt = Value.t = M
+include M
 
 (*
 type t = (int, int arry) Hashtbl.t

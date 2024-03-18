@@ -17,6 +17,7 @@ depends: [
   "bos"
   "cmdliner"
   "ppx_deriving_yojson"
+  "encoding" {>= "0.0.4"}
   "odoc" {with-doc}
 ]
 build: [
@@ -34,3 +35,6 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/formalsec/whilloc.git"
+pin-depends: [
+  [ "encoding.dev" "git+https://github.com/formalsec/encoding#25c6021256a995d84e62a358e51451bc710210f7"]
+]

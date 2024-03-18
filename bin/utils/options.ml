@@ -49,8 +49,12 @@ let mode =
   Arg.(required & opt (some mode_conv) None & info [ "m"; "mode" ] ~doc ~docv)
 
 let verbose =
-  let doc = "Show the statements being executed." in
+  let doc = "Shows the statements being executed." in
   Arg.(value & flag & info [ "v"; "verbose" ] ~doc)
+
+let print =
+  let doc = "Shows the results of each execution." in
+  Arg.(value & flag & info [ "p"; "print" ] ~doc)
 
 let timeout =
   let docv = "DURATION" in

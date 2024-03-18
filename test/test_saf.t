@@ -1,5 +1,5 @@
 Tests Model ArrayFork:
-  $ wl test basic --mode saf
+  $ wl test basic -p --mode saf
   
   =====================
   	Whilloc
@@ -8,6 +8,13 @@ Tests Model ArrayFork:
   Input file: basic/arrayfork/1.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+  Assumption evaluated to false
+  Assumption evaluated to false
   Found 1 problems!
   
   =====================
@@ -17,6 +24,34 @@ Tests Model ArrayFork:
   Input file: basic/arrayfork/2.wl
   Execution mode: saf
   
+  Assertion violated, counter example:
+      $_i : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_v : Int _
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
   Found 4 problems!
   
   =====================
@@ -26,6 +61,18 @@ Tests Model ArrayFork:
   Input file: basic/arrayfork/3.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -35,6 +82,46 @@ Tests Model ArrayFork:
   Input file: basic/arrayite/1.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -45,87 +132,88 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 6)
+  6
   
   >Program Print
-  (Val Int 28)
+  28
   
   >Program Print
-  (Val Int 5)
+  5
   
   >Program Print
-  (Val Int 5)
+  5
   
   >Program Print
-  (Val Int 10)
+  10
   
   >Program Print
-  (Val Int 9)
+  9
   
   >Program Print
-  (Val Int 1)
-  (Val Int 1)
+  1
+  1
   
   >Program Print
-  (Val Int 1)
-  (Val Int 2)
+  1
+  2
   
   >Program Print
-  (Val Int 1)
-  (Val Int 3)
+  1
+  3
   
   >Program Print
-  (Val Int 1)
-  (Val Int 4)
+  1
+  4
   
   >Program Print
-  (Val Int 2)
-  (Val Int 1)
+  2
+  1
   
   >Program Print
-  (Val Int 2)
-  (Val Int 2)
+  2
+  2
   
   >Program Print
-  (Val Int 2)
-  (Val Int 3)
+  2
+  3
   
   >Program Print
-  (Val Int 2)
-  (Val Int 4)
+  2
+  4
   
   >Program Print
-  (Val Int 3)
-  (Val Int 1)
+  3
+  1
   
   >Program Print
-  (Val Int 3)
-  (Val Int 2)
+  3
+  2
   
   >Program Print
-  (Val Int 3)
-  (Val Int 3)
+  3
+  3
   
   >Program Print
-  (Val Int 3)
-  (Val Int 4)
+  3
+  4
   
   >Program Print
-  (Val Int 4)
-  (Val Int 1)
+  4
+  1
   
   >Program Print
-  (Val Int 4)
-  (Val Int 2)
+  4
+  2
   
   >Program Print
-  (Val Int 4)
-  (Val Int 3)
+  4
+  3
   
   >Program Print
-  (Val Int 4)
-  (Val Int 4)
+  4
+  4
   
+  Returned 0
   Everything Ok!
   
   =====================
@@ -136,11 +224,12 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 11)
+  11
   
   >Program Print
-  (Val Int 12)
+  12
   
+  Returned 1
   Everything Ok!
   
   =====================
@@ -151,17 +240,18 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 6)
+  6
   
   >Program Print
-  (SymbInt $_descending)
+  $_descending
   
   >Program Print
-  (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2)))
+  (int.add (int.add $_descending 3) 10)
   
   >Program Print
-  (+ (+ (+ (SymbInt $_descending) (Val Int 3)) (* (Val Int 5) (Val Int 2))) (Val Int 1))
+  (int.add (int.add (int.add $_descending 3) 10) 1)
   
+  Returned (int.add (int.add $_descending 3) 10)
   Everything Ok!
   
   =====================
@@ -172,8 +262,9 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (* (+ (SymbInt $_ok_computer) (Val Int 1)) (Val Int 2))
+  (int.mul (int.add $_ok_computer 1) 2)
   
+  Returned (int.add $_ok_computer 1)
   Everything Ok!
   
   =====================
@@ -183,6 +274,8 @@ Tests Model ArrayFork:
   Input file: basic/common/13.wl
   Execution mode: saf
   
+  Returned true
+  Returned false
   Everything Ok!
   
   =====================
@@ -192,6 +285,8 @@ Tests Model ArrayFork:
   Input file: basic/common/14.wl
   Execution mode: saf
   
+  Returned 10
+  Returned 12
   Everything Ok!
   
   =====================
@@ -202,8 +297,13 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (SymbInt $_x)
+  $_x
   
+  Returned 5
+  Returned 4
+  Returned 3
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -214,20 +314,21 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (SymbInt $_miguel)
-  (SymbInt $_rita)
-  (SymbInt $_XXXXXXXXXXXXXXXXXX)
+  $_miguel
+  $_rita
+  $_XXXXXXXXXXXXXXXXXX
   
   >Program Print
-  (+ (+ (SymbInt $_miguel) (Val Int 1)) (SymbInt $_rita))
-  (SymbInt $_rita)
-  (SymbInt $_XXXXXXXXXXXXXXXXXX)
+  (int.add (int.add $_miguel 1) $_rita)
+  $_rita
+  $_XXXXXXXXXXXXXXXXXX
   
   >Program Print
-  (SymbInt $_nvidia)
-  (SymbInt $_rita)
-  (SymbInt $_XXXXXXXXXXXXXXXXXX)
+  $_nvidia
+  $_rita
+  $_XXXXXXXXXXXXXXXXXX
   
+  Returned (int.mul $_nvidia $_XXXXXXXXXXXXXXXXXX)
   Everything Ok!
   
   =====================
@@ -237,6 +338,8 @@ Tests Model ArrayFork:
   Input file: basic/common/17.wl
   Execution mode: saf
   
+  Returned true
+  Returned false
   Everything Ok!
   
   =====================
@@ -247,11 +350,13 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Bool true)
+  true
   
   >Program Print
-  (Val Bool false)
+  false
   
+  Returned (int.add $_x 1)
+  Returned (int.add $_x 1)
   Everything Ok!
   
   =====================
@@ -262,17 +367,18 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 6)
+  6
   
   >Program Print
-  (Val Bool false)
+  false
   
   >Program Print
-  (Val Int 3)
+  3
   
   >Program Print
-  (Val Int 2)
+  2
   
+  Returned -1
   Everything Ok!
   
   =====================
@@ -282,6 +388,8 @@ Tests Model ArrayFork:
   Input file: basic/common/3.wl
   Execution mode: saf
   
+  Assertion violated, counter example:
+      Empty model
   Found 1 problems!
   
   =====================
@@ -292,11 +400,12 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 6)
+  6
   
   >Program Print
-  (Val Int 7)
+  7
   
+  Returned 9
   Everything Ok!
   
   =====================
@@ -307,8 +416,9 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 24)
+  24
   
+  Returned 12
   Everything Ok!
   
   =====================
@@ -318,6 +428,8 @@ Tests Model ArrayFork:
   Input file: basic/common/6.wl
   Execution mode: saf
   
+  Assertion violated, counter example:
+      Empty model
   Found 1 problems!
   
   =====================
@@ -328,17 +440,18 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Bool true)
+  true
   
   >Program Print
-  (Val Int 1)
+  1
   
   >Program Print
-  (Val Int 0)
+  0
   
   >Program Print
-  (Val Int 1)
+  1
   
+  Returned 1
   Everything Ok!
   
   =====================
@@ -349,17 +462,18 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Bool true)
-  (Val Bool true)
+  true
+  true
   
   >Program Print
-  (Val Bool false)
-  (Val Bool true)
-  (Val Int 5)
+  false
+  true
+  5
   
   >Program Print
-  (Val Int 146)
+  146
   
+  Returned 73
   Everything Ok!
   
   =====================
@@ -370,8 +484,9 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int -1)
+  -1
   
+  Returned -1
   Everything Ok!
   
   =====================
@@ -382,8 +497,9 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Int 5)
+  5
   
+  Returned 0
   Everything Ok!
   
   =====================
@@ -393,6 +509,13 @@ Tests Model ArrayFork:
   Input file: basic/factorial.wl
   Execution mode: saf
   
+  Returned 120
+  Returned 24
+  Returned 6
+  Returned 2
+  Returned 1
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -402,6 +525,12 @@ Tests Model ArrayFork:
   Input file: basic/simple1.wl
   Execution mode: saf
   
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
   Found 2 problems!
   
   =====================
@@ -412,29 +541,35 @@ Tests Model ArrayFork:
   Execution mode: saf
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
   >Program Print
-  (Val Loc 0)
+  0
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -444,6 +579,2506 @@ Tests Model ArrayFork:
   Input file: basic/statements/symbol_int_c.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
   Everything Ok!
   
   =====================
@@ -471,6 +3106,86 @@ Tests Model ArrayFork:
   Input file: basic/tree/3.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Returned 0
+  Returned 0
+  Assertion violated, counter example:
+      $_i : Int _
+      $_j : Int _
+      $_k : Int _
+      $_v : Int _
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
   Found 9 problems!
   
   =====================
@@ -480,6 +3195,48 @@ Tests Model ArrayFork:
   Input file: basic/tree/4.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -489,6 +3246,16 @@ Tests Model ArrayFork:
   Input file: basic/tree/5.wl
   Execution mode: saf
   
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Returned 0
+  Assumption evaluated to false
+  Assumption evaluated to false
   Everything Ok!
   
   =====================
@@ -498,5 +3265,11 @@ Tests Model ArrayFork:
   Input file: basic/wasm.wl
   Execution mode: saf
   
+  Returned 0
+  Assertion violated, counter example:
+      $_x : Int _
+      $_y : Int _
+  Returned 0
+  Returned 0
   Found 1 problems!
   Total number of files tested: 33

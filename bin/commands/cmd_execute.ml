@@ -2,26 +2,23 @@ open Whilloc
 open Utils
 
 (* Choice *)
-module C_Choice = List_choice.Make (Eval_concrete.M) (Heap_concrete.M)
-module SAF_Choice = List_choice.Make (Eval_symbolic.M) (Heap_array_fork.M)
-module SAITE_Choice = List_choice.Make (Eval_symbolic.M) (Heap_arrayite.M)
-module ST_Choice = List_choice.Make (Eval_symbolic.M) (Heap_tree.M)
-module SOPL_Choice = List_choice.Make (Eval_symbolic.M) (Heap_oplist.M)
+module C_Choice = List_choice.Make (Eval_concrete) (Heap_concrete.M)
+module SAF_Choice = List_choice.Make (Eval_symbolic) (Heap_array_fork)
+module SAITE_Choice = List_choice.Make (Eval_symbolic) (Heap_arrayite)
+module ST_Choice = List_choice.Make (Eval_symbolic) (Heap_tree)
+module SOPL_Choice = List_choice.Make (Eval_symbolic) (Heap_oplist)
 
 (* Interpreter *)
-module C =
-  Interpreter.Make (Eval_concrete.M) (Dfs.M) (Heap_concrete.M) (C_Choice)
+module C = Interpreter.Make (Eval_concrete) (Dfs) (Heap_concrete.M) (C_Choice)
 
 module SAF =
-  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_array_fork.M) (SAF_Choice)
+  Interpreter.Make (Eval_symbolic) (Dfs) (Heap_array_fork) (SAF_Choice)
 
 module SAITE =
-  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_arrayite.M) (SAITE_Choice)
+  Interpreter.Make (Eval_symbolic) (Dfs) (Heap_arrayite) (SAITE_Choice)
 
-module ST = Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_tree.M) (ST_Choice)
-
-module SOPL =
-  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (Heap_oplist.M) (SOPL_Choice)
+module ST = Interpreter.Make (Eval_symbolic) (Dfs) (Heap_tree) (ST_Choice)
+module SOPL = Interpreter.Make (Eval_symbolic) (Dfs) (Heap_oplist) (SOPL_Choice)
 
 type mode =
   | Concrete
@@ -63,7 +60,7 @@ let write_report report =
   | Ok v -> v
   | Error (`Msg err) -> failwith err
 
-let run input mode =
+let run ?(no_values = false) ?(test = false) input mode =
   let start = Sys.time () in
   print_header ();
   let program = input |> read_file |> parse_program |> create_program in
@@ -75,6 +72,7 @@ let run input mode =
       let rets = C.interpret program in
       ( List.filter_map
           (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -84,6 +82,7 @@ let run input mode =
       let rets = SAF.interpret program in
       ( List.filter_map
           (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -93,6 +92,7 @@ let run input mode =
       let rets = SAITE.interpret program in
       ( List.filter_map
           (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -102,6 +102,7 @@ let run input mode =
       let rets = ST.interpret program in
       ( List.filter_map
           (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
@@ -111,12 +112,14 @@ let run input mode =
       let rets = SOPL.interpret program in
       ( List.filter_map
           (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
             | _ -> None )
           rets
       , List.length rets )
   in
+
   let execution_time = Sys.time () -. start in
   let num_problems = List.length problems in
   if num_problems = 0 then Printf.printf "Everything Ok!\n"
@@ -127,7 +130,8 @@ let run input mode =
        =====================\n\
        Total Execution time: %f\n\
        Total Solver time: %f\n"
-      execution_time !Translator.solver_time;
+      execution_time
+      !Encoding.Solver.Z3_batch.solver_time;
   write_report
     { execution_time
     ; mode
@@ -135,7 +139,7 @@ let run input mode =
     ; num_problems
     ; problems
     ; filename = input
-    ; solver_time = !Translator.solver_time
+    ; solver_time = !Encoding.Solver.Z3_batch.solver_time
     }
 
 let main (opts : options) =

@@ -1,6 +1,6 @@
-module M : Heap_intf.M with type vt = Term.t = struct
-  type t = (int, Term.t array) Hashtbl.t
-  type vt = Term.t
+module M = struct
+  type vt = Encoding.Expr.t
+  type t = (int, vt array) Hashtbl.t
 
   let init () : t = Hashtbl.create Parameters.size
   let pp (_fmt : Fmt.t) (_heap : t) : unit = failwith "Not Implemented"
@@ -25,6 +25,8 @@ module M : Heap_intf.M with type vt = Term.t = struct
   let clone _ = assert false
 end
 
+module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+include M
 (*
 type t = (int, int arry) Hashtbl.t
 
