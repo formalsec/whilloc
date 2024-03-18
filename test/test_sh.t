@@ -1,4 +1,4 @@
-Tests Model WriteLists:
+Tests Model Hierarchy Heap using WriteLists:
   $ wl test basic -p --mode sh
   
   =====================

@@ -11,7 +11,8 @@ module M = struct
 
   exception BlockNotInHeap
 
-  let init ?(next = 0) () : t = { map = Hashtbl.create Parameters.size; i = next }
+  let init ?(next = 0) () : t =
+    { map = Hashtbl.create Parameters.size; i = next }
 
   let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
@@ -125,17 +126,23 @@ module M = struct
   let free (heap : t) (loc : value) (path : value Pc.t) : (t * value Pc.t) list
       =
     let loc', _ = find_block heap loc in
-    let _ = Hashtbl.replace heap.map loc' (Array.make 0 Expr.(make @@ Val (Int 0))) in
+    let _ =
+      Hashtbl.replace heap.map loc' (Array.make 0 Expr.(make @@ Val (Int 0)))
+    in
     [ (heap, path) ]
 
   let get_block (h : t) (addr : value) : block option =
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     match Hashtbl.find_opt h.map addr' with
     | Some block -> if Array.length block = 0 then None else Some block
     | None -> None
 
   let set_block (h : t) (addr : value) (block : block) : t =
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     Hashtbl.replace h.map addr' block;
     h
 

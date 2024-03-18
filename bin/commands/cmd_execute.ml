@@ -128,14 +128,16 @@ let run ?(no_values = false) ?(test = false) input mode =
             | _ -> None )
           rets
       , List.length rets )
-    |Sh ->
+    | Sh ->
       let rets = SH.interpret program in
       ( List.filter_map
           (fun (out, _) ->
             if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
             match out with
             | Outcome.Error _ | Outcome.EndGas -> Some out
-            | _ -> None ) rets, List.length rets)
+            | _ -> None )
+          rets
+      , List.length rets )
   in
 
   let execution_time = Sys.time () -. start in

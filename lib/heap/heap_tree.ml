@@ -196,7 +196,9 @@ module M = struct
     ( match Expr.view arr with
     | Val (Int i) ->
       Hashtbl.replace h' i
-        (Leaf (Expr.(make @@ Val (Int 0), make @@ Val (Int 0)), Expr.(make @@ Val (Int 0))))
+        (Leaf
+           ( Expr.(make @@ Val (Int 0), make @@ Val (Int 0))
+           , Expr.(make @@ Val (Int 0)) ) )
     | _ -> failwith "Invalid allocation index" );
     [ (h, pc) ]
 
@@ -214,18 +216,22 @@ module M = struct
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
 
   let get_block ((h, _) : t) (addr : value) : block option =
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     match Hashtbl.find_opt h addr' with
     | Some tree -> (
       match tree with
       | Leaf (r, _) | Node (r, _) ->
-        if r = (Expr.(make @@ Val (Int 0), make @@ Val (Int 0))) then None
+        if r = Expr.(make @@ Val (Int 0), make @@ Val (Int 0)) then None
         else Some tree )
     | None -> None
 
   let set_block (h : t) (addr : value) (block : block) : t =
     let h', _ = h in
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     Hashtbl.replace h' addr' block;
     h
 

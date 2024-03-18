@@ -3,7 +3,10 @@ module M = struct
   type block = value array
   type t = (int, block) Hashtbl.t
 
-  let init ?(next = 0) () : t = ignore next; Hashtbl.create Parameters.size
+  let init ?(next = 0) () : t =
+    ignore next;
+    Hashtbl.create Parameters.size
+
   let pp (_fmt : Fmt.t) (_heap : t) : unit = failwith "Not Implemented"
   let to_string (_h : t) : string = failwith "Not Implemented"
 

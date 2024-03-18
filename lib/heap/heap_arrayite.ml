@@ -149,14 +149,18 @@ module M = struct
     | _ -> failwith "InternalError: HeapArrayIte.free, arr must be location"
 
   let get_block ((h, _) : t) (addr : value) : block option =
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     match Hashtbl.find_opt h addr' with
     | Some block -> if Array.length block = 0 then None else Some block
     | None -> None
 
   let set_block (h : t) (addr : value) (block : block) : t =
     let h', _ = h in
-    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
     Hashtbl.replace h' addr' block;
     h
 

@@ -12,7 +12,6 @@ struct
     ; mutable next : int
     }
 
-    
   let init ?(next = 0) () = { map = Heap.init (); parent = None; next }
 
   let rec pp (fmt : Fmt.t) (hh : t) : unit =
