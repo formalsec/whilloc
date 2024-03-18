@@ -11,15 +11,12 @@ module M = struct
 
   let solver = Slv.Z3_batch.create ()
 
-  let eval_unop (op : Term.unop) : T.unop =
+  let eval_unop (op : Term.unop) =
     match op with
-    | Term.Neg -> T.Neg
-    | Term.Not -> T.Not
-    | Term.Abs -> T.Abs
-    | Term.StringOfInt ->
-      failwith
-        "InternalError: EvalSymbolic.eval_unop, StringOfInt not implemented in \
-         Encoding"
+    | Term.Neg -> (Some T.Neg, None)
+    | Term.Not -> (Some T.Not, None)
+    | Term.Abs -> (Some T.Abs, None)
+    | Term.StringOfInt -> (None, Some T.String_from_int)
 
   let eval_binop (op : Term.binop) =
     match op with
@@ -52,8 +49,10 @@ module M = struct
       let op' = eval_unop op in
       let e' = eval store e in
       match op' with
-      | T.Not -> E.(unop T.Ty_bool op' e')
-      | _ -> E.(unop T.Ty_int op' e') )
+      | Some T.Not, None -> E.(unop T.Ty_bool T.Not e')
+      | Some u, None -> E.(unop T.Ty_int u e') 
+      | None, Some c -> E.(cvtop T.Ty_int c e')
+      | _ -> assert false )
     | Binop (op, e1, e2) -> (
       let op' = eval_binop op in
       let e1' = eval store e1 in
@@ -87,19 +86,15 @@ module M = struct
          implemented"
 
   let hashtbl_to_list (tbl : (S.t, V.t) Hashtbl.t) :
-    (string * Value.t) list option =
-    Some
+    (string * Value.t) list =
       (Hashtbl.fold
-         (fun k v acc -> (S.to_string k, translate_value v) :: acc)
-         tbl [] )
+        (fun k v acc -> (S.to_string k, translate_value v) :: acc)
+        tbl [] )
 
   let test_assert (exprs : t list) : bool * Model.t =
     assert (is_true exprs);
-    let enc_model = Slv.Z3_batch.model solver in
-    match enc_model with
-    | Some m ->
-      let model = hashtbl_to_list m in
-      (Option.is_some model, model)
+    match Slv.Z3_batch.model solver with
+    | Some m -> (true, Some (hashtbl_to_list m))
     | None -> (false, None)
 
   let negate (e : t) : t = E.(unop T.Ty_bool T.Not e)
