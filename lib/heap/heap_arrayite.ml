@@ -1,13 +1,13 @@
 open Encoding
 
 module M = struct
-  type vt = Encoding.Expr.t
-  type bt = vt array
-  type t = (int, bt) Hashtbl.t * int
+  type value = Encoding.Expr.t
+  type block = value array
+  type t = (int, block) Hashtbl.t * int
 
   let init () : t = (Hashtbl.create Parameters.size, 0)
 
-  let pp_block fmt (block : bt) =
+  let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
       (Fmt.pp_lst ~pp_sep:Fmt.pp_comma Expr.pp)
       (Array.to_list block)
@@ -19,14 +19,14 @@ module M = struct
 
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
-  let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
+  let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
     let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
+  let in_bounds (heap : t) (arr : value) (i : value) (pc : value Pc.t) : bool =
     let h, _ = heap in
     match Expr.view arr with
     | Val (Int l) -> (
@@ -41,7 +41,7 @@ module M = struct
 
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
 
-  let find_block (heap : t) (loc : vt) : int * bt =
+  let find_block (heap : t) (loc : value) : int * block =
     let heap', _ = heap in
     match Expr.view loc with
     | Val (Int loc') -> (
@@ -51,7 +51,7 @@ module M = struct
       | None -> failwith "Block does not exist" )
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
+  let malloc (h : t) (sz : value) (pc : value Pc.t) : (t * value * value Pc.t) list =
     let tbl, next = h in
     match Expr.view sz with
     | Val (Int i) ->
@@ -60,8 +60,8 @@ module M = struct
     | _ ->
       failwith "InternalError: HeapArrayIte.malloc, size must be an integer"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
-    (t * vt Pc.t) list =
+  let update (heap : t) (loc : value) (index : value) (v : value) (path : value Pc.t) :
+    (t * value Pc.t) list =
     let heap', curr = heap in
     let loc, block = find_block heap loc in
     match Expr.view index with
@@ -85,8 +85,8 @@ module M = struct
         [ ((heap', curr), path) ]
     | _ -> failwith "Invalid index"
 
-  let lookup (h : t) (arr : vt) (index : vt) (pc : vt Pc.t) :
-    (t * vt * vt Pc.t) list =
+  let lookup (h : t) (arr : value) (index : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let tbl, _ = h in
     match Expr.view index with
     | Val (Int i) -> (
@@ -139,7 +139,7 @@ module M = struct
       | _ ->
         failwith "InternalError:  HeapArrayIte.update, arr must be a location" )
 
-  let free (h : t) (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
+  let free (h : t) (arr : value) (pc : value Pc.t) : (t * value Pc.t) list =
     let tbl, _ = h in
     match Expr.view arr with
     | Val (Int l) -> (
@@ -153,5 +153,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Encoding.Expr.t = M
 include M

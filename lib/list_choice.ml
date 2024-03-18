@@ -1,6 +1,6 @@
 open Sstate
 
-module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type vt = Eval.t) :
+module Make (Eval : Eval_intf.M) (Heap : Heap_intf.M with type value = Eval.t) :
   Choice_intf.Choice with type v = Eval.t and type h = Heap.t = struct
   type state = (Eval.t, Heap.t) Sstate.t
   type v = Eval.t

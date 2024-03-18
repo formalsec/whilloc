@@ -1,17 +1,17 @@
 open Encoding
 
 module M = struct
-  type vt = Encoding.Expr.t
-  type bt = vt array
+  type value = Encoding.Expr.t
+  type block = value array
 
   type t =
-    { map : (int, bt) Hashtbl.t
+    { map : (int, block) Hashtbl.t
     ; i : int
     }
 
   let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
 
-  let pp_block fmt (block : bt) =
+  let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
       (Fmt.pp_lst ~pp_sep:Fmt.pp_comma Expr.pp)
       (Array.to_list block)
@@ -23,14 +23,14 @@ module M = struct
 
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
-  let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
+  let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
     let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
+  let in_bounds (heap : t) (arr : value) (i : value) (pc : value Pc.t) : bool =
     match Expr.view arr with
     | Val (Int l) -> (
       match Hashtbl.find_opt heap.map l with
@@ -44,7 +44,7 @@ module M = struct
 
   let copy (heap : t) : t = { heap with map = Hashtbl.copy heap.map }
 
-  let find_block (heap : t) (loc : vt) : int * bt =
+  let find_block (heap : t) (loc : value) : int * block =
     match Expr.view loc with
     | Val (Int loc') -> (
       let block = Hashtbl.find_opt heap.map loc' in
@@ -53,7 +53,7 @@ module M = struct
       | None -> failwith "Block does not exist" )
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (heap : t) (size : vt) (path : vt Pc.t) : (t * vt * vt Pc.t) list =
+  let malloc (heap : t) (size : value) (path : value Pc.t) : (t * value * value Pc.t) list =
     match Expr.view size with
     | Val (Int size') ->
       let block = Array.make size' Expr.(make @@ Val (Int 0)) in
@@ -61,8 +61,8 @@ module M = struct
       [ ({ heap with i = heap.i + 1 }, Expr.(make @@ Val (Int heap.i)), path) ]
     | _ -> failwith "Size needs to be a concrete integer"
 
-  let lookup (heap : t) (loc : vt) (index : vt) (path : vt Pc.t) :
-    (t * vt * vt Pc.t) list =
+  let lookup (heap : t) (loc : value) (index : value) (path : value Pc.t) :
+    (t * value * value Pc.t) list =
     let _, block = find_block heap loc in
     match Expr.view index with
     | Val (Int index') ->
@@ -89,8 +89,8 @@ module M = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
-    (t * vt Pc.t) list =
+  let update (heap : t) (loc : value) (index : value) (v : value) (path : value Pc.t) :
+    (t * value Pc.t) list =
     let loc, block = find_block heap loc in
     match Expr.view index with
     | Val (Int index') ->
@@ -122,7 +122,7 @@ module M = struct
           temp
     | _ -> failwith "Invalid index"
 
-  let free (heap : t) (loc : vt) (path : vt Pc.t) : (t * vt Pc.t) list =
+  let free (heap : t) (loc : value) (path : value Pc.t) : (t * value Pc.t) list =
     let loc', _ = find_block heap loc in
     let _ = Hashtbl.remove heap.map loc' in
     [ (heap, path) ]
@@ -130,5 +130,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Encoding.Expr.t = M
 include M

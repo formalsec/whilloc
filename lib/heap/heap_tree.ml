@@ -1,11 +1,11 @@
 open Encoding
 
 module M = struct
-  type vt = Encoding.Expr.t
-  type range = vt * vt
+  type value = Encoding.Expr.t
+  type range = value * value
 
   type tree_t =
-    | Leaf of range * vt
+    | Leaf of range * value
     | Node of range * tree_t list
 
   type t = (int, tree_t) Hashtbl.t * int
@@ -41,7 +41,7 @@ module M = struct
     Hashtbl.iter tree_to_json h';
     "Json files created in output directory."
 
-  let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
+  let malloc (h : t) (sz : value) (pc : value Pc.t) : (t * value * value Pc.t) list =
     let h', curr = h in
     let tree =
       Leaf (Expr.(make @@ Val (Int 0), sz), Expr.(make @@ Val (Int 0)))
@@ -49,11 +49,11 @@ module M = struct
     Hashtbl.replace h' curr tree;
     [ ((h', curr + 1), Expr.(make @@ Val (Int curr)), pc) ]
 
-  let update h (arr : vt) (index : vt) (v : vt) (pc : vt Pc.t) :
-    (t * vt Pc.t) list =
+  let update h (arr : value) (index : value) (v : value) (pc : value Pc.t) :
+    (t * value Pc.t) list =
     let h', next = h in
-    let rec update_tree (tree : tree_t) (index : vt) (v : vt) (pc : vt Pc.t) :
-      (tree_t * vt Pc.t) list option =
+    let rec update_tree (tree : tree_t) (index : value) (v : value) (pc : value Pc.t) :
+      (tree_t * value Pc.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
         let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
@@ -134,7 +134,7 @@ module M = struct
         new_trees
     | None -> failwith "Out of bounds access"
 
-  let must_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
+  let must_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
     let e1 = Expr.(relop Ty.Ty_int Ty.Lt index lower) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index upper) in
@@ -142,15 +142,15 @@ module M = struct
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
-  let may_within_range (r : range) (index : vt) (pc : vt Pc.t) : bool =
+  let may_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
     let e1 = Expr.(relop Ty.Ty_int Ty.Ge index lower) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Lt index upper) in
 
     Eval_symbolic.is_true ([ e1; e2 ] @ pc)
 
-  let rec search_tree (index : vt) (pc : vt Pc.t) (tree : tree_t) :
-    (vt * vt) list =
+  let rec search_tree (index : value) (pc : value Pc.t) (tree : tree_t) :
+    (value * value) list =
     match tree with
     | Leaf (r, v) ->
       let lower, upper = r in
@@ -168,7 +168,7 @@ module M = struct
       if in_range then List.concat (List.map (search_tree index pc) tree_list)
       else []
 
-  let lookup h (arr : vt) (index : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list
+  let lookup h (arr : value) (index : value) (pc : value Pc.t) : (t * value * value Pc.t) list
       =
     let tbl, _ = h in
 
@@ -188,7 +188,7 @@ module M = struct
           "InternalError: HeapTree.lookup, accessed tree is not in the heap" )
     | _ -> failwith "InternalError: HeapTree.lookup, arr must be location"
 
-  let free h (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
+  let free h (arr : value) (pc : value Pc.t) : (t * value Pc.t) list =
     let h', _ = h in
     (* let ign = to_string h in
        ignore ign; *)
@@ -197,7 +197,7 @@ module M = struct
     | _ -> failwith "Invalid allocation index" );
     [ (h, pc) ]
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
+  let in_bounds (heap : t) (arr : value) (i : value) (pc : value Pc.t) : bool =
     let h', _ = heap in
     match Expr.view arr with
     | Val (Int l) -> (
@@ -214,5 +214,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Encoding.Expr.t = M
 include M
