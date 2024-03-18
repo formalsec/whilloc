@@ -68,8 +68,7 @@ module M = struct
     | Val (Int index') ->
       let ret = Array.get block index' in
       [ (heap, ret, path) ]
-    | Symbol _ ->
-      if Expr.ty index = Ty_int then
+    | Symbol s when Symbol.type_of s = Ty_int -> 
         let blockList = Array.to_list block in
         let temp =
           List.mapi
@@ -88,7 +87,6 @@ module M = struct
             in
             Eval_symbolic.is_true (e :: path) )
           temp
-      else failwith "Invalid index"
     | _ -> failwith "Invalid index"
 
   let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
@@ -99,8 +97,7 @@ module M = struct
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap.map loc block in
       [ (heap, path) ]
-    | Symbol _ ->
-      if Expr.ty index = Ty_int then
+    | Symbol s when Symbol.type_of s = Ty_int ->
         let blockList = Array.to_list block in
         let temp =
           List.mapi
@@ -123,7 +120,6 @@ module M = struct
             in
             Eval_symbolic.is_true (e :: path) )
           temp
-      else failwith "Invalid index"
     | _ -> failwith "Invalid index"
 
   let free (heap : t) (loc : vt) (path : vt Pc.t) : (t * vt Pc.t) list =

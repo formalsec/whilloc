@@ -69,8 +69,7 @@ module M = struct
       let _ = Array.set block index' v in
       let _ = Hashtbl.replace heap' loc block in
       [ ((heap', curr), path) ]
-    | Symbol _ ->
-      if Expr.ty index = Ty_int then
+    | Symbol s when Symbol.type_of s = Ty_int ->
         let block' =
           Array.mapi
             (fun j old_expr ->
@@ -84,7 +83,6 @@ module M = struct
         in
         let _ = Hashtbl.replace heap' loc block' in
         [ ((heap', curr), path) ]
-      else failwith "Invalid index"
     | _ -> failwith "Invalid index"
 
   let lookup (h : t) (arr : vt) (index : vt) (pc : vt Pc.t) :

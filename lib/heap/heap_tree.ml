@@ -16,11 +16,11 @@ module M = struct
     let open Fmt in
     match block with
     | Leaf ((l, r), v) ->
-      fprintf fmt "{ \"leaf\": { \"range\": \"[%a, %a]\", \"value\": \"%a\"} }"
+      fprintf fmt {|{ "leaf": { "range": "[%a, %a]", "value": "%a"} }|}
         Expr.pp l Expr.pp r Expr.pp v
     | Node ((l, r), ch) ->
       fprintf fmt
-        "{ \"node\": { \"range\": \"[%a, %a]\", \"children\": [ %a ]} }" Expr.pp
+        {|{ "node": { "range": "[%a, %a]", "children": [ %a ]} }|} Expr.pp
         l Expr.pp r
         (pp_lst ~pp_sep:pp_comma pp_block)
         ch

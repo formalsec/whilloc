@@ -42,10 +42,7 @@ module M = struct
       | Some (sz, _) -> (
         match Expr.view sz with
         | Val (Int _) -> is_within sz i pc
-        | Symbol _ ->
-          if Expr.ty sz = Ty_int then is_within sz i pc
-          else
-            failwith "InternalError: HeapOpList.in_bounds, size not an integer"
+        | Symbol s when Symbol.type_of s = Ty_int -> is_within sz i pc
         | _ ->
           failwith "InternalError: HeapOpList.in_bounds, size not an integer" )
       | _ ->
