@@ -50,7 +50,7 @@ module M = struct
       let e' = eval store e in
       match op' with
       | Some T.Not, None -> E.(unop T.Ty_bool T.Not e')
-      | Some u, None -> E.(unop T.Ty_int u e') 
+      | Some u, None -> E.(unop T.Ty_int u e')
       | None, Some c -> E.(cvtop T.Ty_int c e')
       | _ -> assert false )
     | Binop (op, e1, e2) -> (
@@ -85,11 +85,10 @@ module M = struct
         "InternalError: EvalSymbolic.val_translator, value from Encoding not \
          implemented"
 
-  let hashtbl_to_list (tbl : (S.t, V.t) Hashtbl.t) :
-    (string * Value.t) list =
-      (Hashtbl.fold
-        (fun k v acc -> (S.to_string k, translate_value v) :: acc)
-        tbl [] )
+  let hashtbl_to_list (tbl : (S.t, V.t) Hashtbl.t) : (string * Value.t) list =
+    Hashtbl.fold
+      (fun k v acc -> (S.to_string k, translate_value v) :: acc)
+      tbl []
 
   let test_assert (exprs : t list) : bool * Model.t =
     assert (is_true exprs);

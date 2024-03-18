@@ -5,7 +5,7 @@ module M = struct
   type t = (int, block) Hashtbl.t * int
   type value = Value.t (* indexes and sizes are always values *)
 
-  let init () : t = (Hashtbl.create Parameters.size, 0)
+  let init ?(next = 0) () : t = (Hashtbl.create Parameters.size, next)
 
   let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
@@ -19,7 +19,8 @@ module M = struct
 
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
-  let malloc (h : t) (sz : value) (pc : value Pc.t) : (t * value * value Pc.t) list =
+  let malloc (h : t) (sz : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let tbl, next = h in
     match sz with
     | Integer i ->
@@ -28,8 +29,8 @@ module M = struct
     | _ ->
       failwith "InternalError: HeapConcrete.malloc, size must be an integer"
 
-  let update (h : t) (arr : value) (index : value) (v : value) (pc : value Pc.t) :
-    (t * value Pc.t) list =
+  let update (h : t) (arr : value) (index : value) (v : value) (pc : value Pc.t)
+    : (t * value Pc.t) list =
     let tbl, _ = h in
     match (arr, index) with
     | Loc l, Integer i -> (
@@ -70,7 +71,8 @@ module M = struct
       | _ -> failwith "InternalError: illegal free" )
     | _ -> failwith "InternalError: HeapConcrete.update, arr must be location"
 
-  let in_bounds (heap : t) (addr : value) (i : value) (_pc : value Pc.t) : bool =
+  let in_bounds (heap : t) (addr : value) (i : value) (_pc : value Pc.t) : bool
+      =
     match addr with
     | Loc l -> (
       let tbl, _ = heap in
@@ -83,6 +85,8 @@ module M = struct
     | _ ->
       failwith "InternalError: HeapConcrete.in_bounds, arr must be location"
 
+  let get_block (_h : t) (_addr : value) : block option = assert false
+  let set_block (_h : t) (_addr : value) (_block : block) : t = assert false
   let clone _ = assert false
 end
 

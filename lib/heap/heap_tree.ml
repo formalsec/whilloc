@@ -8,20 +8,20 @@ module M = struct
     | Leaf of range * value
     | Node of range * tree_t list
 
+  type block = tree_t
   type t = (int, tree_t) Hashtbl.t * int
 
-  let init () : t = (Hashtbl.create Parameters.size, 0)
+  let init ?(next = 0) () : t = (Hashtbl.create Parameters.size, next)
 
   let rec pp_block (fmt : Fmt.t) (block : tree_t) : unit =
     let open Fmt in
     match block with
     | Leaf ((l, r), v) ->
-      fprintf fmt {|{ "leaf": { "range": "[%a, %a]", "value": "%a"} }|}
-        Expr.pp l Expr.pp r Expr.pp v
+      fprintf fmt {|{ "leaf": { "range": "[%a, %a]", "value": "%a"} }|} Expr.pp
+        l Expr.pp r Expr.pp v
     | Node ((l, r), ch) ->
-      fprintf fmt
-        {|{ "node": { "range": "[%a, %a]", "children": [ %a ]} }|} Expr.pp
-        l Expr.pp r
+      fprintf fmt {|{ "node": { "range": "[%a, %a]", "children": [ %a ]} }|}
+        Expr.pp l Expr.pp r
         (pp_lst ~pp_sep:pp_comma pp_block)
         ch
 
@@ -41,7 +41,8 @@ module M = struct
     Hashtbl.iter tree_to_json h';
     "Json files created in output directory."
 
-  let malloc (h : t) (sz : value) (pc : value Pc.t) : (t * value * value Pc.t) list =
+  let malloc (h : t) (sz : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let h', curr = h in
     let tree =
       Leaf (Expr.(make @@ Val (Int 0), sz), Expr.(make @@ Val (Int 0)))
@@ -52,8 +53,8 @@ module M = struct
   let update h (arr : value) (index : value) (v : value) (pc : value Pc.t) :
     (t * value Pc.t) list =
     let h', next = h in
-    let rec update_tree (tree : tree_t) (index : value) (v : value) (pc : value Pc.t) :
-      (tree_t * value Pc.t) list option =
+    let rec update_tree (tree : tree_t) (index : value) (v : value)
+      (pc : value Pc.t) : (tree_t * value Pc.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
         let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
@@ -168,8 +169,8 @@ module M = struct
       if in_range then List.concat (List.map (search_tree index pc) tree_list)
       else []
 
-  let lookup h (arr : value) (index : value) (pc : value Pc.t) : (t * value * value Pc.t) list
-      =
+  let lookup h (arr : value) (index : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let tbl, _ = h in
 
     match Expr.view arr with
@@ -193,7 +194,9 @@ module M = struct
     (* let ign = to_string h in
        ignore ign; *)
     ( match Expr.view arr with
-    | Val (Int i) -> Hashtbl.remove h' i
+    | Val (Int i) ->
+      Hashtbl.replace h' i
+        (Leaf (Expr.(make @@ Val (Int 0), make @@ Val (Int 0)), Expr.(make @@ Val (Int 0))))
     | _ -> failwith "Invalid allocation index" );
     [ (h, pc) ]
 
@@ -209,6 +212,22 @@ module M = struct
           "InternalError: HeapTree.in_bounds, accessed tree is not in the heap"
       )
     | _ -> failwith "InternalError: HeapTree.in_bounds, arr must be location"
+
+  let get_block ((h, _) : t) (addr : value) : block option =
+    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    match Hashtbl.find_opt h addr' with
+    | Some tree -> (
+      match tree with
+      | Leaf (r, _) | Node (r, _) ->
+        if r = (Expr.(make @@ Val (Int 0), make @@ Val (Int 0))) then None
+        else Some tree )
+    | None -> None
+
+  let set_block (h : t) (addr : value) (block : block) : t =
+    let h', _ = h in
+    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    Hashtbl.replace h' addr' block;
+    h
 
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
   let clone h = copy h

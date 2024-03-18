@@ -9,7 +9,9 @@ module M = struct
     ; i : int
     }
 
-  let init () : t = { map = Hashtbl.create Parameters.size; i = 0 }
+  exception BlockNotInHeap
+
+  let init ?(next = 0) () : t = { map = Hashtbl.create Parameters.size; i = next }
 
   let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
@@ -35,10 +37,7 @@ module M = struct
     | Val (Int l) -> (
       match Hashtbl.find_opt heap.map l with
       | Some a -> is_within (Array.length a) i pc
-      | _ ->
-        failwith
-          "InternalError: HeapArrayFork.in_bounds, accessed array is not in \
-           the heap" )
+      | _ -> raise BlockNotInHeap )
     | _ ->
       failwith "InternalError: HeapArrayFork.in_bounds, arr must be location"
 
@@ -53,7 +52,8 @@ module M = struct
       | None -> failwith "Block does not exist" )
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (heap : t) (size : value) (path : value Pc.t) : (t * value * value Pc.t) list =
+  let malloc (heap : t) (size : value) (path : value Pc.t) :
+    (t * value * value Pc.t) list =
     match Expr.view size with
     | Val (Int size') ->
       let block = Array.make size' Expr.(make @@ Val (Int 0)) in
@@ -68,29 +68,29 @@ module M = struct
     | Val (Int index') ->
       let ret = Array.get block index' in
       [ (heap, ret, path) ]
-    | Symbol s when Symbol.type_of s = Ty_int -> 
-        let blockList = Array.to_list block in
-        let temp =
-          List.mapi
-            (fun index' expr ->
-              let cond =
-                Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
-              in
-              (copy heap, expr, Pc.add_condition path cond) )
-            blockList
-        in
-        List.filteri
-          (fun index' _ ->
-            (* can be optimized *)
-            let e =
-              Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+    | Symbol s when Symbol.type_of s = Ty_int ->
+      let blockList = Array.to_list block in
+      let temp =
+        List.mapi
+          (fun index' expr ->
+            let cond =
+              Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
             in
-            Eval_symbolic.is_true (e :: path) )
-          temp
+            (copy heap, expr, Pc.add_condition path cond) )
+          blockList
+      in
+      List.filteri
+        (fun index' _ ->
+          (* can be optimized *)
+          let e =
+            Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+          in
+          Eval_symbolic.is_true (e :: path) )
+        temp
     | _ -> failwith "Invalid index"
 
-  let update (heap : t) (loc : value) (index : value) (v : value) (path : value Pc.t) :
-    (t * value Pc.t) list =
+  let update (heap : t) (loc : value) (index : value) (v : value)
+    (path : value Pc.t) : (t * value Pc.t) list =
     let loc, block = find_block heap loc in
     match Expr.view index with
     | Val (Int index') ->
@@ -98,34 +98,46 @@ module M = struct
       let _ = Hashtbl.replace heap.map loc block in
       [ (heap, path) ]
     | Symbol s when Symbol.type_of s = Ty_int ->
-        let blockList = Array.to_list block in
-        let temp =
-          List.mapi
-            (fun index' _ ->
-              let newBlock = Array.copy block in
-              let newHeap = Hashtbl.copy heap.map in
-              let _ = Array.set newBlock index' v in
-              let _ = Hashtbl.replace newHeap loc newBlock in
-              let cond =
-                Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
-              in
-              ({ heap with map = newHeap }, Pc.add_condition path cond) )
-            blockList
-        in
-        List.filteri
+      let blockList = Array.to_list block in
+      let temp =
+        List.mapi
           (fun index' _ ->
-            (* can be optimized *)
-            let e =
+            let newBlock = Array.copy block in
+            let newHeap = Hashtbl.copy heap.map in
+            let _ = Array.set newBlock index' v in
+            let _ = Hashtbl.replace newHeap loc newBlock in
+            let cond =
               Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
             in
-            Eval_symbolic.is_true (e :: path) )
-          temp
+            ({ heap with map = newHeap }, Pc.add_condition path cond) )
+          blockList
+      in
+      List.filteri
+        (fun index' _ ->
+          (* can be optimized *)
+          let e =
+            Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+          in
+          Eval_symbolic.is_true (e :: path) )
+        temp
     | _ -> failwith "Invalid index"
 
-  let free (heap : t) (loc : value) (path : value Pc.t) : (t * value Pc.t) list =
+  let free (heap : t) (loc : value) (path : value Pc.t) : (t * value Pc.t) list
+      =
     let loc', _ = find_block heap loc in
-    let _ = Hashtbl.remove heap.map loc' in
+    let _ = Hashtbl.replace heap.map loc' (Array.make 0 Expr.(make @@ Val (Int 0))) in
     [ (heap, path) ]
+
+  let get_block (h : t) (addr : value) : block option =
+    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    match Hashtbl.find_opt h.map addr' with
+    | Some block -> if Array.length block = 0 then None else Some block
+    | None -> None
+
+  let set_block (h : t) (addr : value) (block : block) : t =
+    let addr' = match Expr.view addr with Val (Int l) -> l | _ -> assert false in
+    Hashtbl.replace h.map addr' block;
+    h
 
   let clone h = copy h
 end

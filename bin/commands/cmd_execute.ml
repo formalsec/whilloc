@@ -1,15 +1,20 @@
 open Whilloc
 open Utils
 
+(* Heap *)
+
+module HeapHierarchy = Heap_hierarchy.M (Heap_oplist)
+
 (* Choice *)
-module C_Choice = List_choice.Make (Eval_concrete) (Heap_concrete.M)
+module C_Choice = List_choice.Make (Eval_concrete) (Heap_concrete)
 module SAF_Choice = List_choice.Make (Eval_symbolic) (Heap_array_fork)
 module SAITE_Choice = List_choice.Make (Eval_symbolic) (Heap_arrayite)
 module ST_Choice = List_choice.Make (Eval_symbolic) (Heap_tree)
 module SOPL_Choice = List_choice.Make (Eval_symbolic) (Heap_oplist)
+module SH_Choice = List_choice.Make (Eval_symbolic.M) (HeapHierarchy)
 
 (* Interpreter *)
-module C = Interpreter.Make (Eval_concrete) (Dfs) (Heap_concrete.M) (C_Choice)
+module C = Interpreter.Make (Eval_concrete) (Dfs) (Heap_concrete) (C_Choice)
 
 module SAF =
   Interpreter.Make (Eval_symbolic) (Dfs) (Heap_array_fork) (SAF_Choice)
@@ -20,12 +25,16 @@ module SAITE =
 module ST = Interpreter.Make (Eval_symbolic) (Dfs) (Heap_tree) (ST_Choice)
 module SOPL = Interpreter.Make (Eval_symbolic) (Dfs) (Heap_oplist) (SOPL_Choice)
 
+module SH =
+  Interpreter.Make (Eval_symbolic.M) (Dfs.M) (HeapHierarchy) (SH_Choice)
+
 type mode =
   | Concrete
   | Saf
   | Saite
   | St
   | Sopl
+  | Sh
 [@@deriving yojson]
 
 type report =
@@ -52,6 +61,7 @@ let mode_to_string = function
   | Saite -> "saite"
   | St -> "st"
   | Sopl -> "sopl"
+  | Sh -> "sh"
 
 let write_report report =
   let json = report |> report_to_yojson |> Yojson.Safe.to_string in
@@ -118,6 +128,14 @@ let run ?(no_values = false) ?(test = false) input mode =
             | _ -> None )
           rets
       , List.length rets )
+    |Sh ->
+      let rets = SH.interpret program in
+      ( List.filter_map
+          (fun (out, _) ->
+            if test then Format.printf "%a@." (Outcome.pp ~no_values) out;
+            match out with
+            | Outcome.Error _ | Outcome.EndGas -> Some out
+            | _ -> None ) rets, List.length rets)
   in
 
   let execution_time = Sys.time () -. start in
