@@ -1,3 +1,5 @@
+# .t are cram tests so we'll call it OCaml
+*.t linguist-language=OCaml
 *.ml linguist-language=OCaml
 *.mli linguist-language=OCaml
 *.mly linguist-language=OCaml
