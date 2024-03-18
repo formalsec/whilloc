@@ -1,5 +1,5 @@
 module M = struct
-  open Term
+  open Expr
   module E = Encoding.Expr
   module V = Encoding.Value
   module T = Encoding.Ty
@@ -11,34 +11,34 @@ module M = struct
 
   let solver = Slv.Z3_batch.create ()
 
-  let eval_unop (op : Term.unop) =
+  let eval_unop (op : Expr.unop) =
     match op with
-    | Term.Neg -> (Some T.Neg, None)
-    | Term.Not -> (Some T.Not, None)
-    | Term.Abs -> (Some T.Abs, None)
-    | Term.StringOfInt -> (None, Some T.String_from_int)
+    | Expr.Neg -> (Some T.Neg, None)
+    | Expr.Not -> (Some T.Not, None)
+    | Expr.Abs -> (Some T.Abs, None)
+    | Expr.StringOfInt -> (None, Some T.String_from_int)
 
-  let eval_binop (op : Term.binop) =
+  let eval_binop (op : Expr.binop) =
     match op with
-    | Term.Plus -> (Some T.Add, None)
-    | Term.Minus -> (Some T.Sub, None)
-    | Term.Times -> (Some T.Mul, None)
-    | Term.Div -> (Some T.Div, None)
-    | Term.Modulo -> (Some T.Rem, None)
-    | Term.Pow -> (Some T.Pow, None)
-    | Term.Or -> (Some T.Or, None)
-    | Term.And -> (Some T.And, None)
-    | Term.Xor -> (Some T.Xor, None)
-    | Term.ShiftL -> (Some T.Shl, None)
-    | Term.ShiftR -> (Some T.ShrA, None)
-    | Term.Gt -> (None, Some T.Gt)
-    | Term.Lt -> (None, Some T.Lt)
-    | Term.Gte -> (None, Some T.Ge)
-    | Term.Lte -> (None, Some T.Le)
-    | Term.Equals -> (None, Some T.Eq)
-    | Term.NEquals -> (None, Some T.Ne)
+    | Expr.Plus -> (Some T.Add, None)
+    | Expr.Minus -> (Some T.Sub, None)
+    | Expr.Times -> (Some T.Mul, None)
+    | Expr.Div -> (Some T.Div, None)
+    | Expr.Modulo -> (Some T.Rem, None)
+    | Expr.Pow -> (Some T.Pow, None)
+    | Expr.Or -> (Some T.Or, None)
+    | Expr.And -> (Some T.And, None)
+    | Expr.Xor -> (Some T.Xor, None)
+    | Expr.ShiftL -> (Some T.Shl, None)
+    | Expr.ShiftR -> (Some T.ShrA, None)
+    | Expr.Gt -> (None, Some T.Gt)
+    | Expr.Lt -> (None, Some T.Lt)
+    | Expr.Gte -> (None, Some T.Ge)
+    | Expr.Lte -> (None, Some T.Le)
+    | Expr.Equals -> (None, Some T.Eq)
+    | Expr.NEquals -> (None, Some T.Ne)
 
-  let rec eval (store : st) (e : Term.t) : t =
+  let rec eval (store : st) (e : Expr.t) : t =
     match e with
     | Val (Integer n) -> E.(make @@ Val (V.Int n))
     | Val (Boolean true) -> E.(make @@ Val V.True)

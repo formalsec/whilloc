@@ -65,19 +65,19 @@ value:
 (* e ::= v | x | -e | e+e | f(e) | (e) *)
 expression:
   | v = value;
-    { Term.Val v }
+    { Expr.Val v }
   | v = VAR;
-    { Term.Var v }
+    { Expr.Var v }
   | MINUS; e = expression;
-    { Term.Unop (Term.Neg, e) } %prec unopt_prec
+    { Expr.Unop (Expr.Neg, e) } %prec unopt_prec
   | NOT; e = expression;
-    { Term.Unop (Term.Not, e) } %prec unopt_prec
+    { Expr.Unop (Expr.Not, e) } %prec unopt_prec
   | ABS; e = expression;
-    { Term.Unop (Term.Abs, e) } %prec unopt_prec
+    { Expr.Unop (Expr.Abs, e) } %prec unopt_prec
   | STOI; e = expression;
-    { Term.Unop (Term.StringOfInt, e) } %prec unopt_prec
+    { Expr.Unop (Expr.StringOfInt, e) } %prec unopt_prec
   | e1 = expression; bop = binop_target; e2 = expression;
-    { Term.Binop (bop, e1, e2) }
+    { Expr.Binop (bop, e1, e2) }
   | LPAREN; e=expression ; RPAREN
     { e }
 
@@ -126,20 +126,20 @@ statement_sequence:
 
 
 %inline binop_target:
-  | PLUS    { Term.Plus }
-  | MINUS   { Term.Minus }
-  | TIMES   { Term.Times }
-  | DIVIDE  { Term.Div }
-  | MODULO  { Term.Modulo }
-  | POW     { Term.Pow }
-  | GT      { Term.Gt }
-  | LT      { Term.Lt }
-  | GTE     { Term.Gte }
-  | LTE     { Term.Lte }
-  | EQUAL   { Term.Equals }
-  | NEQUAL  { Term.NEquals }
-  | OR      { Term.Or }
-  | AND     { Term.And }
-  | XOR     { Term.Xor }
-  | SHL     { Term.ShiftL }
-  | SHR     { Term.ShiftR }
+  | PLUS    { Expr.Plus }
+  | MINUS   { Expr.Minus }
+  | TIMES   { Expr.Times }
+  | DIVIDE  { Expr.Div }
+  | MODULO  { Expr.Modulo }
+  | POW     { Expr.Pow }
+  | GT      { Expr.Gt }
+  | LT      { Expr.Lt }
+  | GTE     { Expr.Gte }
+  | LTE     { Expr.Lte }
+  | EQUAL   { Expr.Equals }
+  | NEQUAL  { Expr.NEquals }
+  | OR      { Expr.Or }
+  | AND     { Expr.And }
+  | XOR     { Expr.Xor }
+  | SHL     { Expr.ShiftL }
+  | SHR     { Expr.ShiftR }

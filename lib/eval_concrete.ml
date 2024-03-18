@@ -4,7 +4,7 @@ module M = struct
   type t = Value.t
   type st = t Store.t
 
-  let rec eval (store : st) (e : Term.t) : t =
+  let rec eval (store : st) (e : Expr.t) : t =
     match e with
     | Val v -> v
     | Var x -> Store.get store x

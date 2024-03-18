@@ -17,7 +17,7 @@ depends: [
   "bos"
   "cmdliner"
   "ppx_deriving_yojson"
-  "encoding" {>= "0.0.4"}
+  "encoding" {>= "dev"}
   "odoc" {with-doc}
 ]
 build: [

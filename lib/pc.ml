@@ -5,8 +5,8 @@ let add_condition (pc : 'v list) (t : 'v) : 'v list = t :: pc
 
 let negate (pc : 'v list) : 'v =
   List.fold_right
-    (fun x y -> Term.make_boperation Or (Term.negate x) y)
-    pc Term.make_false
+    (fun x y -> Expr.make_boperation Or (Expr.negate x) y)
+    pc Expr.make_false
 
 let pp (pp_val : Fmt.t -> 'v -> unit) (fmt : Fmt.t) (pc : 'value list) : unit =
   (Fmt.pp_lst ~pp_sep:(fun fmt () -> Fmt.fprintf fmt " AND ") pp_val) fmt pc

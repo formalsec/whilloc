@@ -198,7 +198,6 @@ module M = struct
     [ (h, pc) ]
 
   let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
-    (* Printf.printf "In_bounds .array: %s, i: %s\n PC: %s\n" (Term.to_string arr) (Term.string_of_expression i) (Pc.to_string Term.string_of_expression pc); *)
     let h', _ = heap in
     match Expr.view arr with
     | Val (Int l) -> (
