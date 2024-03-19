@@ -167,16 +167,16 @@ let shr ((v1, v2) : t * t) : t =
       "Exception in Oper.shr: this operation is only applicable to Integer \
        arguments"
 
-let eval_unop_expr (op : Term.unop) (v : t) : t =
+let eval_unop_expr (op : Expr.unop) (v : t) : t =
   match op with
   | Neg -> neg v
   | Not -> not_ v
   | Abs -> abs v
   | StringOfInt -> stoi v
 
-let eval_ite (_ : Term.t) (_ : Term.t) (_ : Term.t) : t = assert false
+let eval_ite (_ : Expr.t) (_ : Expr.t) (_ : Expr.t) : t = assert false
 
-let eval_binop_expr (op : Term.binop) (v1 : t) (v2 : t) : t =
+let eval_binop_expr (op : Expr.binop) (v1 : t) (v2 : t) : t =
   let f =
     match op with
     | Plus -> plus

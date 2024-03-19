@@ -33,7 +33,7 @@
    bos 
    cmdliner 
    ppx_deriving_yojson
-   (encoding (>= "dev")))
+   (encoding (= "dev")))
  (tags
   (topics "to describe" your project)))
 

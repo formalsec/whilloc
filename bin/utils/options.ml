@@ -36,6 +36,7 @@ let mode_conv =
     ; ("saite", Cmd_execute.Saite)
     ; ("st", Cmd_execute.St)
     ; ("sopl", Cmd_execute.Sopl)
+    ; ("sh", Cmd_execute.Sh)
     ]
 
 let mode =

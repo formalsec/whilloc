@@ -15,7 +15,7 @@ module M = struct
     let symbolic_store = Store.create_store key_symbols in
     (concrete_store, symbolic_store)
 
-  let eval (store : st) (e : Term.t) : t =
+  let eval (store : st) (e : Expr.t) : t =
     let cstore, sstore = project_store store in
     (Eval_concrete.eval cstore e, Eval_symbolic.eval sstore e)
 

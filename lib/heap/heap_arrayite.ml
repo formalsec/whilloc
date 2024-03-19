@@ -1,13 +1,15 @@
 open Encoding
 
 module M = struct
-  type vt = Encoding.Expr.t
-  type bt = vt array
-  type t = (int, bt) Hashtbl.t * int
+  type value = Encoding.Expr.t
+  type block = value array
+  type t = (int, block) Hashtbl.t * int
 
-  let init () : t = (Hashtbl.create Parameters.size, 0)
+  exception BlockNotInHeap
 
-  let pp_block fmt (block : bt) =
+  let init ?(next = 0) () : t = (Hashtbl.create Parameters.size, next)
+
+  let pp_block fmt (block : block) =
     Fmt.fprintf fmt "%a"
       (Fmt.pp_lst ~pp_sep:Fmt.pp_comma Expr.pp)
       (Array.to_list block)
@@ -19,29 +21,26 @@ module M = struct
 
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
-  let is_within (sz : int) (index : vt) (pc : vt Pc.t) : bool =
+  let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
     let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
     let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
     let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
-  let in_bounds (heap : t) (arr : vt) (i : vt) (pc : vt Pc.t) : bool =
+  let in_bounds (heap : t) (arr : value) (i : value) (pc : value Pc.t) : bool =
     let h, _ = heap in
     match Expr.view arr with
     | Val (Int l) -> (
       match Hashtbl.find_opt h l with
       | Some a -> is_within (Array.length a) i pc
-      | _ ->
-        failwith
-          "InternalError: HeapArrayIte.in_bounds, accessed array is not in the \
-           heap" )
+      | _ -> raise BlockNotInHeap )
     | _ ->
       failwith "InternalError: HeapArrayIte.in_bounds, arr must be location"
 
   let copy ((heap, i) : t) : t = (Hashtbl.copy heap, i)
 
-  let find_block (heap : t) (loc : vt) : int * bt =
+  let find_block (heap : t) (loc : value) : int * block =
     let heap', _ = heap in
     match Expr.view loc with
     | Val (Int loc') -> (
@@ -51,7 +50,8 @@ module M = struct
       | None -> failwith "Block does not exist" )
     | _ -> failwith "Location needs to be a concrete value"
 
-  let malloc (h : t) (sz : vt) (pc : vt Pc.t) : (t * vt * vt Pc.t) list =
+  let malloc (h : t) (sz : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let tbl, next = h in
     match Expr.view sz with
     | Val (Int i) ->
@@ -60,8 +60,8 @@ module M = struct
     | _ ->
       failwith "InternalError: HeapArrayIte.malloc, size must be an integer"
 
-  let update (heap : t) (loc : vt) (index : vt) (v : vt) (path : vt Pc.t) :
-    (t * vt Pc.t) list =
+  let update (heap : t) (loc : value) (index : value) (v : value)
+    (path : value Pc.t) : (t * value Pc.t) list =
     let heap', curr = heap in
     let loc, block = find_block heap loc in
     match Expr.view index with
@@ -70,23 +70,21 @@ module M = struct
       let _ = Hashtbl.replace heap' loc block in
       [ ((heap', curr), path) ]
     | Symbol s when Symbol.type_of s = Ty_int ->
-        let block' =
-          Array.mapi
-            (fun j old_expr ->
-              let e =
-                Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j)))
-              in
-              if Eval_symbolic.is_true (e :: path) then
-                Expr.(Bool.ite e v old_expr)
-              else old_expr )
-            block
-        in
-        let _ = Hashtbl.replace heap' loc block' in
-        [ ((heap', curr), path) ]
+      let block' =
+        Array.mapi
+          (fun j old_expr ->
+            let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j))) in
+            if Eval_symbolic.is_true (e :: path) then
+              Expr.(Bool.ite e v old_expr)
+            else old_expr )
+          block
+      in
+      let _ = Hashtbl.replace heap' loc block' in
+      [ ((heap', curr), path) ]
     | _ -> failwith "Invalid index"
 
-  let lookup (h : t) (arr : vt) (index : vt) (pc : vt Pc.t) :
-    (t * vt * vt Pc.t) list =
+  let lookup (h : t) (arr : value) (index : value) (pc : value Pc.t) :
+    (t * value * value Pc.t) list =
     let tbl, _ = h in
     match Expr.view index with
     | Val (Int i) -> (
@@ -139,19 +137,35 @@ module M = struct
       | _ ->
         failwith "InternalError:  HeapArrayIte.update, arr must be a location" )
 
-  let free (h : t) (arr : vt) (pc : vt Pc.t) : (t * vt Pc.t) list =
+  let free (h : t) (arr : value) (pc : value Pc.t) : (t * value Pc.t) list =
     let tbl, _ = h in
     match Expr.view arr with
     | Val (Int l) -> (
       match Hashtbl.find_opt tbl l with
       | Some _ ->
-        Hashtbl.remove tbl l;
+        Hashtbl.replace tbl l (Array.make 0 Expr.(make @@ Val (Int 0)));
         [ (h, pc) ]
       | _ -> failwith "InternalError: HeapArrayIte.free, illegal free" )
     | _ -> failwith "InternalError: HeapArrayIte.free, arr must be location"
 
+  let get_block ((h, _) : t) (addr : value) : block option =
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
+    match Hashtbl.find_opt h addr' with
+    | Some block -> if Array.length block = 0 then None else Some block
+    | None -> None
+
+  let set_block (h : t) (addr : value) (block : block) : t =
+    let h', _ = h in
+    let addr' =
+      match Expr.view addr with Val (Int l) -> l | _ -> assert false
+    in
+    Hashtbl.replace h' addr' block;
+    h
+
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type vt = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Encoding.Expr.t = M
 include M
