@@ -1,4 +1,4 @@
-# Whilloc
+# Whilloc [![Build](https://github.com/formalsec/whilloc/actions/workflows/build.yml/badge.svg)](https://github.com/formalsec/whilloc/actions/workflows/build.yml) [![Coverage Status](https://coveralls.io/repos/github/formalsec/whilloc/badge.svg?branch=HEAD)](https://coveralls.io/github/formalsec/whilloc?branch=HEAD)
 
 A simple "while"-like programming language that includes memory
 allocation support.

@@ -1,5 +1,7 @@
 # OCaml Generated Files
-_build
+_build/
+_coverage/
+*.coverage
 
 # MacOS Files
 .DS_Store
