@@ -33,4 +33,9 @@ jobs:
       - name: Build
         run: opam exec -- dune build @install
       - name: Test
-        run: opam exec -- dune runtest
+        run: BISECT_FILE=`pwd`/bisect opam exec -- dune runtest --force --instrument-with bisect_ppx
+      - name: Upload coverage
+        if: matrix.os == 'ubuntu-latest'
+        run: opam exec -- bisect-ppx-report send-to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}

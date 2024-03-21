@@ -25,15 +25,16 @@
  (name whilloc)
  (synopsis "A short synopsis")
  (description "A longer description")
- (depends 
-   ocaml 
-   dune 
-   z3 
-   menhir 
-   bos 
-   cmdliner 
+ (depends
+   ocaml
+   dune
+   z3
+   menhir
+   bos
+   cmdliner
    ppx_deriving_yojson
-   (encoding (= "dev")))
+   (encoding (= "dev"))
+   (bisect_ppx (and :with-test (>= "2.5.0"))))
  (tags
   (topics "to describe" your project)))
 

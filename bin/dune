@@ -6,4 +6,6 @@
  (modules main options dir cmd_execute cmd_test doc_execute doc_test)
  (libraries whilloc cmdliner bos ppx_deriving_yojson.runtime)
  (preprocess
-  (pps ppx_deriving_yojson)))
+  (pps ppx_deriving_yojson))
+ (instrumentation
+  (backend bisect_ppx)))
