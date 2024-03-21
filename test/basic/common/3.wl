@@ -1,7 +1,7 @@
 function main() {
     x = 3;
     x = x+1;
-    if (x>4) {
+    if (x >= 4) {
         y = 2+2*x;
         print(y)
     }

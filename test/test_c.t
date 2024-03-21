@@ -249,9 +249,11 @@ Tests Model ArrayFork:
   Input file: basic/common/3.wl
   Execution mode: c
   
-  Assertion violated, counter example:
-      No model
-  Found 1 problems!
+  >Program Print
+  Int 10
+  
+  Returned Int 1
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -289,9 +291,8 @@ Tests Model ArrayFork:
   Input file: basic/common/6.wl
   Execution mode: c
   
-  Assertion violated, counter example:
-      No model
-  Found 1 problems!
+  Returned Bool true
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -385,6 +386,17 @@ Tests Model ArrayFork:
   	Whilloc
   =====================
   
+  Input file: basic/statements/assert_false.wl
+  Execution mode: c
+  
+  Assertion violated, counter example:
+      No model
+  Found 1 problems!
+  
+  =====================
+  	Whilloc
+  =====================
+  
   Input file: basic/statements/delete.wl
   Execution mode: c
   
@@ -452,7 +464,7 @@ Tests Model ArrayFork:
   Execution mode: c
   
   Fatal error: exception Failure("ApplicationError: tried to create a symbolic value in a concrete execution context")
-  Total number of files tested: 33
+  Total number of files tested: 34
 
   $ wl test large_arrays_fail --mode c -p
   

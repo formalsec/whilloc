@@ -324,9 +324,11 @@ Tests Model ArrayITE:
   Input file: basic/common/3.wl
   Execution mode: saite
   
-  Assertion violated, counter example:
-      Empty model
-  Found 1 problems!
+  >Program Print
+  10
+  
+  Returned 1
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -364,9 +366,8 @@ Tests Model ArrayITE:
   Input file: basic/common/6.wl
   Execution mode: saite
   
-  Assertion violated, counter example:
-      Empty model
-  Found 1 problems!
+  Returned true
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -468,6 +469,17 @@ Tests Model ArrayITE:
   Assertion violated, counter example:
       $_i : Int _
   Found 2 problems!
+  
+  =====================
+  	Whilloc
+  =====================
+  
+  Input file: basic/statements/assert_false.wl
+  Execution mode: saite
+  
+  Assertion violated, counter example:
+      Empty model
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -580,5 +592,5 @@ Tests Model ArrayITE:
   Returned 0
   Returned 0
   Found 1 problems!
-  Total number of files tested: 33
+  Total number of files tested: 34
 

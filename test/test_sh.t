@@ -324,9 +324,11 @@ Tests Model Hierarchy Heap using WriteLists:
   Input file: basic/common/3.wl
   Execution mode: sh
   
-  Assertion violated, counter example:
-      Empty model
-  Found 1 problems!
+  >Program Print
+  10
+  
+  Returned 1
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -364,9 +366,8 @@ Tests Model Hierarchy Heap using WriteLists:
   Input file: basic/common/6.wl
   Execution mode: sh
   
-  Assertion violated, counter example:
-      Empty model
-  Found 1 problems!
+  Returned true
+  Everything Ok!
   
   =====================
   	Whilloc
@@ -468,6 +469,17 @@ Tests Model Hierarchy Heap using WriteLists:
   Assertion violated, counter example:
       $_i : Int _
   Found 2 problems!
+  
+  =====================
+  	Whilloc
+  =====================
+  
+  Input file: basic/statements/assert_false.wl
+  Execution mode: sh
+  
+  Assertion violated, counter example:
+      Empty model
+  Found 1 problems!
   
   =====================
   	Whilloc
@@ -580,7 +592,7 @@ Tests Model Hierarchy Heap using WriteLists:
   Returned 0
   Returned 0
   Found 1 problems!
-  Total number of files tested: 33
+  Total number of files tested: 34
   $ wl test large_arrays_fail -p --mode sh
   
   =====================
