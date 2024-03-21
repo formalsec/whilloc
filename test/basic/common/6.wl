@@ -1,8 +1,5 @@
 function is_one(x) {
-    y = 1;
-    assert(x==3);
-    assume(x==1);
-    return 73
+    return x == 1
 };
 
 function main() {
