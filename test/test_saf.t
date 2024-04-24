@@ -246,12 +246,12 @@ Tests Model ArrayFork:
   $_descending
   
   >Program Print
-  (int.add (int.add $_descending 3) 10)
+  (int.add $_descending 13)
   
   >Program Print
-  (int.add (int.add (int.add $_descending 3) 10) 1)
+  (int.add $_descending 14)
   
-  Returned (int.add (int.add $_descending 3) 10)
+  Returned (int.add $_descending 13)
   Everything Ok!
   
   =====================

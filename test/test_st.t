@@ -184,12 +184,12 @@ Tests Model Tree:
   $_descending
   
   >Program Print
-  (int.add (int.add $_descending 3) 10)
+  (int.add $_descending 13)
   
   >Program Print
-  (int.add (int.add (int.add $_descending 3) 10) 1)
+  (int.add $_descending 14)
   
-  Returned (int.add (int.add $_descending 3) 10)
+  Returned (int.add $_descending 13)
   Everything Ok!
   
   =====================
@@ -436,7 +436,7 @@ Tests Model Tree:
   Execution mode: st
   
   >Program Print
-  (bool.ite (bool.and true true) 5 0)
+  5
   
   Returned 0
   Everything Ok!
