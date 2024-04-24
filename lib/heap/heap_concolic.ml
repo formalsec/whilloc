@@ -1,6 +1,8 @@
+open Smtml
+
 module M = struct
   type value =
-    Value.t * Encoding.Expr.t (* indexes and sizes are always values *)
+    Value.t * Expr.t (* indexes and sizes are always values *)
 
   type block = value array
   type t = (int, block) Hashtbl.t
@@ -35,7 +37,7 @@ module M = struct
   let clone _ = assert false
 end
 
-module M' : Heap_intf.M with type value = Value.t * Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Value.t * Expr.t = M
 include M
 (*
 type t = (int, int arry) Hashtbl.t

@@ -1,7 +1,7 @@
-open Encoding
+open Smtml
 
 module M = struct
-  type value = Encoding.Expr.t
+  type value = Expr.t
   type block = value array
 
   type t =
@@ -84,7 +84,7 @@ module M = struct
         (fun index' _ ->
           (* can be optimized *)
           let e =
-            Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+            Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
           in
           Eval_symbolic.is_true (e :: path) )
         temp
@@ -108,7 +108,7 @@ module M = struct
             let _ = Array.set newBlock index' v in
             let _ = Hashtbl.replace newHeap loc newBlock in
             let cond =
-              Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+              Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
             in
             ({ heap with map = newHeap }, Pc.add_condition path cond) )
           blockList
@@ -117,7 +117,7 @@ module M = struct
         (fun index' _ ->
           (* can be optimized *)
           let e =
-            Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')))
+            Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
           in
           Eval_symbolic.is_true (e :: path) )
         temp
@@ -149,5 +149,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type value = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Expr.t = M
 include M

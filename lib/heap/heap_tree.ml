@@ -1,7 +1,7 @@
-open Encoding
+open Smtml
 
 module M = struct
-  type value = Encoding.Expr.t
+  type value = Expr.t
   type range = value * value
 
   type tree_t =
@@ -239,5 +239,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type value = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Expr.t = M
 include M

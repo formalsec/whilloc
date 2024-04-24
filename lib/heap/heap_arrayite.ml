@@ -1,7 +1,7 @@
-open Encoding
+open Smtml
 
 module M = struct
-  type value = Encoding.Expr.t
+  type value = Expr.t
   type block = value array
   type t = (int, block) Hashtbl.t * int
 
@@ -73,7 +73,7 @@ module M = struct
       let block' =
         Array.mapi
           (fun j old_expr ->
-            let e = Expr.(relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j))) in
+            let e = Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int j))) in
             if Eval_symbolic.is_true (e :: path) then
               Expr.(Bool.ite e v old_expr)
             else old_expr )
@@ -111,14 +111,14 @@ module M = struct
                    (* can be optimized *)
                    let e =
                      Expr.(
-                       relop Ty.Ty_int Ty.Eq index (make @@ Val (Int index')) )
+                       relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')) )
                    in
                    Eval_symbolic.is_true (e :: pc) )
                  (Array.to_list
                     (Array.mapi
                        (fun j e ->
                          ( Expr.(
-                             relop Ty.Ty_int Ty.Eq index (make @@ Val (Int j)) )
+                             relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int j)) )
                          , e ) )
                        arr ) ) )
           in
@@ -167,5 +167,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type value = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Expr.t = M
 include M
