@@ -1,7 +1,7 @@
-open Encoding
+open Smtml
 
 module M = struct
-  type value = Encoding.Expr.t
+  type value = Expr.t
   type addr = int
   type size = value
   type op = value * value * value Pc.t
@@ -76,7 +76,7 @@ module M = struct
     let v =
       List.fold_left
         (fun ac (i, v, _) ->
-          Expr.(Bool.ite Expr.(relop Ty.Ty_int Ty.Eq index i) v ac) )
+          Expr.(Bool.ite Expr.(relop Ty.Ty_bool Ty.Eq index i) v ac) )
         Expr.(make @@ Val (Int 0))
         (List.rev ops)
     in
@@ -109,5 +109,5 @@ module M = struct
   let clone h = copy h
 end
 
-module M' : Heap_intf.M with type value = Encoding.Expr.t = M
+module M' : Heap_intf.M with type value = Expr.t = M
 include M
