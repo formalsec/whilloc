@@ -22,9 +22,9 @@ module M = struct
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+    let e1 = Expr.(relop Ty_int Lt index (value (Int 0))) in
+    let e2 = Expr.(relop Ty_int Ge index (value (Int sz))) in
+    let e3 = Expr.(binop Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
@@ -55,8 +55,8 @@ module M = struct
     let tbl, next = h in
     match Expr.view sz with
     | Val (Int i) ->
-      Hashtbl.replace tbl next (Array.make i Expr.(make @@ Val (Int 0)));
-      [ ((tbl, next + 1), Expr.(make @@ Val (Int next)), pc) ]
+      Hashtbl.replace tbl next (Array.make i Expr.(value (Int 0)));
+      [ ((tbl, next + 1), Expr.(value (Int next)), pc) ]
     | _ ->
       failwith "InternalError: HeapArrayIte.malloc, size must be an integer"
 
@@ -73,7 +73,7 @@ module M = struct
       let block' =
         Array.mapi
           (fun j old_expr ->
-            let e = Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int j))) in
+            let e = Expr.(relop Ty.Ty_bool Eq index (value (Int j))) in
             if Eval_symbolic.is_true (e :: path) then
               Expr.(Bool.ite e v old_expr)
             else old_expr )
@@ -111,25 +111,25 @@ module M = struct
                    (* can be optimized *)
                    let e =
                      Expr.(
-                       relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')) )
+                       relop Ty.Ty_bool Eq index (value (Int index')) )
                    in
                    Eval_symbolic.is_true (e :: pc) )
                  (Array.to_list
                     (Array.mapi
                        (fun j e ->
                          ( Expr.(
-                             relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int j)) )
+                             relop Ty.Ty_bool Eq index (value (Int j)) )
                          , e ) )
                        arr ) ) )
           in
           let f (bop, e) l =
             match Expr.view e with
-            | Triop (_, Ty.Ite, a, b, _) ->
-              let e1 = Expr.(binop Ty.Ty_bool Ty.And bop a) in
+            | Triop (_, Ite, a, b, _) ->
+              let e1 = Expr.(binop Ty.Ty_bool And bop a) in
               Expr.(Bool.ite e1 b l)
             | _ -> Expr.(Bool.ite bop e l)
           in
-          let expr = Array.fold_right f aux Expr.(make @@ Val (Int 0)) in
+          let expr = Array.fold_right f aux Expr.(value (Int 0)) in
           [ (h, expr, pc) ]
         | _ ->
           failwith
@@ -143,7 +143,7 @@ module M = struct
     | Val (Int l) -> (
       match Hashtbl.find_opt tbl l with
       | Some _ ->
-        Hashtbl.replace tbl l (Array.make 0 Expr.(make @@ Val (Int 0)));
+        Hashtbl.replace tbl l (Array.make 0 Expr.(value (Int 0)));
         [ (h, pc) ]
       | _ -> failwith "InternalError: HeapArrayIte.free, illegal free" )
     | _ -> failwith "InternalError: HeapArrayIte.free, arr must be location"

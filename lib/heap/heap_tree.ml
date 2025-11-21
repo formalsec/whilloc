@@ -44,11 +44,9 @@ module M = struct
   let malloc (h : t) (sz : value) (pc : value Pc.t) :
     (t * value * value Pc.t) list =
     let h', curr = h in
-    let tree =
-      Leaf (Expr.(make @@ Val (Int 0), sz), Expr.(make @@ Val (Int 0)))
-    in
+    let tree = Leaf (Expr.(value (Int 0), sz), Expr.(value (Int 0))) in
     Hashtbl.replace h' curr tree;
-    [ ((h', curr + 1), Expr.(make @@ Val (Int curr)), pc) ]
+    [ ((h', curr + 1), Expr.(value (Int curr)), pc) ]
 
   let update h (arr : value) (index : value) (v : value) (pc : value Pc.t) :
     (t * value Pc.t) list =
@@ -57,14 +55,12 @@ module M = struct
       (pc : value Pc.t) : (tree_t * value Pc.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
-        let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
-        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
-        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
+        let ge_left = Expr.(relop Ty.Ty_int Ge index left) in
+        let l_right = Expr.(relop Ty.Ty_int Lt index right) in
+        let cond = Expr.(binop Ty.Ty_bool And ge_left l_right) in
         let pc' = cond :: pc in
         if Eval_symbolic.is_true pc' then
-          let index_plus_1 =
-            Expr.(binop Ty.Ty_int Ty.Add index (make @@ Val (Int 1)))
-          in
+          let index_plus_1 = Expr.(binop Ty.Ty_int Add index (value (Int 1))) in
           let leaves =
             [ Leaf ((left, index), old_v)
             ; Leaf ((index, index_plus_1), v)
@@ -74,9 +70,9 @@ module M = struct
           Some [ (Node ((left, right), leaves), pc') ]
         else None
       | Node ((left, right), trees) ->
-        let ge_left = Expr.(relop Ty.Ty_int Ty.Ge index left) in
-        let l_right = Expr.(relop Ty.Ty_int Ty.Lt index right) in
-        let cond = Expr.(binop Ty.Ty_bool Ty.And ge_left l_right) in
+        let ge_left = Expr.(relop Ty.Ty_int Ge index left) in
+        let l_right = Expr.(relop Ty.Ty_int Lt index right) in
+        let cond = Expr.(binop Ty.Ty_bool And ge_left l_right) in
         let pc' = cond :: pc in
         if Eval_symbolic.is_true pc' then
           let l = List.map (fun t -> update_tree t index v pc') trees in
@@ -137,16 +133,16 @@ module M = struct
 
   let must_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index lower) in
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index upper) in
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+    let e1 = Expr.(relop Ty.Ty_int Lt index lower) in
+    let e2 = Expr.(relop Ty.Ty_int Ge index upper) in
+    let e3 = Expr.(binop Ty.Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
   let may_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
-    let e1 = Expr.(relop Ty.Ty_int Ty.Ge index lower) in
-    let e2 = Expr.(relop Ty.Ty_int Ty.Lt index upper) in
+    let e1 = Expr.(relop Ty.Ty_int Ge index lower) in
+    let e2 = Expr.(relop Ty.Ty_int Lt index upper) in
 
     Eval_symbolic.is_true ([ e1; e2 ] @ pc)
 
@@ -159,9 +155,9 @@ module M = struct
       if in_range then
         [ ( v
           , Expr.(
-              binop Ty.Ty_bool Ty.And
-                (relop Ty.Ty_int Ty.Lt index upper)
-                (relop Ty.Ty_int Ty.Ge index lower) ) )
+              binop Ty.Ty_bool And
+                (relop Ty.Ty_int Lt index upper)
+                (relop Ty.Ty_int Ge index lower) ) )
         ]
       else []
     | Node (r, tree_list) ->
@@ -180,7 +176,7 @@ module M = struct
         let v =
           List.fold_left
             (fun ac (v, c) -> Expr.Bool.ite c v ac)
-            Expr.(make @@ Val (Int 0))
+            Expr.(value (Int 0))
             (search_tree index pc tree)
         in
         [ (h, v, pc) ]
@@ -196,9 +192,7 @@ module M = struct
     ( match Expr.view arr with
     | Val (Int i) ->
       Hashtbl.replace h' i
-        (Leaf
-           ( Expr.(make @@ Val (Int 0), make @@ Val (Int 0))
-           , Expr.(make @@ Val (Int 0)) ) )
+        (Leaf (Expr.(value (Int 0), value (Int 0)), Expr.(value (Int 0))))
     | _ -> failwith "Invalid allocation index" );
     [ (h, pc) ]
 
@@ -223,8 +217,7 @@ module M = struct
     | Some tree -> (
       match tree with
       | Leaf (r, _) | Node (r, _) ->
-        if r = Expr.(make @@ Val (Int 0), make @@ Val (Int 0)) then None
-        else Some tree )
+        if r = Expr.(value (Int 0), value (Int 0)) then None else Some tree )
     | None -> None
 
   let set_block (h : t) (addr : value) (block : block) : t =

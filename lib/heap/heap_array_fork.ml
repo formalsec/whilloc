@@ -27,9 +27,9 @@ module M = struct
   let to_string (heap : t) : string = Format.asprintf "%a" pp heap
 
   let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index (make @@ Val (Int sz))) in
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+    let e1 = Expr.(relop Ty.Ty_int Lt index (value (Int 0))) in
+    let e2 = Expr.(relop Ty.Ty_int Ge index (value (Int sz))) in
+    let e3 = Expr.(binop Ty.Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
@@ -57,9 +57,9 @@ module M = struct
     (t * value * value Pc.t) list =
     match Expr.view size with
     | Val (Int size') ->
-      let block = Array.make size' Expr.(make @@ Val (Int 0)) in
+      let block = Array.make size' Expr.(value (Int 0)) in
       let _ = Hashtbl.add heap.map heap.i block in
-      [ ({ heap with i = heap.i + 1 }, Expr.(make @@ Val (Int heap.i)), path) ]
+      [ ({ heap with i = heap.i + 1 }, Expr.(value (Int heap.i)), path) ]
     | _ -> failwith "Size needs to be a concrete integer"
 
   let lookup (heap : t) (loc : value) (index : value) (path : value Pc.t) :
@@ -74,18 +74,14 @@ module M = struct
       let temp =
         List.mapi
           (fun index' expr ->
-            let cond =
-              Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
-            in
+            let cond = Expr.(relop Ty.Ty_bool Eq index (value (Int index'))) in
             (copy heap, expr, Pc.add_condition path cond) )
           blockList
       in
       List.filteri
         (fun index' _ ->
           (* can be optimized *)
-          let e =
-            Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
-          in
+          let e = Expr.(relop Ty.Ty_bool Eq index (value (Int index'))) in
           Eval_symbolic.is_true (e :: path) )
         temp
     | _ -> failwith "Invalid index"
@@ -108,7 +104,7 @@ module M = struct
             let _ = Array.set newBlock index' v in
             let _ = Hashtbl.replace newHeap loc newBlock in
             let cond =
-              Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
+              Expr.(relop Ty.Ty_bool Eq index (value (Int index')))
             in
             ({ heap with map = newHeap }, Pc.add_condition path cond) )
           blockList
@@ -117,7 +113,7 @@ module M = struct
         (fun index' _ ->
           (* can be optimized *)
           let e =
-            Expr.(relop Ty.Ty_bool Ty.Eq index (make @@ Val (Int index')))
+            Expr.(relop Ty.Ty_bool Eq index (value (Int index')))
           in
           Eval_symbolic.is_true (e :: path) )
         temp
@@ -127,7 +123,7 @@ module M = struct
       =
     let loc', _ = find_block heap loc in
     let _ =
-      Hashtbl.replace heap.map loc' (Array.make 0 Expr.(make @@ Val (Int 0)))
+      Hashtbl.replace heap.map loc' (Array.make 0 Expr.(value (Int 0)))
     in
     [ (heap, path) ]
 

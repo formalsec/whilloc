@@ -32,9 +32,9 @@ module M = struct
   let to_string (heap : t) : string = Fmt.asprintf "%a" pp heap
 
   let is_within (sz : value) (index : value) (pc : value Pc.t) : bool =
-    let e1 = Expr.(relop Ty.Ty_int Ty.Lt index (make @@ Val (Int 0))) in
-    let e2 = Expr.(relop Ty.Ty_int Ty.Ge index sz) in
-    let e3 = Expr.(binop Ty.Ty_bool Ty.Or e1 e2) in
+    let e1 = Expr.(relop Ty_int Lt index (value (Int 0))) in
+    let e2 = Expr.(relop Ty_int Ge index sz) in
+    let e3 = Expr.(binop Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
@@ -56,7 +56,7 @@ module M = struct
     let next = h.next in
     Hashtbl.add h.map next (sz, []);
     h.next <- h.next + 1;
-    [ (h, Expr.(make @@ Val (Int next)), pc) ]
+    [ (h, Expr.(value (Int next)), pc) ]
 
   let update (h : t) (arr : value) (index : value) (v : value) (pc : value Pc.t)
     : (t * value Pc.t) list =
@@ -76,8 +76,8 @@ module M = struct
     let v =
       List.fold_left
         (fun ac (i, v, _) ->
-          Expr.(Bool.ite Expr.(relop Ty.Ty_bool Ty.Eq index i) v ac) )
-        Expr.(make @@ Val (Int 0))
+          Expr.(Bool.ite Expr.(relop Ty.Ty_bool Eq index i) v ac) )
+        Expr.(value (Int 0))
         (List.rev ops)
     in
     [ (h, v, pc) ]
@@ -86,7 +86,7 @@ module M = struct
     let addr' =
       match Expr.view arr with Val (Int i) -> i | _ -> assert false
     in
-    Hashtbl.replace h.map addr' (Expr.(make @@ Val (Int 0)), []);
+    Hashtbl.replace h.map addr' (Expr.(value (Int 0)), []);
     [ (h, pc) ]
 
   let get_block (h : t) (addr : value) : block option =
@@ -95,7 +95,7 @@ module M = struct
     in
     match Hashtbl.find_opt h.map addr' with
     | Some (size, ops) ->
-      if size = Expr.(make @@ Val (Int 0)) then None else Some (size, ops)
+      if size = Expr.(value (Int 0)) then None else Some (size, ops)
     | None -> None
 
   let set_block (h : t) (addr : value) (block : block) : t =

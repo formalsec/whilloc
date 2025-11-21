@@ -42,9 +42,8 @@ module M = struct
   let make_symbol (name : string) (tp : string) =
     let symbolic_name = Parameters.symbol_prefix ^ name in
     let symbolic_value =
-      if String.equal "bool" tp then
-        E.mk_symbol (S.make T.Ty_bool symbolic_name)
-      else E.mk_symbol (S.make T.Ty_int symbolic_name)
+      if String.equal "bool" tp then E.symbol @@ S.make T.Ty_bool symbolic_name
+      else E.symbol @@ S.make T.Ty_int symbolic_name
     in
     let concrete_value =
       match Symb_map.map symbolic_name with

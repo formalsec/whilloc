@@ -150,8 +150,7 @@ let run ?(no_values = false) ?(test = false) input mode =
        =====================\n\
        Total Execution time: %f\n\
        Total Solver time: %f\n"
-      execution_time
-      !Smtml.Solver.Z3_batch.solver_time;
+      execution_time !Solver.solver_time;
   write_report
     { execution_time
     ; mode
@@ -159,7 +158,7 @@ let run ?(no_values = false) ?(test = false) input mode =
     ; num_problems
     ; problems
     ; filename = input
-    ; solver_time = !Smtml.Solver.Z3_batch.solver_time
+    ; solver_time = !Solver.solver_time
     }
 
 let main (opts : options) =

@@ -3,22 +3,21 @@ module M = struct
   module E = Smtml.Expr
   module V = Smtml.Value
   module Ty = Smtml.Ty
-  module Slv = Smtml.Solver
   module S = Smtml.Symbol
 
   type t = E.t
   type st = t Store.t
 
-  let solver = Slv.Z3_batch.create ()
+  let solver = Solver.create ()
 
   let eval_unop = function
-    | Expr.Not -> `Unary Ty.(Ty_bool, Not)
+    | Expr.Not -> `Unary Ty.(Ty_bool, Ty.Unop.Not)
     | Expr.Neg -> `Unary Ty.(Ty_int, Neg)
     | Expr.Abs -> `Unary Ty.(Ty_int, Abs)
-    | Expr.StringOfInt -> `Cvtop Ty.(Ty_str, String_from_int)
+    | Expr.StringOfInt -> `Cvtop Ty.(Ty_str, Ty.Cvtop.ToString)
 
   let eval_binop = function
-    | Expr.Plus -> `Binary Ty.(Ty_int, Add)
+    | Expr.Plus -> `Binary Ty.(Ty_int, Ty.Binop.Add)
     | Expr.Minus -> `Binary Ty.(Ty_int, Sub)
     | Expr.Times -> `Binary Ty.(Ty_int, Mul)
     | Expr.Div -> `Binary Ty.(Ty_int, Div)
@@ -29,7 +28,7 @@ module M = struct
     | Expr.Or -> `Binary Ty.(Ty_bool, Or)
     | Expr.And -> `Binary Ty.(Ty_bool, And)
     | Expr.Xor -> `Binary Ty.(Ty_bool, Xor)
-    | Expr.Gt -> `Relop Ty.(Ty_int, Gt)
+    | Expr.Gt -> `Relop Ty.(Ty_int, Ty.Relop.Gt)
     | Expr.Lt -> `Relop Ty.(Ty_int, Lt)
     | Expr.Gte -> `Relop Ty.(Ty_int, Ge)
     | Expr.Lte -> `Relop Ty.(Ty_int, Le)
@@ -64,7 +63,7 @@ module M = struct
     | _ -> assert false
 
   let is_true (exprs : t list) : bool =
-    match Slv.Z3_batch.check solver exprs with
+    match Solver.check solver exprs with
     | `Sat -> true
     | `Unsat -> false
     | `Unknown ->
@@ -87,11 +86,11 @@ module M = struct
 
   let test_assert (exprs : t list) : bool * Model.t =
     assert (is_true exprs);
-    match Slv.Z3_batch.model solver with
+    match Solver.model solver with
     | Some m -> (true, Some (hashtbl_to_list m))
     | None -> (false, None)
 
-  let negate (e : t) : t = E.(unop Ty.Ty_bool Ty.Not e)
+  let negate (e : t) : t = E.(unop Ty_bool Not e)
   let pp (fmt : Fmt.t) (e : t) : unit = E.pp fmt e
   let to_string (e : t) : string = Fmt.asprintf "%a" pp e
   let print (e : t) : unit = to_string e |> print_endline
@@ -99,8 +98,8 @@ module M = struct
   let make_symbol (name : string) (tp : string) =
     let symb_name = Parameters.symbol_prefix ^ name in
     let symb_value =
-      if String.equal "bool" tp then E.mk_symbol (S.make Ty.Ty_bool symb_name)
-      else E.mk_symbol (S.make Ty.Ty_int symb_name)
+      if String.equal "bool" tp then E.symbol (S.make Ty.Ty_bool symb_name)
+      else E.symbol (S.make Ty.Ty_int symb_name)
     in
     Some symb_value
 end
