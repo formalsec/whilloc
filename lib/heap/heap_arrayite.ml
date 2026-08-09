@@ -23,7 +23,7 @@ module M = struct
 
   let is_within (sz : int) (index : value) (pc : value Pc.t) : bool =
     let e1 = Expr.(relop Ty_int Lt index (value (Int 0))) in
-    let e2 = Expr.(relop Ty_int Ge index (value (Int sz))) in
+    let e2 = Expr.(relop Ty_int Le (value (Int sz)) index ) in
     let e3 = Expr.(binop Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))

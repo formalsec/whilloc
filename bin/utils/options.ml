@@ -4,14 +4,20 @@ module File = struct
   let parse_fpath str test_f =
     let file = Fpath.v str in
     match test_f file with
-    | Ok true -> `Ok file
-    | Ok false -> `Error (str ^ " is not a file")
-    | Error (`Msg err) -> `Error err
+    | Ok true -> Ok file
+    | Ok false -> Error (`Msg (str ^ " is not a file"))
+    | Error _ as err -> err
 
-  let fpath = ((fun str -> `Ok (Fpath.v str)), Fpath.pp)
-  let valid_fpath = ((fun str -> parse_fpath str Bos.OS.Path.exists), Fpath.pp)
-  let non_dir_fpath = ((fun str -> parse_fpath str Bos.OS.File.exists), Fpath.pp)
-  let dir_fpath = ((fun str -> parse_fpath str Bos.OS.Dir.exists), Fpath.pp)
+  let fpath = Arg.conv ((fun str -> Ok (Fpath.v str)), Fpath.pp)
+
+  let valid_fpath =
+    Arg.conv ((fun str -> parse_fpath str Bos.OS.Path.exists), Fpath.pp)
+
+  let non_dir_fpath =
+    Arg.conv ((fun str -> parse_fpath str Bos.OS.File.exists), Fpath.pp)
+
+  let dir_fpath =
+    Arg.conv ((fun str -> parse_fpath str Bos.OS.Dir.exists), Fpath.pp)
 
   let input =
     let docv = "FILE" in

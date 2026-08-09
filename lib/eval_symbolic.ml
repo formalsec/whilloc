@@ -10,30 +10,32 @@ module M = struct
 
   let solver = Solver.create ()
 
-  let eval_unop = function
-    | Expr.Not -> `Unary Ty.(Ty_bool, Ty.Unop.Not)
-    | Expr.Neg -> `Unary Ty.(Ty_int, Neg)
-    | Expr.Abs -> `Unary Ty.(Ty_int, Abs)
-    | Expr.StringOfInt -> `Cvtop Ty.(Ty_str, Ty.Cvtop.ToString)
+  let eval_unop op e =
+    match op with
+    | Expr.Not -> E.unop Ty_bool Not e
+    | Neg -> E.unop Ty_int Neg e
+    | Abs -> E.unop Ty_int Abs e
+    | StringOfInt -> E.cvtop Ty_str ToString e
 
-  let eval_binop = function
-    | Expr.Plus -> `Binary Ty.(Ty_int, Ty.Binop.Add)
-    | Expr.Minus -> `Binary Ty.(Ty_int, Sub)
-    | Expr.Times -> `Binary Ty.(Ty_int, Mul)
-    | Expr.Div -> `Binary Ty.(Ty_int, Div)
-    | Expr.Modulo -> `Binary Ty.(Ty_int, Rem)
-    | Expr.Pow -> `Binary Ty.(Ty_int, Pow)
-    | Expr.ShiftL -> `Binary Ty.(Ty_int, Shl)
-    | Expr.ShiftR -> `Binary Ty.(Ty_int, ShrA)
-    | Expr.Or -> `Binary Ty.(Ty_bool, Or)
-    | Expr.And -> `Binary Ty.(Ty_bool, And)
-    | Expr.Xor -> `Binary Ty.(Ty_bool, Xor)
-    | Expr.Gt -> `Relop Ty.(Ty_int, Ty.Relop.Gt)
-    | Expr.Lt -> `Relop Ty.(Ty_int, Lt)
-    | Expr.Gte -> `Relop Ty.(Ty_int, Ge)
-    | Expr.Lte -> `Relop Ty.(Ty_int, Le)
-    | Expr.Equals -> `Relop Ty.(Ty_bool, Eq)
-    | Expr.NEquals -> `Relop Ty.(Ty_bool, Ne)
+  let eval_binop op e1 e2 =
+    match op with
+    | Expr.Plus -> E.binop Ty.Ty_int Add e1 e2
+    | Minus -> E.binop Ty.Ty_int Sub e1 e2
+    | Times -> E.binop Ty.Ty_int Mul e1 e2
+    | Div -> E.binop Ty.Ty_int Div e1 e2
+    | Modulo -> E.binop Ty.Ty_int Rem e1 e2
+    | Pow -> E.binop Ty.Ty_int Pow e1 e2
+    | ShiftL -> E.binop Ty.Ty_int Shl e1 e2
+    | ShiftR -> E.binop Ty.Ty_int ShrA e1 e2
+    | Or -> E.binop Ty.Ty_bool Or e1 e2
+    | And -> E.binop Ty.Ty_bool And e1 e2
+    | Xor -> E.binop Ty.Ty_bool Xor e1 e2
+    | Lt -> E.relop Ty.Ty_int Lt e1 e2
+    | Gt -> E.relop Ty.Ty_int Le e2 e1
+    | Lte -> E.relop Ty.Ty_int Le e1 e2
+    | Gte -> E.relop Ty.Ty_int Le e2 e1
+    | Equals -> E.relop Ty.Ty_bool Eq e1 e2
+    | NEquals -> E.relop Ty.Ty_bool Ne e1 e2
 
   let rec eval (store : st) (e : Expr.t) : t =
     match e with
@@ -42,17 +44,13 @@ module M = struct
     | Val (Boolean false) -> E.value V.False
     | Val (Loc n) -> E.value (V.Int n)
     | Var x -> Store.get store x
-    | Unop (op, e) -> (
+    | Unop (op, e) ->
       let e = eval store e in
-      match eval_unop op with
-      | `Unary (t, op) -> E.(unop t op e)
-      | `Cvtop (t, c) -> E.(cvtop t c e) )
-    | Binop (op, e1, e2) -> (
+      eval_unop op e
+    | Binop (op, e1, e2) ->
       let e1 = eval store e1 in
       let e2 = eval store e2 in
-      match eval_binop op with
-      | `Binary (t, op) -> E.(binop t op e1 e2)
-      | `Relop (t, op) -> E.(relop t op e1 e2) )
+      eval_binop op e1 e2
     | B_symb _ ->
       failwith
         "InternalError: EvalSymbolic.eval, tried to evaluate a symbolic boolean"

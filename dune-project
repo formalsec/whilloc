@@ -33,7 +33,7 @@
    bos
    cmdliner
    ppx_deriving_yojson
-   (smtml (>= "0.14.0"))
+   (smtml (>= "0.29.0"))
    (bisect_ppx (and :with-test (>= "2.5.0"))))
  (tags
   (topics "to describe" your project)))

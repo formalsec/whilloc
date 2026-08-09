@@ -55,7 +55,7 @@ module M = struct
       (pc : value Pc.t) : (tree_t * value Pc.t) list option =
       match tree with
       | Leaf ((left, right), old_v) ->
-        let ge_left = Expr.(relop Ty.Ty_int Ge index left) in
+        let ge_left = Expr.(relop Ty.Ty_int Le left index) in
         let l_right = Expr.(relop Ty.Ty_int Lt index right) in
         let cond = Expr.(binop Ty.Ty_bool And ge_left l_right) in
         let pc' = cond :: pc in
@@ -70,7 +70,7 @@ module M = struct
           Some [ (Node ((left, right), leaves), pc') ]
         else None
       | Node ((left, right), trees) ->
-        let ge_left = Expr.(relop Ty.Ty_int Ge index left) in
+        let ge_left = Expr.(relop Ty.Ty_int Le left index) in
         let l_right = Expr.(relop Ty.Ty_int Lt index right) in
         let cond = Expr.(binop Ty.Ty_bool And ge_left l_right) in
         let pc' = cond :: pc in
@@ -134,14 +134,14 @@ module M = struct
   let must_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
     let e1 = Expr.(relop Ty.Ty_int Lt index lower) in
-    let e2 = Expr.(relop Ty.Ty_int Ge index upper) in
+    let e2 = Expr.(relop Ty.Ty_int Le upper index) in
     let e3 = Expr.(binop Ty.Ty_bool Or e1 e2) in
 
     not (Eval_symbolic.is_true (e3 :: pc))
 
   let may_within_range (r : range) (index : value) (pc : value Pc.t) : bool =
     let lower, upper = r in
-    let e1 = Expr.(relop Ty.Ty_int Ge index lower) in
+    let e1 = Expr.(relop Ty.Ty_int Le lower index) in
     let e2 = Expr.(relop Ty.Ty_int Lt index upper) in
 
     Eval_symbolic.is_true ([ e1; e2 ] @ pc)
@@ -157,7 +157,7 @@ module M = struct
           , Expr.(
               binop Ty.Ty_bool And
                 (relop Ty.Ty_int Lt index upper)
-                (relop Ty.Ty_int Ge index lower) ) )
+                (relop Ty.Ty_int Le lower index) ) )
         ]
       else []
     | Node (r, tree_list) ->
